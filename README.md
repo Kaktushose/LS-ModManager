@@ -5,7 +5,7 @@
 
 Dieses Programm ermöglicht das Erstellen und Verwalten von Modpacks für den Landwirtschaftssimulator.
 
-![logo](https://github.com/Kaktushose/ls-modmanager/tree/master/src/main/resources/img/Logo.png)
+![logo](https://raw.githubusercontent.com/Kaktushose/ls-modmanager/master/src/main/resources/img/Logo.png)
 
 ## Download
 Zur Zeit ist noch kein Download verfügbar, da das Programm noch in der Entwicklung ist
