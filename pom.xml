@@ -74,7 +74,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass></mainClass>
+                            <mainClass>de.github.kaktushose.lsmodmanager.core.Bootstrapper</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
