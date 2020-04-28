@@ -5,4 +5,10 @@ jdk:
 
 dist: trusty
 
+branches:
+  only:
+    - master
+    - develop
+    - /release\/.*$/
+
 script: mvn clean install
