@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="900.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
+            xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <BorderPane layoutX="10.0" layoutY="10.0" prefHeight="480.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <MenuBar BorderPane.alignment="CENTER">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Menü">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Einstellungen"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onExit" text="Beenden"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Modpacks">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onModpackCreate"
+                                          text="Neues Modpack erstellen"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onModpackEdit" text="Modpack bearbeiten"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Hilfe">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onHelp" text="LSMM Hilfe"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onAbout" text="Über LSMM"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                    <BorderPane.margin>
+                        <Insets/>
+                    </BorderPane.margin>
+                </MenuBar>
+            </top>
+            <left>
+                <VBox prefHeight="552.0" prefWidth="450.0" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <HBox prefHeight="5.0" prefWidth="300.0" spacing="10.0">
+                            <children>
+                                <ComboBox fx:id="modpackComboBox" onAction="#onModpackSelect" prefHeight="35.0"
+                                          prefWidth="175.0" promptText="Modpack auswählen"/>
+                                <Button mnemonicParsing="false" onAction="#onModpackLoad" text="Modpack laden"/>
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="0.0" prefWidth="300.0" spacing="5.0">
+                            <children>
+                                <Label text="aktuell geladenes Modpack:"/>
+                                <Label text="kein Modpack geladen"/>
+                            </children>
+                        </HBox>
+                        <ListView fx:id="modpackListView" prefHeight="504.0" prefWidth="430.0"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                </VBox>
+            </left>
+            <right>
+                <VBox prefHeight="552.0" prefWidth="450.0" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <ComboBox prefHeight="42.0" prefWidth="179.0" promptText="Spielstand auswählen"/>
+                        <HBox prefHeight="10.0" prefWidth="300.0">
+                            <children>
+                                <Label text="0 von 34 benötigten Mods sind geladen"/>
+                            </children>
+                        </HBox>
+                        <ListView prefHeight="507.0" prefWidth="430.0"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                </VBox>
+            </right>
+            <center>
+                <Separator maxHeight="-Infinity" orientation="VERTICAL" prefHeight="900.0" prefWidth="0.0"
+                           BorderPane.alignment="CENTER"/>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>
