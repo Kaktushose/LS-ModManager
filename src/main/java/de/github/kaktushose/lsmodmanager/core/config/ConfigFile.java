@@ -21,6 +21,7 @@ public class ConfigFile {
             if (!configFile.exists()) {
                 new File(workingDirectory).mkdir();
                 configFile.createNewFile();
+                saveConfig(new Config());
             }
         } catch (IOException e) {
             logger.error("There was an error creating the config file", e);

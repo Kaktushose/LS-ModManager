@@ -5,7 +5,7 @@ public class Config {
     private String lsPath;
     private String loadedModpack;
 
-    public Config() {
+    Config() {
        lsPath = System.getProperty("user.home") + "\\Documents\\My Games\\Farming Simulator2019";
        loadedModpack = "";
     }
