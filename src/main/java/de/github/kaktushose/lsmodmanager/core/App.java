@@ -12,12 +12,14 @@ public class App {
     private Stage stage;
     private final ConfigFile configFile;
     private Config config;
+    private SceneManager sceneManager;
     private long startTime;
 
     App(Stage stage) {
         logger = LoggerFactory.getLogger(App.class);
         this.stage = stage;
         configFile = new ConfigFile();
+        sceneManager = new SceneManager(this, stage);
     }
 
     void preStart() {
@@ -28,12 +30,15 @@ public class App {
     }
 
     void start() {
-        //this will be outsourced to a scene manager later on, but for now we'll leave it as it is
-        stage.show();
+        sceneManager.showMainWindow();
     }
 
     void postStart() {
         logger.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
+    }
+
+    public SceneManager getSceneManager() {
+        return sceneManager;
     }
 
     //Getter and Setter for config
