@@ -3,6 +3,7 @@ package de.github.kaktushose.lsmodmanager.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// helper class to log (unwanted) termination of the app properly
 public class CloseEvent {
 
     private String reason;

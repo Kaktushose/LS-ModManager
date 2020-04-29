@@ -36,7 +36,7 @@ public class App {
         logger.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
     }
 
-    //Boilerplate
+    //Getter and Setter for config
     public String getLsPath() {
         return config.getLsPath();
     }

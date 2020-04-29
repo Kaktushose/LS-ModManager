@@ -19,7 +19,7 @@ public class ConfigFile {
         logger = LoggerFactory.getLogger(ConfigFile.class);
         try {
             if (!configFile.exists()) {
-                new File(workingDirectory).mkdir();
+                new File(workingDirectory).mkdir(); // if the config file doesn't exist, the folder probably won't exist neither
                 configFile.createNewFile();
                 saveConfig(new Config());
             }
@@ -28,6 +28,7 @@ public class ConfigFile {
         }
     }
 
+    // returns default config, if loading fails, in order to prevent app crash
     public Config loadConfig() {
         Config config = new Config();
         ObjectMapper mapper = new ObjectMapper();
