@@ -2,6 +2,7 @@ package de.github.kaktushose.lsmodmanager.core;
 
 import de.github.kaktushose.lsmodmanager.ui.controller.Controller;
 import de.github.kaktushose.lsmodmanager.ui.controller.MainController;
+import de.github.kaktushose.lsmodmanager.ui.controller.SettingsController;
 import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,9 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 public class SceneManager {
 
@@ -35,6 +33,15 @@ public class SceneManager {
         stage.show();
     }
 
+    public void showSettings() {
+        Stage stage = loadFXML(SettingsController.class, "settings.fxml", 640, 440);
+        stage.setTitle("Einstellungen");
+        stage.setResizable(false);
+        stage.getIcons().add(new Image("img/LogoT.png"));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+
     private Stage loadFXML(Class<?> controllerClass, String file, int width, int height) {
         Stage stage = new Stage();
 
@@ -49,9 +56,9 @@ public class SceneManager {
         } catch (Exception e) { // bad practice, but this shit can throw like thousands different exceptions
             CloseEvent closeEvent = new CloseEvent(e, 1);
             closeEvent.perform();
-            return null;
+            return stage;
         }
-        stage.setScene(new Scene(root, 900, 600));
+        stage.setScene(new Scene(root, width, height));
         controller.afterInitialization();
         return stage;
     }

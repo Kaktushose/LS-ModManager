@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="447.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0"
             prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
             xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox prefHeight="395.0" prefWidth="640.0" spacing="10.0">
+        <VBox prefHeight="400.0" prefWidth="640.0" spacing="10.0">
             <children>
                 <Label text="Einstellungen">
                     <font>
@@ -85,4 +85,3 @@
         </VBox>
     </children>
 </AnchorPane>
-

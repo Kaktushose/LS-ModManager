@@ -27,12 +27,10 @@ public class MainController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("initialize");
     }
 
     @Override
     public void afterInitialization() {
-        System.out.println("after initialize");
     }
 
     @Override
@@ -42,6 +40,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onSettings() {
+        app.getSceneManager().showSettings();
     }
 
     @FXML
