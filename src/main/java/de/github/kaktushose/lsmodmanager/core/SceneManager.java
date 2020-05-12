@@ -41,7 +41,7 @@ public class SceneManager {
     }
 
     public void showSettings() {
-        sceneLoader.loadFXML(MainController.class, "settings.fxml", 640, 440);
+        sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 440);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Einstellungen");
         stage.setResizable(false);
@@ -51,7 +51,7 @@ public class SceneManager {
     }
 
     public List<String> showFileChooser() {
-        sceneLoader.loadFXML(MainController.class, "filechooser.fxml", 687, 750);
+        sceneLoader.loadFXML(FileChooserController.class, "filechooser.fxml", 687, 750);
         FileChooserController controller = (FileChooserController) sceneLoader.getController();
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Dateien auswählen");
