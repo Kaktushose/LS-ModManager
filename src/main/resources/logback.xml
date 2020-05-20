@@ -8,7 +8,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <append>false</append>
-        <file>../lsmm.log</file>
+        <file>${lsmm.log}/lsmm.log</file>
         <encoder>
             <Pattern>%d{HH:mm:ss} [%t] %level %logger - %msg%n</Pattern>
         </encoder>

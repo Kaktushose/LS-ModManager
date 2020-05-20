@@ -9,13 +9,14 @@ import org.slf4j.LoggerFactory;
 public class App {
 
     private Logger logger;
-    private Stage stage;
+    private final Stage stage;
     private final ConfigFile configFile;
     private Config config;
-    private SceneManager sceneManager;
+    private final SceneManager sceneManager;
     private long startTime;
 
     App(Stage stage) {
+        System.setProperty("lsmm.log", System.getenv("AppData") + "\\LS-ModManager");
         logger = LoggerFactory.getLogger(App.class);
         this.stage = stage;
         configFile = new ConfigFile();
