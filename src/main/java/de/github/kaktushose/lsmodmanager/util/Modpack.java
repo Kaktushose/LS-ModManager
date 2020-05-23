@@ -22,6 +22,7 @@ public class Modpack {
     private List<File> mods;
 
     public Modpack() {
+        this.id = -1;
     }
 
     public Modpack(String name, List<File> mods, String lsPath, int id) {

@@ -58,17 +58,15 @@ public class ModpackCreateController extends Controller {
             Dialogs.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
             return false;
         }
-        unsaved = false;
         String name = textFieldName.getText();
-        List<String> filter = Arrays.asList("\\", "/", ":", "*", "?", "\"", "<", ">", "|");
 
-
-        if (filter.stream().anyMatch(name::contains)) {
-            Dialogs.displayErrorMessage("Fehler", "Der Name darf keines der folgenden Zeichen enthalten:\n \\ / : * ? \" < > |");
+        if (app.getModpackManager().modpackExists(name)) {
+            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" + name + "\".\nBitte wähle einen anderen Namen aus.");
             return false;
         }
         app.getModpackManager().createModpack(name, files);
         Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
+        unsaved = false;
         onClose();
         return true;
     }
@@ -76,7 +74,7 @@ public class ModpackCreateController extends Controller {
     @FXML
     public void onClose() {
         if (unsaved) {
-            switch (Dialogs.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\r\nTrotzdem schließen?")) {
+            switch (Dialogs.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\nTrotzdem schließen?")) {
                 case 0:
                     if (onSave()) {
                         stage.close();

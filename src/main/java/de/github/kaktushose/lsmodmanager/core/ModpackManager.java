@@ -5,9 +5,7 @@ import de.github.kaktushose.lsmodmanager.json.index.ModpackIndex;
 import de.github.kaktushose.lsmodmanager.util.Modpack;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModpackManager {
 
@@ -21,6 +19,7 @@ public class ModpackManager {
         modpacks = new HashMap<>();
         indexFile = new IndexFile();
         modpackIndex = indexFile.loadModpackIndex();
+        indexModpacks();
     }
 
     public void createModpack(String name, List<File> mods) {
@@ -36,5 +35,18 @@ public class ModpackManager {
         indexFile.saveModpackIndex(modpackIndex);
     }
 
+    private void indexModpacks() {
+        modpackIndex.getModpacks().forEach((id, modpack) -> {
+            modpack.setId(id);
+            File[] mods = modpack.getFolder().listFiles();
+            if (mods != null)
+            modpack.setMods(new ArrayList<>(Arrays.asList(mods)));
+            modpacks.put(modpack.getName(), modpack);
+        });
+    }
+
+    public boolean modpackExists(String name) {
+        return modpacks.containsKey(name);
+    }
 
 }
