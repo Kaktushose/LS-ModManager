@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
             xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
     <children>
@@ -21,9 +21,13 @@
                 <Separator prefHeight="0.0" prefWidth="640.0"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="125.0" text="Pfad zum LS-Ordner"/>
-                        <TextField fx:id="textFieldLsPath" editable="false" prefHeight="36.0" prefWidth="302.0"/>
-                        <Button mnemonicParsing="false" onAction="#onLsPath" text="auswählen"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="LS-Ordner"/>
+                        <TextField fx:id="textFieldLsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
+                        <Button mnemonicParsing="false" onAction="#onLsPath" text="auswählen">
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="20.0"/>
@@ -32,9 +36,16 @@
                 <Separator prefWidth="200.0"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="125.0" text="Backup-Ordner"/>
-                        <TextField fx:id="textFieldBackupPath" editable="false" prefHeight="36.0" prefWidth="302.0"/>
-                        <Button mnemonicParsing="false" onAction="#onBackupPath" text="auswählen"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="Modpack-Ordner"/>
+                        <TextField fx:id="textFieldModpackPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
+                        <Button mnemonicParsing="false" onAction="#onModpackPath" text="auswählen">
+                            <padding>
+                                <Insets right="20.0"/>
+                            </padding>
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Button>
                     </children>
                     <VBox.margin>
                         <Insets/>
@@ -45,8 +56,8 @@
                 </HBox>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <CheckBox fx:id="toggleBackup" mnemonicParsing="false" onAction="#onAutoBackup"
-                                  prefHeight="20.0" prefWidth="285.0" text="automatisches Backup bei jedem Start">
+                        <CheckBox fx:id="toggleCopy" mnemonicParsing="false" onAction="#onToggleCopy"
+                                  prefHeight="20.0" prefWidth="285.0" text="Dateien beim Erstellen verschieben">
                             <HBox.margin>
                                 <Insets top="20.0"/>
                             </HBox.margin>
@@ -56,14 +67,6 @@
                         <Insets left="20.0"/>
                     </padding>
                 </HBox>
-                <Button mnemonicParsing="false" onAction="#onBackupCreate" text="Backup erstellen">
-                    <padding>
-                        <Insets left="20.0" top="20.0"/>
-                    </padding>
-                    <VBox.margin>
-                        <Insets left="20.0" top="20.0"/>
-                    </VBox.margin>
-                </Button>
                 <Separator prefHeight="4.0" prefWidth="640.0">
                     <padding>
                         <Insets bottom="-10.0"/>

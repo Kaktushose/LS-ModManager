@@ -1,7 +1,7 @@
-package de.github.kaktushose.lsmodmanager.core;
+package de.github.kaktushose.lsmodmanager.util;
 
+import de.github.kaktushose.lsmodmanager.core.App;
 import de.github.kaktushose.lsmodmanager.ui.controller.Controller;
-import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +13,7 @@ public class SceneLoader {
     private Stage stage;
     private Controller controller;
 
-    SceneLoader(App app) {
+    public SceneLoader(App app) {
         this.app = app;
     }
 

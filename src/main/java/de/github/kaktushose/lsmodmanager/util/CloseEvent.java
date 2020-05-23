@@ -8,8 +8,8 @@ public class CloseEvent {
 
     private String reason;
     private Throwable cause;
-    private int status;
-    private Logger logger;
+    private final int status;
+    private final Logger logger;
 
     public CloseEvent(int status) {
         this.status = status;

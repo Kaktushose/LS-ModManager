@@ -1,18 +1,19 @@
 package de.github.kaktushose.lsmodmanager.core;
 
-import de.github.kaktushose.lsmodmanager.core.config.Config;
-import de.github.kaktushose.lsmodmanager.core.config.ConfigFile;
+import de.github.kaktushose.lsmodmanager.json.config.Config;
+import de.github.kaktushose.lsmodmanager.json.config.ConfigFile;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class App {
 
-    private Logger logger;
     private final Stage stage;
     private final ConfigFile configFile;
-    private Config config;
     private final SceneManager sceneManager;
+    private final ModpackManager modpackManager;
+    private final Logger logger;
+    private Config config;
     private long startTime;
 
     App(Stage stage) {
@@ -21,6 +22,7 @@ public class App {
         this.stage = stage;
         configFile = new ConfigFile();
         sceneManager = new SceneManager(this, stage);
+        modpackManager = new ModpackManager(this);
     }
 
     void preStart() {
@@ -42,6 +44,10 @@ public class App {
         return sceneManager;
     }
 
+    public ModpackManager getModpackManager() {
+        return modpackManager;
+    }
+
     //Getter and Setter for config
     public String getLsPath() {
         return config.getLsPath();
@@ -52,13 +58,21 @@ public class App {
         configFile.saveConfig(config);
     }
 
-    public String getLoadedModpack() {
-        return config.getLoadedModpack();
+    public String getModpackPath() {
+        return config.getModpackPath();
     }
 
-    public void setLoadedModpack(String loadedModpack) {
-        config.setLoadedModpack(loadedModpack);
+    public void setModpackPath(String modpacksPath) {
+        config.setModpackPath(modpacksPath);
         configFile.saveConfig(config);
     }
 
+    public int getLoadedModpack() {
+        return config.getLoadedModpack();
+    }
+
+    public void setLoadedModpack(int loadedModpack) {
+        config.setLoadedModpack(loadedModpack);
+        configFile.saveConfig(config);
+    }
 }
