@@ -39,7 +39,7 @@ public class SceneManager {
     }
 
     public void showSettings() {
-        sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 440);
+        sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 400);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Einstellungen");
         stage.setResizable(false);

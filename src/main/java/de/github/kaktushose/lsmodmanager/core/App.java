@@ -58,12 +58,12 @@ public class App {
         configFile.saveConfig(config);
     }
 
-    public String getModpacksPath() {
-        return config.getModpacksPath();
+    public String getModpackPath() {
+        return config.getModpackPath();
     }
 
-    public void setModpacksPath(String modpacksPath) {
-        config.setModpacksPath(modpacksPath);
+    public void setModpackPath(String modpacksPath) {
+        config.setModpackPath(modpacksPath);
         configFile.saveConfig(config);
     }
 

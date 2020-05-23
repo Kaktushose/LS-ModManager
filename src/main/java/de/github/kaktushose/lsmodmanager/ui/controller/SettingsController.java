@@ -15,9 +15,9 @@ import java.util.ResourceBundle;
 public class SettingsController extends Controller {
 
     @FXML
-    public TextField textFieldLsPath, textFieldBackupPath;
+    public TextField textFieldLsPath, textFieldModpackPath;
     @FXML
-    public CheckBox toggleBackup;
+    public CheckBox toggleCopy;
 
     private boolean unsaved;
 
@@ -29,7 +29,7 @@ public class SettingsController extends Controller {
     public void initialize(URL location, ResourceBundle resources) {
         unsaved = false;
         textFieldLsPath.setText(app.getLsPath());
-        // TODO if actually implemented add backup settings
+        textFieldModpackPath.setText(app.getModpackPath());
     }
 
     @Override
@@ -54,22 +54,19 @@ public class SettingsController extends Controller {
     }
 
     @FXML
-    public void onBackupPath() {
-        Dialogs.displayInfoMessage("", "not implemented yet");
-        toggleBackup.setSelected(false);
+    public void onModpackPath() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Pfad auswählen");
+        File path = directoryChooser.showDialog(stage);
+        if (path == null) return;
+        textFieldModpackPath.setText(path.getAbsolutePath());
+        unsaved = !app.getModpackPath().equals(path.getAbsolutePath());
     }
 
     @FXML
-    public void onAutoBackup() {
+    public void onToggleCopy() {
         Dialogs.displayInfoMessage("", "not implemented yet");
-        toggleBackup.setSelected(false);
-
-    }
-
-    @FXML
-    public void onBackupCreate() {
-        Dialogs.displayInfoMessage("", "not implemented yet");
-        toggleBackup.setSelected(false);
+        toggleCopy.setSelected(false);
     }
 
     @FXML
@@ -93,7 +90,7 @@ public class SettingsController extends Controller {
 
     private void save() {
         app.setLsPath(textFieldLsPath.getText());
-        // TODO if actually implemented add backup settings
+        app.setModpackPath(textFieldModpackPath.getText());
         unsaved = false;
     }
 

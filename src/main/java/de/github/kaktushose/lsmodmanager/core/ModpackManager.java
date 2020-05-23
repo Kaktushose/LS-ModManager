@@ -28,7 +28,7 @@ public class ModpackManager {
             throw new IllegalArgumentException("A modpack with the name `" + name + "` already exists!");
         }
         int id = modpackIndex.getLastId() + 1;
-        Modpack modpack = new Modpack(name, mods, app.getModpacksPath(), id);
+        Modpack modpack = new Modpack(name, mods, app.getModpackPath(), id);
         modpack.create();
         modpacks.put(name, modpack);
         modpackIndex.getModpacks().put(id, modpack);
