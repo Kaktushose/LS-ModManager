@@ -1,4 +1,4 @@
-package de.github.kaktushose.lsmodmanager.core.config;
+package de.github.kaktushose.lsmodmanager.json.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class ConfigFile {
 
-    private File configFile;
-    private Logger logger;
+    private final File configFile;
+    private final Logger logger;
 
     public ConfigFile() {
         String workingDirectory = System.getenv("AppData") + "\\LS-ModManager";

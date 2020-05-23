@@ -1,7 +1,6 @@
 package de.github.kaktushose.lsmodmanager.ui.controller;
 
 import de.github.kaktushose.lsmodmanager.core.App;
-import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.ui.model.FileModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +15,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FileChooserController extends Controller {
 
@@ -27,7 +25,6 @@ public class FileChooserController extends Controller {
     public TableColumn<FileModel, String> nameColumn;
     @FXML
     public TableColumn<FileModel, Button> buttonColumn;
-    private boolean unsaved;
     private Set<File> fileCache;
     private List<File> selectedFiles;
 
@@ -42,7 +39,6 @@ public class FileChooserController extends Controller {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         buttonColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
         buttonColumn.setEditable(true);
-        unsaved = false;
         fileCache = new HashSet<>();
     }
 
@@ -51,9 +47,15 @@ public class FileChooserController extends Controller {
 
     }
 
+    @Override
+    public void onCloseRequest() {
+        onClose();
+    }
+
     public void setFiles(Collection<File> selectedFiles) {
         this.selectedFiles = new ArrayList<>(selectedFiles);
         this.selectedFiles.forEach(this::addItemToTableView);
+        fileCache.addAll(selectedFiles);
     }
 
     @FXML
@@ -69,28 +71,13 @@ public class FileChooserController extends Controller {
                     addItemToTableView(file);
                 }
             });
-            unsaved = true;
         }
     }
 
     @FXML
-    public void onSave() {
-        save();
-        unsaved = false;
-    }
-
-    @FXML
     public void onClose() {
-        if (unsaved) {
-            switch (Dialogs.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\nTrotzdem verlassen?")) {
-                case 0:
-                    save();
-                    stage.close();
-                    return;
-                case 1:
-                    stage.close();
-            }
-        } else stage.close();
+        save();
+        stage.close();
     }
 
     public List<File> getSelectedFiles() {

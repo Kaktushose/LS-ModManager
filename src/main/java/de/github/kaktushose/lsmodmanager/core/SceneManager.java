@@ -2,7 +2,9 @@ package de.github.kaktushose.lsmodmanager.core;
 
 import de.github.kaktushose.lsmodmanager.ui.controller.FileChooserController;
 import de.github.kaktushose.lsmodmanager.ui.controller.MainController;
+import de.github.kaktushose.lsmodmanager.ui.controller.ModpackCreateController;
 import de.github.kaktushose.lsmodmanager.ui.controller.SettingsController;
+import de.github.kaktushose.lsmodmanager.util.SceneLoader;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,10 +17,10 @@ import java.util.List;
 
 public class SceneManager {
 
-    private App app;
-    private Stage primaryStage;
-    private Logger logger;
-    private SceneLoader sceneLoader;
+    private final App app;
+    private final Stage primaryStage;
+    private final Logger logger;
+    private final SceneLoader sceneLoader;
 
     public SceneManager(App app, Stage primaryStage) {
         this.app = app;
@@ -38,6 +40,16 @@ public class SceneManager {
 
     public void showSettings() {
         sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 440);
+        Stage stage = sceneLoader.getStage();
+        stage.setTitle("Einstellungen");
+        stage.setResizable(false);
+        stage.getIcons().add(new Image("img/LogoT.png"));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+
+    public void showModpackCreate() {
+        sceneLoader.loadFXML(ModpackCreateController.class, "modpackcreate.fxml", 640, 285);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Einstellungen");
         stage.setResizable(false);

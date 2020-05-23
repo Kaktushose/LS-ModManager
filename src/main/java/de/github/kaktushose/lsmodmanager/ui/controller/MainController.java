@@ -1,6 +1,7 @@
 package de.github.kaktushose.lsmodmanager.ui.controller;
 
 import de.github.kaktushose.lsmodmanager.core.App;
+import de.github.kaktushose.lsmodmanager.core.SceneManager;
 import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import javafx.fxml.FXML;
@@ -21,8 +22,11 @@ public class MainController extends Controller {
     public ComboBox<String> modpackComboBox;
     public ListView<String> modpackListView;
 
+    private final SceneManager sceneManager;
+
     public MainController(App app, Stage stage) {
         super(app, stage);
+        sceneManager = app.getSceneManager();
     }
 
     @Override
@@ -40,7 +44,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onSettings() {
-        app.getSceneManager().showSettings();
+        sceneManager.showSettings();
     }
 
     @FXML
@@ -53,6 +57,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackCreate() {
+        sceneManager.showModpackCreate();
     }
 
     @FXML

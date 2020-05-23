@@ -17,6 +17,9 @@
         <VBox prefHeight="750.0" prefWidth="687.0" spacing="20.0">
             <children>
                 <TableView fx:id="tableView" prefHeight="633.0" prefWidth="647.0">
+                    <placeholder>
+                        <Label text=""/>
+                    </placeholder>
                     <columns>
                         <TableColumn fx:id="nameColumn" prefWidth="499.0" resizable="false" text="Mod"/>
                         <TableColumn fx:id="buttonColumn" minWidth="0.0" prefWidth="126.0" resizable="false"
@@ -28,18 +31,14 @@
                 </TableView>
                 <HBox prefHeight="28.0" prefWidth="419.0">
                     <children>
-                        <Button onAction="#onAddFile" mnemonicParsing="false" text="Mod hinzufügen">
+                        <Button mnemonicParsing="false" onAction="#onAddFile" prefHeight="40.0" prefWidth="145.0"
+                                text="Mod hinzufügen">
                             <HBox.margin>
                                 <Insets left="20.0"/>
                             </HBox.margin>
                         </Button>
-                        <Region prefHeight="40.0" prefWidth="321.0"/>
-                        <Button onAction="#onSave" mnemonicParsing="false" text="Speichern">
-                            <HBox.margin>
-                                <Insets right="20.0"/>
-                            </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="89.0"
+                        <Region prefHeight="40.0" prefWidth="443.0"/>
+                        <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="99.0"
                                 text="Schließen">
                             <padding>
                                 <Insets right="20.0"/>

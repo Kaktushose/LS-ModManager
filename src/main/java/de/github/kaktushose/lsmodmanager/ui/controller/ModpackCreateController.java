@@ -1,7 +1,6 @@
 package de.github.kaktushose.lsmodmanager.ui.controller;
 
 import de.github.kaktushose.lsmodmanager.core.App;
-import de.github.kaktushose.lsmodmanager.core.SceneManager;
 import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -68,7 +67,7 @@ public class ModpackCreateController extends Controller {
             Dialogs.displayErrorMessage("Fehler", "Der Name darf keines der folgenden Zeichen enthalten:\n \\ / : * ? \" < > |");
             return false;
         }
-
+        app.getModpackManager().createModpack(name, files);
         Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
         onClose();
         return true;
