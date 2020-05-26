@@ -8,7 +8,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class ModpackCreateController extends Controller {
 

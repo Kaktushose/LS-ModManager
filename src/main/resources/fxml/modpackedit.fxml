@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0"
+            prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
+            xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label text="Modpack bearbeiten" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <Separator layoutY="22.0" prefHeight="35.0" prefWidth="624.0"/>
+        <HBox layoutX="86.0" layoutY="165.0" prefHeight="292.0" prefWidth="642.0" AnchorPane.bottomAnchor="42.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+            <children>
+                <VBox prefHeight="331.0" prefWidth="192.0" spacing="10.0">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                    <children>
+                        <Label prefHeight="32.0" prefWidth="58.0" text="Modpack"/>
+                        <Separator prefHeight="0.0" prefWidth="120.0"/>
+                        <Label prefHeight="34.0" prefWidth="120.0" text="Name"/>
+                        <Separator prefHeight="0.0" prefWidth="170.0"/>
+                        <Label prefHeight="29.0" prefWidth="168.0" text="Mods"/>
+                        <Separator prefHeight="17.0" prefWidth="170.0"/>
+                        <Label text="Modpack löschen"/>
+                        <Separator prefHeight="39.0" prefWidth="171.0"/>
+                    </children>
+                </VBox>
+                <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="284.0"
+                      prefWidth="430.0">
+                    <children>
+                        <HBox prefHeight="47.0" prefWidth="480.0">
+                            <children>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <ComboBox fx:id="modpackComboBox" maxHeight="-Infinity" maxWidth="-Infinity"
+                                                  minHeight="-Infinity" minWidth="-Infinity" onAction="#onModpackSelect"
+                                                  prefHeight="42.0" prefWidth="170.0" promptText="Modpack auswählen"/>
+                                        <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                   minWidth="-Infinity" prefHeight="35.0" prefWidth="426.0"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="28.0" prefWidth="424.0" spacing="20.0">
+                            <children>
+                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                    <children>
+                                        <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                minWidth="-Infinity" prefHeight="5.0" prefWidth="430.0"/>
+                                        <TextField fx:id="textFieldName" maxHeight="-Infinity" maxWidth="-Infinity"
+                                                   minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0"
+                                                   prefWidth="302.0">
+                                            <padding>
+                                                <Insets bottom="10.0"/>
+                                            </padding>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0"/>
+                                            </VBox.margin>
+                                        </TextField>
+                                        <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                   minWidth="-Infinity" prefHeight="0.0" prefWidth="430.0"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="107.0" prefWidth="430.0">
+                            <children>
+                                <VBox prefHeight="0.0" prefWidth="425.0" spacing="10.0">
+                                    <children>
+                                        <HBox prefHeight="86.0" prefWidth="425.0" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#onModAdd"
+                                                        prefHeight="40.0" prefWidth="70.0" text="ändern">
+                                                    <padding>
+                                                        <Insets bottom="10.0"/>
+                                                    </padding>
+                                                    <HBox.margin>
+                                                        <Insets top="-10.0"/>
+                                                    </HBox.margin>
+                                                </Button>
+                                            </children>
+                                            <padding>
+                                                <Insets top="34.0"/>
+                                            </padding>
+                                        </HBox>
+                                        <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                   minWidth="-Infinity" prefHeight="20.0" prefWidth="425.0"/>
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets/>
+                                    </HBox.margin>
+                                </VBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="10.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                              prefHeight="109.0" prefWidth="200.0">
+                            <children>
+                                <VBox prefHeight="148.0" prefWidth="430.0">
+                                    <children>
+                                        <Region prefHeight="14.0" prefWidth="430.0"/>
+                                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#onDelete"
+                                                text="löschen"/>
+                                        <Separator maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
+                                                   prefHeight="0.0" prefWidth="426.0"/>
+                                        <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0"
+                                              prefWidth="430.0" spacing="10.0">
+                                            <children>
+                                                <Region prefHeight="26.0" prefWidth="207.0"/>
+                                                <Button fx:id="buttonSave" mnemonicParsing="false" onAction="#onSave"
+                                                        prefHeight="0.0" prefWidth="85.0" text="Speichern">
+                                                    <padding>
+                                                        <Insets bottom="10.0"/>
+                                                    </padding>
+                                                    <HBox.margin>
+                                                        <Insets bottom="10.0"/>
+                                                    </HBox.margin>
+                                                </Button>
+                                                <Button mnemonicParsing="false" onAction="#onClose" text="Schließen">
+                                                    <HBox.margin>
+                                                        <Insets left="10.0" right="10.0"/>
+                                                    </HBox.margin>
+                                                </Button>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="10.0"/>
+                                            </padding>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

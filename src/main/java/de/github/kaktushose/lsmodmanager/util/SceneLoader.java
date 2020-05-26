@@ -28,7 +28,7 @@ public class SceneLoader {
             root = loader.load();
             stage.setScene(new Scene(root, width, height));
             controller.afterInitialization();
-        } catch (Exception e) { // bad practice, but this shit can throw like thousands different exceptions
+        } catch (Exception e) { // bad practice, but this shit can throw like thousand different exceptions
             CloseEvent closeEvent = new CloseEvent(e, 1);
             closeEvent.perform();
             return;

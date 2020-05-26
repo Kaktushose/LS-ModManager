@@ -25,12 +25,12 @@ public class FileChooserController extends Controller {
     public TableColumn<FileModel, String> nameColumn;
     @FXML
     public TableColumn<FileModel, Button> buttonColumn;
-    private Set<File> fileCache;
-    private List<File> selectedFiles;
+    private Map<String, File> fileCache;
+    private final Map<String, File> selectedFiles;
 
     public FileChooserController(App app, Stage stage) {
         super(app, stage);
-        this.selectedFiles = new ArrayList<>();
+        this.selectedFiles = new HashMap<>();
         fileModelObservableList = FXCollections.observableArrayList();
     }
 
@@ -39,7 +39,7 @@ public class FileChooserController extends Controller {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         buttonColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
         buttonColumn.setEditable(true);
-        fileCache = new HashSet<>();
+        fileCache = new HashMap<>();
     }
 
     @Override
@@ -53,9 +53,9 @@ public class FileChooserController extends Controller {
     }
 
     public void setFiles(Collection<File> selectedFiles) {
-        this.selectedFiles = new ArrayList<>(selectedFiles);
-        this.selectedFiles.forEach(this::addItemToTableView);
-        fileCache.addAll(selectedFiles);
+        selectedFiles.forEach(file -> this.selectedFiles.putIfAbsent(file.getName(), file));
+        this.selectedFiles.values().forEach(this::addItemToTableView);
+        selectedFiles.forEach(file -> fileCache.putIfAbsent(file.getName(), file));
     }
 
     @FXML
@@ -67,7 +67,8 @@ public class FileChooserController extends Controller {
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
         if (selectedFiles != null) {
             selectedFiles.forEach(file -> {
-                if (fileCache.add(file)) {
+                if (!fileCache.containsKey(file.getName())) {
+                    fileCache.put(file.getName(), file);
                     addItemToTableView(file);
                 }
             });
@@ -81,21 +82,23 @@ public class FileChooserController extends Controller {
     }
 
     public List<File> getSelectedFiles() {
-        Collections.sort(selectedFiles);
-        return selectedFiles;
+        List<File> files = new ArrayList<>(selectedFiles.values());
+        Collections.sort(files);
+        return files;
     }
 
     private void save() {
         selectedFiles.clear();
-        selectedFiles.addAll(fileCache);
+        fileCache.values().forEach(file -> selectedFiles.putIfAbsent(file.getName(), file));
         fileModelObservableList.forEach(fileModel -> {
             if (fileModel.isDelete()) {
-                selectedFiles.remove(fileModel.getFile());
+                selectedFiles.remove(fileModel.getFile().getName());
             }
         });
     }
 
     private void addItemToTableView(File file) {
+        if (!file.getName().endsWith(".zip")) return;
         fileModelObservableList.add(new FileModel(file));
         tableView.setItems(fileModelObservableList);
     }

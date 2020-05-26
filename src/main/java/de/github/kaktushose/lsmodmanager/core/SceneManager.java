@@ -1,9 +1,6 @@
 package de.github.kaktushose.lsmodmanager.core;
 
-import de.github.kaktushose.lsmodmanager.ui.controller.FileChooserController;
-import de.github.kaktushose.lsmodmanager.ui.controller.MainController;
-import de.github.kaktushose.lsmodmanager.ui.controller.ModpackCreateController;
-import de.github.kaktushose.lsmodmanager.ui.controller.SettingsController;
+import de.github.kaktushose.lsmodmanager.ui.controller.*;
 import de.github.kaktushose.lsmodmanager.util.SceneLoader;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -12,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +49,17 @@ public class SceneManager {
     public void showModpackCreate() {
         sceneLoader.loadFXML(ModpackCreateController.class, "modpackcreate.fxml", 640, 285);
         Stage stage = sceneLoader.getStage();
-        stage.setTitle("Einstellungen");
+        stage.setTitle("Erstellen");
+        stage.setResizable(false);
+        stage.getIcons().add(new Image("img/LogoT.png"));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+
+    public void showModpackEdit() {
+        sceneLoader.loadFXML(ModpackEditController.class, "modpackedit.fxml", 640, 446);
+        Stage stage = sceneLoader.getStage();
+        stage.setTitle("Bearbeiten");
         stage.setResizable(false);
         stage.getIcons().add(new Image("img/LogoT.png"));
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -62,7 +70,7 @@ public class SceneManager {
         return showFileChooser(Collections.emptyList());
     }
 
-    public List<File> showFileChooser(List<File> selectedFiles) {
+    public List<File> showFileChooser(Collection<File> selectedFiles) {
         sceneLoader.loadFXML(FileChooserController.class, "filechooser.fxml", 687, 750);
         FileChooserController controller = (FileChooserController) sceneLoader.getController();
         controller.setFiles(selectedFiles);
