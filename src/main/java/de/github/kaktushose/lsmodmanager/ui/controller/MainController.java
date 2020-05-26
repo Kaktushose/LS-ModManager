@@ -49,7 +49,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onExit() {
-        if (Dialogs.displayCloseOptions("Beenden?", "Möchten Sie den LS-ModManager wirklich beenden?")) {
+        if (Dialogs.displayCloseOptions("Beenden?", "Möchtest du den LS-ModManager wirklich beenden?")) {
             CloseEvent closeEvent = new CloseEvent("The user has closed the program", 0);
             closeEvent.perform();
         }
@@ -62,6 +62,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackEdit() {
+        sceneManager.showModpackEdit();
     }
 
     @FXML

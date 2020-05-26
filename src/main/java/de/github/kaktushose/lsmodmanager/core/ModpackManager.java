@@ -12,7 +12,7 @@ public class ModpackManager {
     private final IndexFile indexFile;
     private final ModpackIndex modpackIndex;
     private final App app;
-    private final Map<String, Modpack> modpacks;
+    private final HashMap<String, Modpack> modpacks;
 
     public ModpackManager(App app) {
         this.app = app;
@@ -35,14 +35,34 @@ public class ModpackManager {
         indexFile.saveModpackIndex(modpackIndex);
     }
 
+    public void deleteModpack(Modpack modpack) {
+        modpacks.remove(modpack.getName());
+        modpackIndex.getModpacks().remove(modpack.getId());
+        modpack.delete();
+        modpackIndex.getModpacks().keySet().forEach(System.out::println);
+        indexFile.saveModpackIndex(modpackIndex);
+    }
+
+    public void setModpack(Modpack oldValue, Modpack newValue) {
+        modpacks.remove(oldValue.getName());
+        modpacks.put(newValue.getName(), newValue);
+        modpackIndex.getModpacks().put(newValue.getId(), newValue);
+        indexFile.saveModpackIndex(modpackIndex);
+    }
+
     private void indexModpacks() {
         modpackIndex.getModpacks().forEach((id, modpack) -> {
             modpack.setId(id);
             File[] mods = modpack.getFolder().listFiles();
             if (mods != null)
-            modpack.setMods(new ArrayList<>(Arrays.asList(mods)));
+                modpack.setMods(Arrays.asList(mods));
             modpacks.put(modpack.getName(), modpack);
         });
+    }
+
+    // returns a immutable map, thus changes to the modpacks can only be made via the corresponding methods in this class
+    public Map<String, Modpack> getModpacks() {
+        return Collections.unmodifiableMap(modpacks);
     }
 
     public boolean modpackExists(String name) {
