@@ -51,5 +51,8 @@ The following dependencies were used to build this app:
  * JUnit Jupiter
     * Version: 5.7.0-M1
     * [Website](https://junit.org/junit5/)
+ * Apache Commons
+    * Version: 2.7
+    * [Website](http://commons.apache.org/)
  * AGIX | Innovative Engineering MaterialFX
     * [BitBucket](https://bitbucket.org/agix-material-fx/materialfx-material-design-for-javafx/src/master/)  
