@@ -1,10 +1,17 @@
 package de.github.kaktushose.lsmodmanager.core;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import de.github.kaktushose.lsmodmanager.json.index.IndexFile;
 import de.github.kaktushose.lsmodmanager.json.index.ModpackIndex;
 import de.github.kaktushose.lsmodmanager.util.Modpack;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class ModpackManager {
@@ -48,6 +55,36 @@ public class ModpackManager {
         modpacks.put(newValue.getName(), newValue);
         modpackIndex.getModpacks().put(newValue.getId(), newValue);
         indexFile.saveModpackIndex(modpackIndex);
+    }
+
+    public Modpack getModpack(String name) {
+        return modpacks.get(name);
+    }
+
+    public Modpack getModpackById(int id) {
+        return modpacks.get(modpackIndex.getModpacks().get(id).getName());
+    }
+
+    public void unloadModpack(Modpack modpack) {
+        app.setLoadedModpackId(-1);
+        File source = new File(app.getLsPath() + "\\mods");
+        try {
+            FileUtils.moveDirectory(source, modpack.getFolder());
+            source.mkdir();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadModpack(Modpack modpack) {
+        app.setLoadedModpackId(modpack.getId());
+        File target = new File(app.getLsPath() + "\\mods");
+        try {
+            Files.deleteIfExists(target.toPath());
+            FileUtils.moveDirectory(modpack.getFolder(), target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void indexModpacks() {

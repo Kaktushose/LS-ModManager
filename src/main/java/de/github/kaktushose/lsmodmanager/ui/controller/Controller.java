@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Controller implements Initializable {
 
-
     protected App app;
     protected Stage stage;
     protected Logger logger;

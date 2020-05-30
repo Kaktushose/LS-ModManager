@@ -17,7 +17,7 @@ public class SceneLoader {
         this.app = app;
     }
 
-    public void loadFXML(Class<?> controllerClass, String file, int width, int height) {
+    public void loadFXML(Class<?>  controllerClass, String file, int width, int height) {
         Stage stage = new Stage();
         Controller controller;
         Parent root;

@@ -1,11 +1,14 @@
 package de.github.kaktushose.lsmodmanager.ui.controller;
 
 import de.github.kaktushose.lsmodmanager.core.App;
+import de.github.kaktushose.lsmodmanager.core.ModpackManager;
 import de.github.kaktushose.lsmodmanager.core.SceneManager;
 import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.util.CloseEvent;
+import de.github.kaktushose.lsmodmanager.util.Modpack;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
@@ -18,15 +21,20 @@ import java.util.ResourceBundle;
 
 public class MainController extends Controller {
 
+    private final SceneManager sceneManager;
+    private final ModpackManager modpackManager;
     @FXML
     public ComboBox<String> modpackComboBox;
+    @FXML
     public ListView<String> modpackListView;
-
-    private final SceneManager sceneManager;
+    @FXML
+    public Label modpackName;
+    private Modpack loadedModpack;
 
     public MainController(App app, Stage stage) {
         super(app, stage);
         sceneManager = app.getSceneManager();
+        modpackManager = app.getModpackManager();
     }
 
     @Override
@@ -35,6 +43,22 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
+        modpackComboBox.getItems().add("Kein Modpack");
+        modpackComboBox.getSelectionModel().select("Kein Modpack");
+        app.getModpackManager().getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
+        int id = app.getLoadedModpackId();
+        if (id < 1) {
+            return;
+        }
+        loadedModpack = modpackManager.getModpackById(id);
+        String name = loadedModpack.getName();
+        modpackName.setText(name);
+        modpackComboBox.getSelectionModel().select(name);
+        loadedModpack.getMods().forEach(file -> {
+            if (file.getName().endsWith("zip")) {
+                modpackListView.getItems().add(file.getName()) ;
+            }
+        });
     }
 
     @Override
@@ -67,6 +91,25 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackSelect() {
+        System.out.println(app.getLoadedModpackId());
+        if (loadedModpack != null) {
+            System.out.println(loadedModpack.getName());
+            modpackManager.unloadModpack(loadedModpack);
+            loadedModpack = null;
+        }
+        if (modpackComboBox.getValue().equals("Kein Modpack")) {
+            return;
+        }
+        loadedModpack = modpackManager.getModpack(modpackComboBox.getValue());
+        modpackManager.loadModpack(loadedModpack);
+
+        modpackListView.getItems().clear();
+        modpackListView.getSelectionModel().clearSelection();
+        loadedModpack.getMods().forEach(file -> {
+            if (file.getName().endsWith("zip")) {
+                modpackListView.getItems().add(file.getName()) ;
+            }
+        });
     }
 
     @FXML

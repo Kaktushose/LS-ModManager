@@ -1,12 +1,14 @@
 package de.github.kaktushose.lsmodmanager.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
@@ -72,20 +74,11 @@ public class Modpack {
     }
 
     public void delete() {
-        delete(folder);
-    }
-
-    private void delete(File dir) {
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory())
-                delete(file);
-            file.delete();
+        try {
+            FileUtils.deleteDirectory(folder);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        dir.delete();
-    }
-
-    public void move() {
-
     }
 
     public String getName() {

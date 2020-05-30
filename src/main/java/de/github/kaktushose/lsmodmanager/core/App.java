@@ -67,11 +67,11 @@ public class App {
         configFile.saveConfig(config);
     }
 
-    public int getLoadedModpack() {
+    public int getLoadedModpackId() {
         return config.getLoadedModpack();
     }
 
-    public void setLoadedModpack(int loadedModpack) {
+    public void setLoadedModpackId(int loadedModpack) {
         config.setLoadedModpack(loadedModpack);
         configFile.saveConfig(config);
     }
