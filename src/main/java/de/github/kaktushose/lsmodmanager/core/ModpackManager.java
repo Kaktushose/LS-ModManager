@@ -26,7 +26,6 @@ public class ModpackManager {
         modpacks = new HashMap<>();
         indexFile = new IndexFile();
         modpackIndex = indexFile.loadModpackIndex();
-        indexModpacks();
     }
 
     public void createModpack(String name, List<File> mods) {
@@ -87,10 +86,15 @@ public class ModpackManager {
         }
     }
 
-    private void indexModpacks() {
+    public void indexModpacks() {
         modpackIndex.getModpacks().forEach((id, modpack) -> {
             modpack.setId(id);
-            File[] mods = modpack.getFolder().listFiles();
+            File[] mods;
+            if (id == app.getLoadedModpackId()) {
+                mods = new File(app.getLsPath() + "//mods").listFiles();
+            } else {
+                 mods = modpack.getFolder().listFiles();
+            }
             if (mods != null)
                 modpack.setMods(Arrays.asList(mods));
             modpacks.put(modpack.getName(), modpack);

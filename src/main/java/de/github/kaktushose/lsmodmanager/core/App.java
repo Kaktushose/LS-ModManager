@@ -30,6 +30,8 @@ public class App {
         logger.info("Starting app...");
         config = configFile.loadConfig();
         logger.debug("Loaded config");
+        modpackManager.indexModpacks();
+        logger.debug("Modpacks indexed");
     }
 
     void start() {

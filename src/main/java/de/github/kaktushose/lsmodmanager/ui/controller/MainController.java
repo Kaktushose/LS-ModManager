@@ -91,21 +91,11 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackSelect() {
-        System.out.println(app.getLoadedModpackId());
-        if (loadedModpack != null) {
-            System.out.println(loadedModpack.getName());
-            modpackManager.unloadModpack(loadedModpack);
-            loadedModpack = null;
-        }
-        if (modpackComboBox.getValue().equals("Kein Modpack")) {
-            return;
-        }
-        loadedModpack = modpackManager.getModpack(modpackComboBox.getValue());
-        modpackManager.loadModpack(loadedModpack);
-
+        Modpack selected = modpackManager.getModpack(modpackComboBox.getValue());
         modpackListView.getItems().clear();
         modpackListView.getSelectionModel().clearSelection();
-        loadedModpack.getMods().forEach(file -> {
+        if (selected == null) return;
+        selected.getMods().forEach(file -> {
             if (file.getName().endsWith("zip")) {
                 modpackListView.getItems().add(file.getName()) ;
             }
@@ -114,7 +104,17 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackLoad() {
-
+        if (loadedModpack != null) {
+            modpackManager.unloadModpack(loadedModpack);
+            loadedModpack = null;
+        }
+        if (modpackComboBox.getValue().equals("Kein Modpack")) {
+            modpackName.setText("Kein Modpack");
+            return;
+        }
+        loadedModpack = modpackManager.getModpack(modpackComboBox.getValue());
+        modpackManager.loadModpack(loadedModpack);
+        modpackName.setText(loadedModpack.getName());
     }
 
     @FXML
