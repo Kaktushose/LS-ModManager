@@ -71,6 +71,7 @@ public class ModpackCreateController extends Controller {
         Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
         unsaved = false;
         onClose();
+        app.getSceneManager().updateMainWindowData();
         return true;
     }
 
@@ -87,5 +88,6 @@ public class ModpackCreateController extends Controller {
                     stage.close();
             }
         } else stage.close();
+        logger.debug("modpack create window closed");
     }
 }

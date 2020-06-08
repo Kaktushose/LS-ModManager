@@ -1,6 +1,7 @@
 package de.github.kaktushose.lsmodmanager.json.index;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,8 @@ public class IndexFile {
                 saveModpackIndex(new ModpackIndex());
             }
         } catch (IOException e) {
-            logger.error("There was an error creating the config file", e);
+            logger.error("There was an error creating the modpack index file!");
+            new CloseEvent(e, 2).perform();
         }
     }
 
@@ -35,7 +37,8 @@ public class IndexFile {
         try {
             modpackIndex = mapper.readValue(new FileInputStream(indexFile), ModpackIndex.class);
         } catch (IOException e) {
-            logger.error("There was an error loading the modpack index", e);
+            logger.error("There was an error loading the modpack index!", e);
+            logger.warn("Starting with empty index!");
         }
         return modpackIndex;
     }
@@ -44,7 +47,7 @@ public class IndexFile {
         try {
             new ObjectMapper().writeValue(indexFile, modpackIndex);
         } catch (IOException e) {
-            logger.error("There was an error saving the modpack index", e);
+            logger.error("There was an error saving the modpack index!", e);
         }
     }
 

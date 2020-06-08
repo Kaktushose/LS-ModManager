@@ -43,22 +43,12 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
-        modpackComboBox.getItems().add("Kein Modpack");
-        modpackComboBox.getSelectionModel().select("Kein Modpack");
-        app.getModpackManager().getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
-        int id = app.getLoadedModpackId();
-        if (id < 1) {
-            return;
-        }
-        loadedModpack = modpackManager.getModpackById(id);
-        String name = loadedModpack.getName();
-        modpackName.setText(name);
-        modpackComboBox.getSelectionModel().select(name);
-        loadedModpack.getMods().forEach(file -> {
-            if (file.getName().endsWith("zip")) {
-                modpackListView.getItems().add(file.getName()) ;
-            }
-        });
+        updateData();
+    }
+
+    public void updateData() {
+        updateListView(loadedModpack);
+        updateComboBox();
     }
 
     @Override
@@ -74,8 +64,7 @@ public class MainController extends Controller {
     @FXML
     public void onExit() {
         if (Dialogs.displayCloseOptions("Beenden?", "Möchtest du den LS-ModManager wirklich beenden?")) {
-            CloseEvent closeEvent = new CloseEvent("The user has closed the program", 0);
-            closeEvent.perform();
+            new CloseEvent("The user has closed the program", 0).perform();
         }
     }
 
@@ -92,14 +81,7 @@ public class MainController extends Controller {
     @FXML
     public void onModpackSelect() {
         Modpack selected = modpackManager.getModpack(modpackComboBox.getValue());
-        modpackListView.getItems().clear();
-        modpackListView.getSelectionModel().clearSelection();
-        if (selected == null) return;
-        selected.getMods().forEach(file -> {
-            if (file.getName().endsWith("zip")) {
-                modpackListView.getItems().add(file.getName()) ;
-            }
-        });
+        updateListView(selected);
     }
 
     @FXML
@@ -120,11 +102,39 @@ public class MainController extends Controller {
     @FXML
     public void onAbout() {
         openURL("https://gadarol.de/board/index.php?thread/4102-ls19-modmanager-diy-java-projekt/");
+        throw new NullPointerException();
     }
 
     @FXML
     public void onHelp() {
         openURL("https://github.com/Kaktushose/ls-modmanager/wiki");
+    }
+
+    private void updateComboBox() {
+        modpackComboBox.getItems().clear();
+        modpackComboBox.getSelectionModel().clearSelection();
+        modpackComboBox.getItems().add("Kein Modpack");
+        modpackComboBox.getSelectionModel().select("Kein Modpack");
+        app.getModpackManager().getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
+        int id = app.getLoadedModpackId();
+        if (id < 1) {
+            return;
+        }
+        loadedModpack = modpackManager.getModpackById(id);
+        String name = loadedModpack.getName();
+        modpackName.setText(name);
+        modpackComboBox.getSelectionModel().select(name);
+    }
+
+    private void updateListView(Modpack modpack) {
+        modpackListView.getItems().clear();
+        modpackListView.getSelectionModel().clearSelection();
+        if (modpack == null) return;
+        modpack.getMods().forEach(file -> {
+            if (file.getName().endsWith("zip")) {
+                modpackListView.getItems().add(file.getName()) ;
+            }
+        });
     }
 
     private void openURL(String url) {
