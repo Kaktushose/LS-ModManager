@@ -19,6 +19,7 @@ public class SceneManager {
     private final Stage primaryStage;
     private final Logger logger;
     private final SceneLoader sceneLoader;
+    private MainController mainController;
 
     public SceneManager(App app, Stage primaryStage) {
         this.app = app;
@@ -28,15 +29,22 @@ public class SceneManager {
     }
 
     public void showMainWindow() {
+        logger.debug("Showing main window");
         sceneLoader.loadFXML(MainController.class, "mainwindow.fxml", 900, 600);
         Stage stage = sceneLoader.getStage();
+        mainController = (MainController) sceneLoader.getController();
         stage.setTitle("LS-ModManager");
         stage.setResizable(false);
         stage.getIcons().add(new Image("img/LogoT.png"));
         stage.show();
     }
 
+    public void updateMainWindowData() {
+        mainController.updateData();
+    }
+
     public void showSettings() {
+        logger.debug("Showing settings window");
         sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 400);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Einstellungen");
@@ -47,6 +55,7 @@ public class SceneManager {
     }
 
     public void showModpackCreate() {
+        logger.debug("Showing modpack create window");
         sceneLoader.loadFXML(ModpackCreateController.class, "modpackcreate.fxml", 640, 285);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Erstellen");
@@ -57,6 +66,7 @@ public class SceneManager {
     }
 
     public void showModpackEdit() {
+        logger.debug("Showing modpack edit window");
         sceneLoader.loadFXML(ModpackEditController.class, "modpackedit.fxml", 640, 446);
         Stage stage = sceneLoader.getStage();
         stage.setTitle("Bearbeiten");
@@ -71,6 +81,7 @@ public class SceneManager {
     }
 
     public List<File> showFileChooser(Collection<File> selectedFiles) {
+        logger.debug("Showing file chooser window");
         sceneLoader.loadFXML(FileChooserController.class, "filechooser.fxml", 687, 750);
         FileChooserController controller = (FileChooserController) sceneLoader.getController();
         controller.setFiles(selectedFiles);

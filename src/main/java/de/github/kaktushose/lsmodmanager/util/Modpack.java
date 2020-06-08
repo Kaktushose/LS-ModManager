@@ -1,6 +1,9 @@
 package de.github.kaktushose.lsmodmanager.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(value = {"mods", "id"})
 public class Modpack {
 
+    private final Logger logger;
     private int id;
     private File folder;
     private String name;
@@ -29,6 +33,7 @@ public class Modpack {
         folder = null;
         name = "N/A";
         mods = new ArrayList<>();
+        logger = LoggerFactory.getLogger(Modpack.class);
     }
 
     public Modpack(Modpack modpack) {
@@ -36,6 +41,7 @@ public class Modpack {
         mods = new ArrayList<>(modpack.mods);
         folder = modpack.folder;
         id = modpack.id;
+        logger = LoggerFactory.getLogger(Modpack.class);
     }
 
     public Modpack(String name, List<File> mods, String lsPath, int id) {
@@ -43,20 +49,23 @@ public class Modpack {
         this.mods = new ArrayList<>(mods);
         this.folder = new File(lsPath + "//lsmm-modpack-" + id);
         this.id = id;
+        logger = LoggerFactory.getLogger(Modpack.class);
     }
 
     public void create() {
         folder.mkdir();
         mods.forEach(file -> {
                     try {
+                        logger.debug("copying file: " + file);
                         Files.copy(Paths.get(file.getAbsolutePath()),
                                 Paths.get(folder.getAbsolutePath() + "//" + file.getName()),
                                 StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error("An error has occurred while copying the file" + file, e);
                     }
                 }
         );
+        logger.debug("Creating package-info.txt");
         File packageInfo = new File(folder.getAbsolutePath() + "//package-info.txt");
         try (final BufferedWriter bw = new BufferedWriter(new FileWriter(packageInfo))) {
             bw.write("Automatically generated folder by the LS-ModManager.\n" +
@@ -67,25 +76,16 @@ public class Modpack {
                     "\ncreated at: " +
                     new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error has occurred while creating the package-info.txt", e);
         }
     }
 
     public void delete() {
-        delete(folder);
-    }
-
-    private void delete(File dir) {
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory())
-                delete(file);
-            file.delete();
+        try {
+            FileUtils.deleteDirectory(folder);
+        } catch (IOException e) {
+            logger.error(String.format("An error has occurred while deleting the modpack \"%s\" (id %d)", name, id), e);
         }
-        dir.delete();
-    }
-
-    public void move() {
-
     }
 
     public String getName() {
@@ -100,43 +100,42 @@ public class Modpack {
         return mods;
     }
 
+    // default setter for jackson
+    public void setMods(List<File> mods) {
+        this.mods = mods;
+    }
+
     /*
     Updates the mod list.
     Deletes all files that are in mods but not in newValue.
     Copies all files that are in newValue but not in mods.
      */
     public void updateMods(Collection<File> newValue) {
-        newValue.forEach(System.out::println);
-        System.out.println("---");
+        logger.debug(String.format("Updating the modpack \"%s\" (id %d)...", name, id));
         List<File> toAdd = newValue.stream().filter(file -> !mods.contains(file)).collect(Collectors.toList());
         List<File> toRemove = mods.stream().filter(file -> !newValue.contains(file)).collect(Collectors.toList());
         toAdd.forEach(file -> {
                     try {
-                        System.out.println("to add: " + file);
+                        logger.debug("Adding file: " + file);
                         Files.copy(Paths.get(file.getAbsolutePath()),
                                 Paths.get(folder.getAbsolutePath() + "//" + file.getName()),
                                 StandardCopyOption.REPLACE_EXISTING);
                         mods.add(new File(folder.getAbsolutePath() + "//" + file.getName()));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error("An error has occurred while copying the file" + file, e);
                     }
                 }
         );
         toRemove.forEach(file -> {
-            System.out.println("to remove: " + file);
             try {
+                logger.debug("Removing file: " + file);
                 Files.delete(file.toPath());
                 mods.remove(file);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("An error has occurred while deleting the file" + file, e);
             }
         });
-        System.out.println("---");
-    }
-
-    // default setter for jackson
-    public void setMods(List<File> mods) {
-        this.mods = mods;
+        logger.debug("Done! Modpack updated");
     }
 
     public File getFolder() {

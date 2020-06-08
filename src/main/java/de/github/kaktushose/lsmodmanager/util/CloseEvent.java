@@ -30,7 +30,7 @@ public class CloseEvent {
 
     public void perform() {
         if (cause != null) {
-            logger.error("LS-ModManger had to unexpectedly stop! Stacktrace:", cause);
+            logger.error("LS-ModManger has crashed! Stacktrace:", cause);
             System.exit(status);
         }
         logger.info(reason == null ? "Program exited with code " + status : reason + ". Program exited with code " + status);

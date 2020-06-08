@@ -102,7 +102,7 @@ public class ModpackEditController extends Controller {
         modpackManager.setModpack(modpack, updatedModpack);
 
         resetUI();
-
+        app.getSceneManager().updateMainWindowData();
         unsaved = false;
         return true;
     }
@@ -120,6 +120,7 @@ public class ModpackEditController extends Controller {
                     stage.close();
             }
         } else stage.close();
+        logger.debug("modpack edit window closed");
     }
 
     private void resetUI() {

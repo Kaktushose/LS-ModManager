@@ -17,7 +17,7 @@ public class SceneLoader {
         this.app = app;
     }
 
-    public void loadFXML(Class<?> controllerClass, String file, int width, int height) {
+    public void loadFXML(Class<?>  controllerClass, String file, int width, int height) {
         Stage stage = new Stage();
         Controller controller;
         Parent root;
@@ -29,8 +29,7 @@ public class SceneLoader {
             stage.setScene(new Scene(root, width, height));
             controller.afterInitialization();
         } catch (Exception e) { // bad practice, but this shit can throw like thousand different exceptions
-            CloseEvent closeEvent = new CloseEvent(e, 1);
-            closeEvent.perform();
+            new CloseEvent(e, 2).perform();
             return;
         }
         this.stage = stage;

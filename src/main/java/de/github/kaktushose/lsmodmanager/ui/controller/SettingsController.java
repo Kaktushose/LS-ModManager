@@ -86,6 +86,7 @@ public class SettingsController extends Controller {
                     stage.close();
             }
         } else stage.close();
+        logger.debug("settings window closed");
     }
 
     private void save() {
