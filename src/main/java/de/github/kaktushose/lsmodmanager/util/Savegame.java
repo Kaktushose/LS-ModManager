@@ -4,6 +4,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,5 +40,6 @@ public class Savegame {
         for (int i = 0; i < nodeList.getLength(); i++) {
             savegameMods.add(nodeList.item(i).getAttributes().getNamedItem("modName").getNodeValue());
         }
+        Collections.sort(savegameMods);
     }
 }
