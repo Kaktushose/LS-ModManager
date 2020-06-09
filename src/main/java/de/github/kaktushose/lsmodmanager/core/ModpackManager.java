@@ -109,7 +109,7 @@ public class ModpackManager {
                 modpack.setMods(Arrays.asList(mods));
             modpacks.put(modpack.getName(), modpack);
         });
-        logger.debug("Done! Modpacks indexed");
+        logger.info("Done! Modpacks indexed");
     }
 
     // returns a immutable map, thus changes to the modpacks can only be made via the corresponding methods in this class

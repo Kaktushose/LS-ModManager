@@ -13,6 +13,7 @@ public class App {
     private final ConfigFile configFile;
     private final SceneManager sceneManager;
     private final ModpackManager modpackManager;
+    private final SavegameInspector savegameInspector;
     private final Logger logger;
     private Config config;
     private long startTime;
@@ -24,6 +25,7 @@ public class App {
         configFile = new ConfigFile();
         sceneManager = new SceneManager(this, stage);
         modpackManager = new ModpackManager(this);
+        savegameInspector = new SavegameInspector(this);
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             logger.error("An unexptected error has occurred! Details:", e);
             Dialogs.displayException(e);
@@ -35,6 +37,7 @@ public class App {
         logger.info("Starting app...");
         config = configFile.loadConfig();
         modpackManager.indexModpacks();
+        savegameInspector.indexSavegames();
     }
 
     void start() {
@@ -51,6 +54,10 @@ public class App {
 
     public ModpackManager getModpackManager() {
         return modpackManager;
+    }
+
+    public SavegameInspector getSavegameInspector() {
+        return savegameInspector;
     }
 
     //Getter and Setter for config
