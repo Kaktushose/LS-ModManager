@@ -42,7 +42,7 @@ public class ConfigFile {
             logger.error("There was an error loading the config!", e);
             logger.warn("Starting with default config!");
         }
-        logger.debug("Done! Config loaded");
+        logger.info("Done! Config loaded");
         return config;
     }
 

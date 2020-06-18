@@ -6,6 +6,7 @@ import de.github.kaktushose.lsmodmanager.core.SceneManager;
 import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import de.github.kaktushose.lsmodmanager.util.Modpack;
+import de.github.kaktushose.lsmodmanager.util.Savegame;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -18,17 +19,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController extends Controller {
 
     private final SceneManager sceneManager;
     private final ModpackManager modpackManager;
     @FXML
-    public ComboBox<String> modpackComboBox;
+    public ComboBox<String> modpackComboBox, savegameComboBox;
     @FXML
-    public ListView<String> modpackListView;
+    public ListView<String> modpackListView, savegameListView;
     @FXML
-    public Label modpackName;
+    public Label modpackName, requiredMods;
     private Modpack loadedModpack;
 
     public MainController(App app, Stage stage) {
@@ -43,12 +45,14 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
+        loadedModpack = modpackManager.getModpackById(app.getLoadedModpackId());
         updateData();
     }
 
     public void updateData() {
         updateListView(loadedModpack);
         updateComboBox();
+        savegameComboBox.getItems().addAll(app.getSavegameInspector().getSavegames().stream().map(Savegame::getName).collect(Collectors.toList()));
     }
 
     @Override
@@ -84,6 +88,15 @@ public class MainController extends Controller {
         updateListView(selected);
     }
 
+    public void onSavegameSelect() {
+        Savegame savegame = app.getSavegameInspector().getSavegames().get(savegameComboBox.getSelectionModel().getSelectedIndex());
+        int loaded = loadedModpack == null ? 0 : loadedModpack.getMods().size() - 1; // -1 for package info
+        requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getMods().size()));
+        savegameListView.getSelectionModel().clearSelection();
+        savegameListView.getItems().clear();
+        savegameListView.getItems().addAll(savegame.getMods());
+    }
+
     @FXML
     public void onModpackLoad() {
         if (loadedModpack != null) {
@@ -102,7 +115,6 @@ public class MainController extends Controller {
     @FXML
     public void onAbout() {
         openURL("https://gadarol.de/board/index.php?thread/4102-ls19-modmanager-diy-java-projekt/");
-        throw new NullPointerException();
     }
 
     @FXML
@@ -132,7 +144,7 @@ public class MainController extends Controller {
         if (modpack == null) return;
         modpack.getMods().forEach(file -> {
             if (file.getName().endsWith("zip")) {
-                modpackListView.getItems().add(file.getName()) ;
+                modpackListView.getItems().add(file.getName());
             }
         });
     }

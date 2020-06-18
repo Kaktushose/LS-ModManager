@@ -63,7 +63,14 @@ public class ModpackManager {
     }
 
     public Modpack getModpackById(int id) {
+        if (id < 0) return null;
         return modpacks.get(modpackIndex.getModpacks().get(id).getName());
+    }
+
+    public void unloadCurrentModpack() {
+        int id = app.getLoadedModpackId();
+        if (id < 0) return;
+        unloadModpack(getModpackById(id));
     }
 
     public void unloadModpack(Modpack modpack) {
@@ -109,7 +116,7 @@ public class ModpackManager {
                 modpack.setMods(Arrays.asList(mods));
             modpacks.put(modpack.getName(), modpack);
         });
-        logger.debug("Done! Modpacks indexed");
+        logger.info("Done! Modpacks indexed");
     }
 
     // returns a immutable map, thus changes to the modpacks can only be made via the corresponding methods in this class

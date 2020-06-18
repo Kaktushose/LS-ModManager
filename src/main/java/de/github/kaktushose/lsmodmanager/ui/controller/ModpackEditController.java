@@ -79,15 +79,23 @@ public class ModpackEditController extends Controller {
 
     @FXML
     public void onDelete() {
-        if (Dialogs.displayConfirmDialog("Löschen?", "Möchtest du das Modpack\"" + modpack.getName() + "\" wirklich löschen?")) {
-            modpackManager.deleteModpack(modpack);
+        if (modpack.getId() == app.getLoadedModpackId()) {
+            if (!Dialogs.displayConfirmDialog("Löschen?", "Das Modpack \"" + modpack.getName() + "\" ist aktuell geladen. Möchtest du es trotzdem löschen?")) {
+                return;
+            }
+        } else if (!Dialogs.displayConfirmDialog("Löschen?", "Möchtest du das Modpack \"" + modpack.getName() + "\" wirklich löschen?")) {
+            return;
         }
+        modpackManager.unloadCurrentModpack();
+        modpackManager.deleteModpack(modpack);
+        app.getSceneManager().updateMainWindowData();
         resetUI();
         unsaved = false;
     }
 
     @FXML
     public boolean onSave() {
+        modpackManager.unloadCurrentModpack();
         // store modified modpack
         Modpack updatedModpack = new Modpack(modpack);
         String name = textFieldName.getText();
@@ -104,6 +112,7 @@ public class ModpackEditController extends Controller {
         resetUI();
         app.getSceneManager().updateMainWindowData();
         unsaved = false;
+        modpackManager.loadModpack(updatedModpack);
         return true;
     }
 
