@@ -90,6 +90,15 @@ public class Dialogs {
         alert.showAndWait();
     }
 
+    public static void displayWarnMessage(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        applyStyle(alert);
+        alert.showAndWait();
+    }
+
     public static void displayException(Throwable throwable) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");

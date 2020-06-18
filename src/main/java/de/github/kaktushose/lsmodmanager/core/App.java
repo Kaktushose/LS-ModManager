@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 public class App extends Application {
 
     private final ConfigFile configFile;
@@ -51,6 +53,23 @@ public class App extends Application {
     }
 
     void postStart() {
+        if (getLsPath().isEmpty()) {
+            for (int i = 19; i != 11; i-=2) {
+                String path = System.getProperty("user.home") + "\\Documents\\My Games\\FarmingSimulator20" + i;
+                if (new File(path).exists()) {
+                    setLsPath(path);
+                    if (getModpackPath().isEmpty()) {
+                        setModpackPath(path);
+                    }
+                    break;
+                }
+            }
+            if (getLsPath().isEmpty()) {
+                Dialogs.displayWarnMessage("Warnung!",
+                        "Der LS-ModManager konnte keinen LS-Ordner finden. " +
+                                "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
+            }
+        }
         logger.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
     }
 
