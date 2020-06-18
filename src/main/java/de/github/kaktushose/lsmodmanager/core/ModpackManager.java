@@ -2,6 +2,7 @@ package de.github.kaktushose.lsmodmanager.core;
 
 import de.github.kaktushose.lsmodmanager.json.index.IndexFile;
 import de.github.kaktushose.lsmodmanager.json.index.ModpackIndex;
+import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.util.Modpack;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -87,18 +88,29 @@ public class ModpackManager {
         logger.info(String.format("Successfully unloaded the modpack \"%s\" (id %d)", modpack.getName(), modpack.getId()));
     }
 
-    public void loadModpack(Modpack modpack) {
-        app.setLoadedModpackId(modpack.getId());
+    @SuppressWarnings("ConstantConditions")
+    public boolean loadModpack(Modpack modpack) {
         File target = new File(app.getLsPath() + "\\mods");
+
+        if (target.listFiles().length != 0) {
+            if (!Dialogs.displayConfirmDialog("Achtung!", "Der Modordner ist nicht leer. Möchtest du das Modpack trotzdem laden?\nNicht gesicherte Dateien gehen verloren!")) {
+                logger.error("Modpack loading aborted. The mod folder isn't empty!");
+                return false;
+            }
+        }
+        System.out.println("called");
+        app.setLoadedModpackId(modpack.getId());
         try {
-            Files.deleteIfExists(target.toPath());
+            FileUtils.deleteDirectory(target);
             logger.debug("Deleted mod folder");
             FileUtils.moveDirectory(modpack.getFolder(), target);
             logger.debug("Moved " + modpack.getFolder() + " to " + target);
         } catch (IOException e) {
             logger.error(String.format("An error has occurred while loading the modpack \"%s\" (id %d)", modpack.getName(), modpack.getId()), e);
+            return false;
         }
         logger.info(String.format("Successfully loaded the modpack \"%s\" (id %d)", modpack.getName(), modpack.getId()));
+        return true;
     }
 
     public void indexModpacks() {

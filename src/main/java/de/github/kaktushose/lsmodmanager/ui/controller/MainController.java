@@ -107,9 +107,11 @@ public class MainController extends Controller {
             modpackName.setText("Kein Modpack");
             return;
         }
-        loadedModpack = modpackManager.getModpack(modpackComboBox.getValue());
-        modpackManager.loadModpack(loadedModpack);
-        modpackName.setText(loadedModpack.getName());
+        Modpack newValue = modpackManager.getModpack(modpackComboBox.getValue());
+        if (modpackManager.loadModpack(newValue)) {
+            loadedModpack = newValue;
+            modpackName.setText(loadedModpack.getName());
+        }
     }
 
     @FXML

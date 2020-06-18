@@ -50,7 +50,7 @@
                         <HBox prefHeight="0.0" prefWidth="300.0" spacing="5.0">
                             <children>
                                 <Label text="aktuell geladenes Modpack:"/>
-                                <Label fx:id="modpackName" text="kein Modpack geladen"/>
+                                <Label fx:id="modpackName" text="Kein Modpack"/>
                             </children>
                         </HBox>
                         <ListView fx:id="modpackListView" prefHeight="504.0" prefWidth="430.0"/>
