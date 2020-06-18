@@ -45,8 +45,8 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
+        loadedModpack = modpackManager.getModpackById(app.getLoadedModpackId());
         updateData();
-
     }
 
     public void updateData() {
@@ -115,7 +115,6 @@ public class MainController extends Controller {
     @FXML
     public void onAbout() {
         openURL("https://gadarol.de/board/index.php?thread/4102-ls19-modmanager-diy-java-projekt/");
-        throw new NullPointerException();
     }
 
     @FXML

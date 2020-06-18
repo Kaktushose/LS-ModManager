@@ -3,13 +3,13 @@ package de.github.kaktushose.lsmodmanager.core;
 import de.github.kaktushose.lsmodmanager.json.config.Config;
 import de.github.kaktushose.lsmodmanager.json.config.ConfigFile;
 import de.github.kaktushose.lsmodmanager.ui.Dialogs;
+import javafx.application.Application;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class App {
+public class App extends Application {
 
-    private final Stage stage;
     private final ConfigFile configFile;
     private final SceneManager sceneManager;
     private final ModpackManager modpackManager;
@@ -18,12 +18,11 @@ public class App {
     private Config config;
     private long startTime;
 
-    App(Stage stage) {
+    public App() {
         System.setProperty("lsmm.log", System.getenv("AppData") + "\\LS-ModManager");
         logger = LoggerFactory.getLogger(App.class);
-        this.stage = stage;
         configFile = new ConfigFile();
-        sceneManager = new SceneManager(this, stage);
+        sceneManager = new SceneManager(this);
         modpackManager = new ModpackManager(this);
         savegameInspector = new SavegameInspector(this);
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
@@ -38,6 +37,13 @@ public class App {
         config = configFile.loadConfig();
         modpackManager.indexModpacks();
         savegameInspector.indexSavegames();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        preStart();
+        start();
+        postStart();
     }
 
     void start() {
@@ -91,4 +97,5 @@ public class App {
         config.setLoadedModpack(loadedModpack);
         configFile.saveConfig(config);
     }
+
 }

@@ -1,15 +1,11 @@
 package de.github.kaktushose.lsmodmanager.core;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 
-public class Bootstrapper extends Application {
+public class Bootstrapper {
 
-    @Override
-    public void start(Stage primaryStage) {
-        App app = new App(primaryStage);
-        app.preStart();
-        app.start();
-        app.postStart();
+    public static void main(String[] args) {
+        Application.launch(App.class);
     }
+
 }

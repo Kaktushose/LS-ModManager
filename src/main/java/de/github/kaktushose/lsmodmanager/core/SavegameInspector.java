@@ -33,7 +33,12 @@ public class SavegameInspector {
         File lsFolder = new File(app.getLsPath());
         for (File file : lsFolder.listFiles(file -> file.getName().startsWith("savegame"))) {
             logger.debug("Found savegame: " + file);
-            Savegame savegame = parser.parse(new File(file + "\\careerSavegame.xml"));
+            File savegameFile = new File(file + "\\careerSavegame.xml");
+            if (!savegameFile.exists()) {
+                logger.debug("Invalid. Skipping " + file);
+                continue;
+            }
+            Savegame savegame = parser.parse(savegameFile);
             logger.debug(String.format("Savegame \"%s\" indexed. %d required mods found", savegame.getName(), savegame.getMods().size()));
             savegames.add(savegame);
         }

@@ -38,7 +38,7 @@ public class Savegame {
 
     public void addMods(NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
-            savegameMods.add(nodeList.item(i).getAttributes().getNamedItem("modName").getNodeValue());
+            savegameMods.add(nodeList.item(i).getAttributes().getNamedItem("modName").getNodeValue() + ".zip");
         }
         Collections.sort(savegameMods);
     }

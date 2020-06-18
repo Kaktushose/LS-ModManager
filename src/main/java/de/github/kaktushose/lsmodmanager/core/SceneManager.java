@@ -16,14 +16,12 @@ import java.util.List;
 public class SceneManager {
 
     private final App app;
-    private final Stage primaryStage;
     private final Logger logger;
     private final SceneLoader sceneLoader;
     private MainController mainController;
 
-    public SceneManager(App app, Stage primaryStage) {
+    public SceneManager(App app) {
         this.app = app;
-        this.primaryStage = primaryStage;
         logger = LoggerFactory.getLogger(SceneManager.class);
         sceneLoader = new SceneLoader(app);
     }

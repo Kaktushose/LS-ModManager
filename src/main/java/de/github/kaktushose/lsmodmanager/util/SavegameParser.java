@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class SavegameParser {
 
-    private Logger logger = LoggerFactory.getLogger(SavegameParser.class);
+    private final Logger logger = LoggerFactory.getLogger(SavegameParser.class);
 
     public Savegame parse(File file) {
         Savegame savegame = new Savegame();
