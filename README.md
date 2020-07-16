@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e9fcb40c03964fab8da7eb78aa467192)](https://app.codacy.com/manual/Kaktushose/LS-ModManager?utm_source=github.com&utm_medium=referral&utm_content=Kaktushose/LS-ModManager&utm_campaign=Badge_Grade_Dashboard)
 [![Generic badge](https://img.shields.io/badge/Download-N/A-ff3030.svg)](https://github.com/Kaktushose/ls-modmanager/releases)
 ![travis](https://travis-ci.com/Kaktushose/ls-modmanager.svg?branch=master)
 ![license-shield](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)
