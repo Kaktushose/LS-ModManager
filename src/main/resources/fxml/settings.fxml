@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0"
             prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
             xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox prefHeight="400.0" prefWidth="640.0" spacing="10.0">
+        <VBox prefHeight="538.0" prefWidth="640.0" spacing="10.0">
             <children>
                 <Label text="Einstellungen">
                     <font>
@@ -32,9 +32,12 @@
                     <padding>
                         <Insets left="20.0"/>
                     </padding>
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
                 </HBox>
                 <Separator prefWidth="200.0"/>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                <HBox prefHeight="100.0" prefWidth="640.0" spacing="20.0">
                     <children>
                         <Label prefHeight="40.0" prefWidth="126.0" text="Modpack-Ordner"/>
                         <TextField fx:id="textFieldModpackPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
@@ -48,31 +51,14 @@
                         </Button>
                     </children>
                     <VBox.margin>
-                        <Insets/>
+                        <Insets bottom="20.0"/>
                     </VBox.margin>
                     <padding>
                         <Insets left="20.0"/>
                     </padding>
                 </HBox>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                    <children>
-                        <CheckBox fx:id="toggleCopy" mnemonicParsing="false" onAction="#onToggleCopy"
-                                  prefHeight="20.0" prefWidth="285.0" text="Dateien beim Erstellen verschieben">
-                            <HBox.margin>
-                                <Insets top="20.0"/>
-                            </HBox.margin>
-                        </CheckBox>
-                    </children>
-                    <padding>
-                        <Insets left="20.0"/>
-                    </padding>
-                </HBox>
-                <Separator prefHeight="4.0" prefWidth="640.0">
-                    <padding>
-                        <Insets bottom="-10.0"/>
-                    </padding>
-                </Separator>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                <Separator prefHeight="4.0" prefWidth="640.0"/>
+                <HBox prefHeight="291.0" prefWidth="640.0" spacing="20.0">
                     <children>
                         <Region prefHeight="40.0" prefWidth="406.0"/>
                         <Button mnemonicParsing="false" onAction="#onSave" prefHeight="40.0" prefWidth="85.0"
@@ -83,6 +69,9 @@
                     <padding>
                         <Insets bottom="20.0" right="20.0" top="-10.0"/>
                     </padding>
+                    <VBox.margin>
+                        <Insets bottom="20.0" top="20.0"/>
+                    </VBox.margin>
                 </HBox>
             </children>
         </VBox>

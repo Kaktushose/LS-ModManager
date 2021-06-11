@@ -1,4 +1,5 @@
 [![Generic badge](https://img.shields.io/badge/Download-N/A-ff3030.svg)](https://github.com/Kaktushose/ls-modmanager/releases)
+[![Codacy](https://api.codacy.com/project/badge/Grade/e9fcb40c03964fab8da7eb78aa467192)](https://app.codacy.com/manual/Kaktushose/LS-ModManager?utm_source=github.com&utm_medium=referral&utm_content=Kaktushose/LS-ModManager&utm_campaign=Badge_Grade_Dashboard)
 ![travis](https://travis-ci.com/Kaktushose/ls-modmanager.svg?branch=master)
 ![license-shield](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)
 
@@ -48,9 +49,6 @@ The following dependencies were used to build this app:
 * Logback
     * Version: 1.3.0-alpha5
     * [Website](http://logback.qos.ch/)
- * JUnit Jupiter
-    * Version: 5.7.0-M1
-    * [Website](https://junit.org/junit5/)
  * Apache Commons
     * Version: 2.7
     * [Website](http://commons.apache.org/)

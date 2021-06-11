@@ -7,10 +7,15 @@ import de.github.kaktushose.lsmodmanager.ui.Dialogs;
 import de.github.kaktushose.lsmodmanager.util.CloseEvent;
 import de.github.kaktushose.lsmodmanager.util.Modpack;
 import de.github.kaktushose.lsmodmanager.util.Savegame;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -47,6 +52,17 @@ public class MainController extends Controller {
     public void afterInitialization() {
         loadedModpack = modpackManager.getModpackById(app.getLoadedModpackId());
         updateData();
+        stage.getScene().setOnKeyPressed(keyEvent -> {
+            if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+                sceneManager.showModpackCreate();
+            } else if (new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+                sceneManager.showModpackEdit();
+            } else if (new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+                onSettings();
+            } else if (keyEvent.getCode() == KeyCode.F1) {
+                onHelp();
+            }
+        });
     }
 
     public void updateData() {
