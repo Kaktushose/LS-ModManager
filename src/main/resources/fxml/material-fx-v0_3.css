@@ -697,9 +697,6 @@
  * Text, Text field & Text area                                                *
  *                                                                             *
  ******************************************************************************/
-.text {
-	-fx-font-smoothing-type: gray;
-}
 
 .text-area, .text-field {
 	-fx-background-color: transparent;

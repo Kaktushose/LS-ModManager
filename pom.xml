@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
@@ -39,7 +39,6 @@
             <artifactId>commons-io</artifactId>
             <version>2.7</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -50,7 +49,6 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${java.version}</version>
         </dependency>
-        -->
     </dependencies>
 
 
