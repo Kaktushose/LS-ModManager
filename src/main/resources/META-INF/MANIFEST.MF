@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: com.github.kaktushose.lsmodmanager.core.Bootstrapper
-
+Main-Class: com.github.kaktushose.lsmodmanager.Bootstrapper

@@ -2,7 +2,6 @@ package com.github.kaktushose.lsmodmanager.core;
 
 import com.github.kaktushose.lsmodmanager.ui.controller.*;
 import com.github.kaktushose.lsmodmanager.util.SceneLoader;
-import de.github.kaktushose.lsmodmanager.ui.controller.*;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;

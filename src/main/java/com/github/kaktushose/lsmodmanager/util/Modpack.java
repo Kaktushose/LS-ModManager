@@ -1,6 +1,5 @@
 package com.github.kaktushose.lsmodmanager.util;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonIgnoreProperties(value = {"mods", "id"})
 public class Modpack {
 
     private final Logger logger;

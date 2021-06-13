@@ -1,7 +1,7 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.core.ModpackManager;
 import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import com.github.kaktushose.lsmodmanager.util.Modpack;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class ModpackEditController extends Controller {
 
-    private final ModpackManager modpackManager;
+    private final ModpackService modpackService;
     @FXML
     public TextField textFieldName;
     @FXML
@@ -31,7 +31,7 @@ public class ModpackEditController extends Controller {
 
     public ModpackEditController(App app, Stage stage) {
         super(app, stage);
-        modpackManager = app.getModpackManager();
+        modpackService = app.getModpackManager();
         files = new ArrayList<>();
     }
 
@@ -53,20 +53,20 @@ public class ModpackEditController extends Controller {
 
     @Override
     public void afterInitialization() {
-        modpackManager.getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
+        //modpackService.getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
     }
 
     @FXML
     public void onModpackSelect() {
-        if (modpackComboBox.getSelectionModel().isEmpty()) {
-            return;
-        }
-        modpack = modpackManager.getModpacks().get(modpackComboBox.getValue());
-        files.clear();
-        files.addAll(modpack.getMods());
-        textFieldName.setText(modpack.getName());
-        textFieldName.setDisable(false);
-        setButtonDisable(false);
+//        if (modpackComboBox.getSelectionModel().isEmpty()) {
+//            return;
+//        }
+//        modpack = modpackService.getModpacks().get(modpackComboBox.getValue());
+//        files.clear();
+//        files.addAll(modpack.getMods());
+//        textFieldName.setText(modpack.getName());
+//        textFieldName.setDisable(false);
+//        setButtonDisable(false);
     }
 
     @FXML
@@ -79,41 +79,42 @@ public class ModpackEditController extends Controller {
 
     @FXML
     public void onDelete() {
-        if (modpack.getId() == app.getLoadedModpackId()) {
-            if (!Dialogs.displayConfirmDialog("Löschen?", "Das Modpack \"" + modpack.getName() + "\" ist aktuell geladen. Möchtest du es trotzdem löschen?")) {
-                return;
-            }
-        } else if (!Dialogs.displayConfirmDialog("Löschen?", "Möchtest du das Modpack \"" + modpack.getName() + "\" wirklich löschen?")) {
-            return;
-        }
-        modpackManager.unloadCurrentModpack();
-        modpackManager.deleteModpack(modpack);
-        app.getSceneManager().updateMainWindowData();
-        resetUI();
-        unsaved = false;
+//        if (modpack.getId() == app.getLoadedModpackId()) {
+//            if (!Dialogs.displayConfirmDialog("Löschen?", "Das Modpack \"" + modpack.getName() + "\" ist aktuell geladen. Möchtest du es trotzdem löschen?")) {
+//                return;
+//            }
+//        } else if (!Dialogs.displayConfirmDialog("Löschen?", "Möchtest du das Modpack \"" + modpack.getName() + "\" wirklich löschen?")) {
+//            return;
+//        }
+//        modpackService.unloadCurrentModpack();
+//        modpackService.deleteModpack(modpack);
+//        app.getSceneManager().updateMainWindowData();
+//        resetUI();
+//        unsaved = false;
     }
 
     @FXML
     public boolean onSave() {
-        modpackManager.unloadCurrentModpack();
-        // store modified modpack
-        Modpack updatedModpack = new Modpack(modpack);
-        String name = textFieldName.getText();
-        if (!name.equals(modpack.getName()) && modpackManager.modpackExists(name)) {
-            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" +
-                    textFieldName.getText() +
-                    "\".\nBitte wähle einen anderen Namen aus.");
-            return false;
-        }
-        updatedModpack.setName(textFieldName.getText());
-        updatedModpack.updateMods(files);
-        modpackManager.setModpack(modpack, updatedModpack);
-
-        resetUI();
-        app.getSceneManager().updateMainWindowData();
-        unsaved = false;
-        modpackManager.loadModpack(updatedModpack);
-        return true;
+//        modpackService.unloadCurrentModpack();
+//        // store modified modpack
+//        Modpack updatedModpack = new Modpack(modpack);
+//        String name = textFieldName.getText();
+//        if (!name.equals(modpack.getName()) && modpackService.modpackExists(name)) {
+//            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" +
+//                    textFieldName.getText() +
+//                    "\".\nBitte wähle einen anderen Namen aus.");
+//            return false;
+//        }
+//        updatedModpack.setName(textFieldName.getText());
+//        updatedModpack.updateMods(files);
+//        modpackService.setModpack(modpack, updatedModpack);
+//
+//        resetUI();
+//        app.getSceneManager().updateMainWindowData();
+//        unsaved = false;
+//        modpackService.loadModpack(updatedModpack);
+//        return true;
+        return false;
     }
 
     @FXML
@@ -129,22 +130,22 @@ public class ModpackEditController extends Controller {
                     stage.close();
             }
         } else stage.close();
-        logger.debug("modpack edit window closed");
+        log.debug("modpack edit window closed");
     }
 
     private void resetUI() {
-        // reload items of combo box because names might have changed
-        modpackComboBox.getItems().clear();
-        modpackComboBox.getSelectionModel().clearSelection();
-        modpackManager.getModpacks().keySet().forEach(s -> modpackComboBox.getItems().add(s));
-
-        // change ui to default
-        setButtonDisable(true);
-        textFieldName.setDisable(true);
-        textFieldName.setText("");
-
-        // must be set after text, because text change will trigger change listener
-        modpackComboBox.setDisable(false);
+//        // reload items of combo box because names might have changed
+//        modpackComboBox.getItems().clear();
+//        modpackComboBox.getSelectionModel().clearSelection();
+//        modpackService.getModpacks().keySet().forEach(s -> modpackComboBox.getItems().add(s));
+//
+//        // change ui to default
+//        setButtonDisable(true);
+//        textFieldName.setDisable(true);
+//        textFieldName.setText("");
+//
+//        // must be set after text, because text change will trigger change listener
+//        modpackComboBox.setDisable(false);
     }
 
     private void setButtonDisable(boolean value) {

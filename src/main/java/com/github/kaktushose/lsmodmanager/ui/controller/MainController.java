@@ -1,8 +1,8 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
 import com.github.kaktushose.lsmodmanager.core.App;
-import com.github.kaktushose.lsmodmanager.core.ModpackManager;
 import com.github.kaktushose.lsmodmanager.core.SceneManager;
+import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import com.github.kaktushose.lsmodmanager.util.CloseEvent;
 import com.github.kaktushose.lsmodmanager.util.Modpack;
@@ -11,9 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -27,7 +24,7 @@ import java.util.stream.Collectors;
 public class MainController extends Controller {
 
     private final SceneManager sceneManager;
-    private final ModpackManager modpackManager;
+    private final ModpackService modpackService;
     @FXML
     public ComboBox<String> modpackComboBox, savegameComboBox;
     @FXML
@@ -39,7 +36,7 @@ public class MainController extends Controller {
     public MainController(App app, Stage stage) {
         super(app, stage);
         sceneManager = app.getSceneManager();
-        modpackManager = app.getModpackManager();
+        modpackService = app.getModpackManager();
     }
 
     @Override
@@ -48,19 +45,19 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
-        loadedModpack = modpackManager.getModpackById(app.getLoadedModpackId());
-        updateData();
-        stage.getScene().setOnKeyPressed(keyEvent -> {
-            if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
-                sceneManager.showModpackCreate();
-            } else if (new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
-                sceneManager.showModpackEdit();
-            } else if (new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
-                onSettings();
-            } else if (keyEvent.getCode() == KeyCode.F1) {
-                onHelp();
-            }
-        });
+//        loadedModpack = modpackService.getModpackById(app.getLoadedModpackId());
+//        updateData();
+//        stage.getScene().setOnKeyPressed(keyEvent -> {
+//            if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+//                sceneManager.showModpackCreate();
+//            } else if (new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+//                sceneManager.showModpackEdit();
+//            } else if (new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
+//                onSettings();
+//            } else if (keyEvent.getCode() == KeyCode.F1) {
+//                onHelp();
+//            }
+//        });
     }
 
     public void updateData() {
@@ -98,8 +95,8 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackSelect() {
-        Modpack selected = modpackManager.getModpack(modpackComboBox.getValue());
-        updateListView(selected);
+        //Modpack selected = modpackService.getModpack(modpackComboBox.getValue());
+        //updateListView(selected);
     }
 
     public void onSavegameSelect() {
@@ -113,19 +110,19 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackLoad() {
-        if (loadedModpack != null) {
-            modpackManager.unloadModpack(loadedModpack);
-            loadedModpack = null;
-        }
-        if (modpackComboBox.getValue().equals("Kein Modpack")) {
-            modpackName.setText("Kein Modpack");
-            return;
-        }
-        Modpack newValue = modpackManager.getModpack(modpackComboBox.getValue());
-        if (modpackManager.loadModpack(newValue)) {
-            loadedModpack = newValue;
-            modpackName.setText(loadedModpack.getName());
-        }
+//        if (loadedModpack != null) {
+//            modpackService.unloadModpack(loadedModpack);
+//            loadedModpack = null;
+//        }
+//        if (modpackComboBox.getValue().equals("Kein Modpack")) {
+//            modpackName.setText("Kein Modpack");
+//            return;
+//        }
+//        Modpack newValue = modpackService.getModpack(modpackComboBox.getValue());
+//        if (modpackService.loadModpack(newValue)) {
+//            loadedModpack = newValue;
+//            modpackName.setText(loadedModpack.getName());
+//        }
     }
 
     @FXML
@@ -139,19 +136,19 @@ public class MainController extends Controller {
     }
 
     private void updateComboBox() {
-        modpackComboBox.getItems().clear();
-        modpackComboBox.getSelectionModel().clearSelection();
-        modpackComboBox.getItems().add("Kein Modpack");
-        modpackComboBox.getSelectionModel().select("Kein Modpack");
-        app.getModpackManager().getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
-        int id = app.getLoadedModpackId();
-        if (id < 1) {
-            return;
-        }
-        loadedModpack = modpackManager.getModpackById(id);
-        String name = loadedModpack.getName();
-        modpackName.setText(name);
-        modpackComboBox.getSelectionModel().select(name);
+//        modpackComboBox.getItems().clear();
+//        modpackComboBox.getSelectionModel().clearSelection();
+//        modpackComboBox.getItems().add("Kein Modpack");
+//        modpackComboBox.getSelectionModel().select("Kein Modpack");
+//        app.getModpackManager().getModpacks().keySet().stream().sorted().forEach(s -> modpackComboBox.getItems().add(s));
+//        int id = app.getLoadedModpackId();
+//        if (id < 1) {
+//            return;
+//        }
+//        loadedModpack = modpackService.getModpackById(id);
+//        String name = loadedModpack.getName();
+//        modpackName.setText(name);
+//        modpackComboBox.getSelectionModel().select(name);
     }
 
     private void updateListView(Modpack modpack) {
@@ -170,10 +167,10 @@ public class MainController extends Controller {
             try {
                 Desktop.getDesktop().browse(new URI(url));
             } catch (IOException | URISyntaxException e) {
-                logger.error("Failed to open the url: " + url, e);
+                log.error("Failed to open the url: " + url, e);
             }
         } else {
-            logger.warn("Failed to open link. Desktop is not supported");
+            log.warn("Failed to open link. Desktop is not supported");
         }
     }
 

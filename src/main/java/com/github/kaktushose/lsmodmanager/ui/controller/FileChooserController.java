@@ -82,10 +82,10 @@ public class FileChooserController extends Controller {
     }
 
     public List<File> getSelectedFiles() {
-        selectedFiles.values().forEach(file -> logger.debug("File selected: " + file));
+        selectedFiles.values().forEach(file -> log.debug("File selected: " + file));
         List<File> files = new ArrayList<>(selectedFiles.values());
         Collections.sort(files);
-        logger.debug("File chooser window closed");
+        log.debug("File chooser window closed");
         return files;
     }
 

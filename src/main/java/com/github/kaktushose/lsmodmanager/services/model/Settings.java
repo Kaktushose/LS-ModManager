@@ -1,23 +1,23 @@
-package com.github.kaktushose.lsmodmanager.json.config;
+package com.github.kaktushose.lsmodmanager.services.model;
 
-public class Config {
+public class Settings {
 
-    private String lsPath;
+    private String fsPath;
     private int loadedModpack;
     private String modpackPath;
 
-    Config() {
-        lsPath = "";
+    public Settings() {
+        fsPath = "";
         loadedModpack = -1;
-        modpackPath = lsPath;
+        modpackPath = fsPath;
     }
 
-    public String getLsPath() {
-        return lsPath;
+    public String getFsPath() {
+        return fsPath;
     }
 
-    public void setLsPath(String lsPath) {
-        this.lsPath = lsPath;
+    public void setFsPath(String fsPath) {
+        this.fsPath = fsPath;
     }
 
     public int getLoadedModpack() {

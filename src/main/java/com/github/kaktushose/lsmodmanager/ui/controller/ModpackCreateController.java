@@ -57,22 +57,23 @@ public class ModpackCreateController extends Controller {
     // boolean indicates whether saving was successful or not
     @FXML
     public boolean onSave() {
-        if (textFieldName.getText().isEmpty()) {
-            Dialogs.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
-            return false;
-        }
-        String name = textFieldName.getText();
-
-        if (app.getModpackManager().modpackExists(name)) {
-            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" + name + "\".\nBitte wähle einen anderen Namen aus.");
-            return false;
-        }
-        app.getModpackManager().createModpack(name, files);
-        Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
-        unsaved = false;
-        onClose();
-        app.getSceneManager().updateMainWindowData();
-        return true;
+//        if (textFieldName.getText().isEmpty()) {
+//            Dialogs.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
+//            return false;
+//        }
+//        String name = textFieldName.getText();
+//
+//        if (app.getModpackManager().modpackExists(name)) {
+//            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" + name + "\".\nBitte wähle einen anderen Namen aus.");
+//            return false;
+//        }
+//        app.getModpackManager().createModpack(name, files);
+//        Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
+//        unsaved = false;
+//        onClose();
+//        app.getSceneManager().updateMainWindowData();
+//        return true;
+        return false;
     }
 
     @FXML
@@ -88,6 +89,6 @@ public class ModpackCreateController extends Controller {
                     stage.close();
             }
         } else stage.close();
-        logger.debug("modpack create window closed");
+        log.debug("modpack create window closed");
     }
 }

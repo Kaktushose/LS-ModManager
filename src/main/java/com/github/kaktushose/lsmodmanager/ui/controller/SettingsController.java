@@ -1,7 +1,9 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
 import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
+import com.github.kaktushose.lsmodmanager.util.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -14,27 +16,25 @@ import java.util.ResourceBundle;
 
 public class SettingsController extends Controller {
 
+    private final SettingsService settingsService;
     @FXML
-    public TextField textFieldLsPath, textFieldModpackPath;
+    public TextField textFieldFsPath;
+    @FXML
+    public TextField textFieldModpackPath;
     @FXML
     public CheckBox toggleCopy;
-
     private boolean unsaved;
 
     public SettingsController(App app, Stage stage) {
         super(app, stage);
+        this.settingsService = app.getSettingsService();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         unsaved = false;
-        textFieldLsPath.setText(app.getLsPath());
-        textFieldModpackPath.setText(app.getModpackPath());
-    }
-
-    @Override
-    public void afterInitialization() {
-
+        textFieldFsPath.setText(settingsService.getFsPath());
+        textFieldModpackPath.setText(settingsService.getModpackPath());
     }
 
     @Override
@@ -43,14 +43,15 @@ public class SettingsController extends Controller {
     }
 
     @FXML
-    public void onLsPath() {
+    public void onFsPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home") + "\\Documents\\My Games"));
+        directoryChooser.setInitialDirectory(new File(Constants.MY_GAMES));
         directoryChooser.setTitle("Pfad auswählen");
+        System.out.println(Constants.MY_GAMES);
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
-        textFieldLsPath.setText(path.getAbsolutePath());
-        unsaved = !app.getLsPath().equals(path.getAbsolutePath());
+        textFieldFsPath.setText(path.getAbsolutePath());
+        unsaved = !settingsService.getFsPath().equals(path.getAbsolutePath());
     }
 
     @FXML
@@ -60,39 +61,31 @@ public class SettingsController extends Controller {
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
         textFieldModpackPath.setText(path.getAbsolutePath());
-        unsaved = !app.getModpackPath().equals(path.getAbsolutePath());
-    }
-
-    @FXML
-    public void onToggleCopy() {
-        Dialogs.displayInfoMessage("", "not implemented yet");
-        toggleCopy.setSelected(false);
+        unsaved = !settingsService.getModpackPath().equals(path.getAbsolutePath());
     }
 
     @FXML
     public void onSave() {
-        save();
+        settingsService.setFsPath(textFieldFsPath.getText());
+        settingsService.setModpackPath(textFieldModpackPath.getText());
+        unsaved = false;
     }
 
     @FXML
     public void onClose() {
         if (unsaved) {
-            switch (Dialogs.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\r\nEinstellungen trotzdem verlassen?")) {
+            int result = Dialogs.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\r\nEinstellungen trotzdem verlassen?");
+            switch (result) {
                 case 0:
-                    save();
-                    stage.close();
-                    return;
+                    onSave();
+                    break;
                 case 1:
-                    stage.close();
+                    break;
+                default:
+                    return;
             }
-        } else stage.close();
-        logger.debug("settings window closed");
+        }
+        stage.close();
+        log.debug("settings window closed");
     }
-
-    private void save() {
-        app.setLsPath(textFieldLsPath.getText());
-        app.setModpackPath(textFieldModpackPath.getText());
-        unsaved = false;
-    }
-
 }

@@ -22,8 +22,8 @@
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
                         <Label prefHeight="40.0" prefWidth="126.0" text="LS-Ordner"/>
-                        <TextField fx:id="textFieldLsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
-                        <Button mnemonicParsing="false" onAction="#onLsPath" text="auswählen">
+                        <TextField fx:id="textFieldFsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
+                        <Button mnemonicParsing="false" onAction="#onFsPath" text="auswählen">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
