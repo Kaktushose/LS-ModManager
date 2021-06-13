@@ -85,7 +85,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>de.github.kaktushose.lsmodmanager.core.Bootstrapper</mainClass>
+                            <mainClass>com.github.kaktushose.lsmodmanager.core.Bootstrapper</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
