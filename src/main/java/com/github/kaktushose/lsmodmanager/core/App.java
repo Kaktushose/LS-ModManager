@@ -17,7 +17,7 @@ public class App extends Application {
     private final SavegameInspector savegameInspector;
 
     public App() {
-        System.setProperty("lsmm.log", Constants.LOGGING_PATH);
+        System.out.println(Constants.LOGGING_PATH);
         settingsService = new SettingsService();
 
         sceneManager = new SceneManager(this);

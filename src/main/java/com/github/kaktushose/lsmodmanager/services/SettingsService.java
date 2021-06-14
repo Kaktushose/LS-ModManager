@@ -4,39 +4,37 @@ import com.github.kaktushose.lsmodmanager.services.model.Settings;
 import com.github.kaktushose.lsmodmanager.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.github.kaktushose.lsmodmanager.util.Constants.SETTINGS_PATH;
 
 public class SettingsService {
 
     private static final Logger log = LoggerFactory.getLogger(SettingsService.class);
     private final Gson gson;
-    private final File settingsFile;
     private Settings settings;
 
     public SettingsService() {
         gson = new Gson();
-        settingsFile = new File(Constants.SETTINGS_PATH);
     }
 
     public void loadSettings() {
         try {
-            if (!settingsFile.exists()) {
-                new File(Constants.APP_PATH).mkdir();
-                settingsFile.createNewFile();
+            if (!Files.exists(Path.of(SETTINGS_PATH))) {
                 settings = new Settings();
                 saveSettings();
                 log.warn("No settings file found! Created a new one!");
                 return;
             }
 
-            JsonReader jsonReader = new JsonReader(new FileReader(settingsFile));
+            JsonReader jsonReader = new JsonReader(new FileReader(SETTINGS_PATH));
             settings = gson.fromJson(jsonReader, Settings.class);
             jsonReader.close();
         } catch (IOException e) {
@@ -46,7 +44,7 @@ public class SettingsService {
     }
 
     private void saveSettings() {
-        try (FileWriter fileWriter = new FileWriter(settingsFile)) {
+        try (FileWriter fileWriter = new FileWriter(SETTINGS_PATH)) {
             gson.toJson(settings, fileWriter);
         } catch (IOException e) {
             throw new RuntimeException("There was an error saving the settings file!", e);
@@ -97,5 +95,4 @@ public class SettingsService {
         settings.setLoadedModpack(loadedModpack);
         saveSettings();
     }
-
 }

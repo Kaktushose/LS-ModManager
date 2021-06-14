@@ -1,5 +1,7 @@
 <configuration>
 
+    <timestamp key="timestamp" datePattern="yyyy-MM-dd_HH-mm-ss"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -7,12 +9,12 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <append>false</append>
-        <file>${lsmm.log}/lsmm.log</file>
+        <file>${lsmm.log}/${timestamp}.log</file>
         <encoder>
             <Pattern>%d{HH:mm:ss} [%t] %level %logger - %msg%n</Pattern>
         </encoder>
     </appender>
+
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
