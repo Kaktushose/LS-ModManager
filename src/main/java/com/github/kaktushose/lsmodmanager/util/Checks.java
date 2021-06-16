@@ -1,8 +1,5 @@
 package com.github.kaktushose.lsmodmanager.util;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -63,5 +60,4 @@ public class Checks {
     public static boolean isPath(String path) {
         return Files.isDirectory(Path.of(path));
     }
-
 }
