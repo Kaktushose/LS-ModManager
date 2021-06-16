@@ -36,7 +36,7 @@ public class MainController extends Controller {
     public MainController(App app, Stage stage) {
         super(app, stage);
         sceneManager = app.getSceneManager();
-        modpackService = app.getModpackManager();
+        modpackService = app.getModpackService();
     }
 
     @Override

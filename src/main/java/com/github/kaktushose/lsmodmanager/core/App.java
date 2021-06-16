@@ -3,7 +3,6 @@ package com.github.kaktushose.lsmodmanager.core;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
-import com.github.kaktushose.lsmodmanager.util.Constants;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -13,13 +12,14 @@ public class App extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(App.class);
     private final SettingsService settingsService;
+    private final ModpackService modpackService;
     private final SceneManager sceneManager;
     private final SavegameInspector savegameInspector;
 
     public App() {
-        System.out.println(Constants.LOGGING_PATH);
         settingsService = new SettingsService();
-
+        settingsService.loadSettings();
+        modpackService = new ModpackService(settingsService);
         sceneManager = new SceneManager(this);
         savegameInspector = new SavegameInspector(settingsService);
 
@@ -52,8 +52,8 @@ public class App extends Application {
         return sceneManager;
     }
 
-    public ModpackService getModpackManager() {
-        return new ModpackService();
+    public ModpackService getModpackService() {
+        return modpackService;
     }
 
     public SavegameInspector getSavegameInspector() {

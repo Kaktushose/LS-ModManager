@@ -1,6 +1,8 @@
 package com.github.kaktushose.lsmodmanager.services;
 
+import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Settings;
+import com.github.kaktushose.lsmodmanager.util.Checks;
 import com.github.kaktushose.lsmodmanager.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -12,6 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 import static com.github.kaktushose.lsmodmanager.util.Constants.SETTINGS_PATH;
 
@@ -71,6 +75,7 @@ public class SettingsService {
     }
 
     public void setFsPath(String fsPath) {
+        Checks.notNull(fsPath, "fsPath");
         log.debug("Value \"fsPath\" updated. Old value \"{}\" new value \"{}\"", settings.getFsPath(), fsPath);
         settings.setFsPath(fsPath);
         saveSettings();
@@ -81,6 +86,7 @@ public class SettingsService {
     }
 
     public void setModpackPath(String modpacksPath) {
+        Checks.notNull(modpacksPath, "modpacksPath");
         log.debug("Value \"modpackPath\" updated. Old value \"{}\" new value \"{}\"", settings.getModpackPath(), modpacksPath);
         settings.setModpackPath(modpacksPath);
         saveSettings();
@@ -93,6 +99,28 @@ public class SettingsService {
     public void setLoadedModpackId(int loadedModpack) {
         log.debug("Value \"loadedModpack\" updated. Old value \"{}\" new value \"{}\"", settings.getLoadedModpack(), loadedModpack);
         settings.setLoadedModpack(loadedModpack);
+        saveSettings();
+    }
+
+    public int getLastModpackId() {
+        return settings.getLastModpackId();
+    }
+
+    public void setLastModpackId(int lastModpackId) {
+        log.debug("Value \"lastModpackId\" updated. Old value \"{}\" new value \"{}\"", settings.getLastModpackId(), lastModpackId);
+        settings.setLastModpackId(lastModpackId);
+        saveSettings();
+    }
+
+    public List<Modpack> getModpacks() {
+        return settings.getModpacks();
+    }
+
+    public void setModpacks(List<Modpack> modpacks) {
+        Checks.notNull(modpacks, "modpacks");
+        Collections.sort(modpacks);
+        log.debug("Value \"modpacks\" updated. Old size \"{}\" new size \"{}\"", settings.getModpacks().size(), modpacks.size());
+        settings.setModpacks(modpacks);
         saveSettings();
     }
 }

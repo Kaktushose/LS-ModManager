@@ -31,7 +31,7 @@ public class ModpackEditController extends Controller {
 
     public ModpackEditController(App app, Stage stage) {
         super(app, stage);
-        modpackService = app.getModpackManager();
+        modpackService = app.getModpackService();
         files = new ArrayList<>();
     }
 
