@@ -75,7 +75,7 @@ public class SettingsService {
     }
 
     public void setFsPath(String fsPath) {
-        Checks.notNull(fsPath, "fsPath");
+        Checks.notFile(fsPath, "fsPath");
         log.debug("Value \"fsPath\" updated. Old value \"{}\" new value \"{}\"", settings.getFsPath(), fsPath);
         settings.setFsPath(fsPath);
         saveSettings();
@@ -86,7 +86,7 @@ public class SettingsService {
     }
 
     public void setModpackPath(String modpacksPath) {
-        Checks.notNull(modpacksPath, "modpacksPath");
+        Checks.notFile(modpacksPath, "modpacksPath");
         log.debug("Value \"modpackPath\" updated. Old value \"{}\" new value \"{}\"", settings.getModpackPath(), modpacksPath);
         settings.setModpackPath(modpacksPath);
         saveSettings();
