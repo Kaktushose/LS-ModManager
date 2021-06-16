@@ -6,7 +6,6 @@ import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import com.github.kaktushose.lsmodmanager.util.CloseEvent;
 import com.github.kaktushose.lsmodmanager.util.Modpack;
-import com.github.kaktushose.lsmodmanager.util.Savegame;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -61,9 +60,9 @@ public class MainController extends Controller {
     }
 
     public void updateData() {
-        updateListView(loadedModpack);
-        updateComboBox();
-        savegameComboBox.getItems().addAll(app.getSavegameInspector().getSavegames().stream().map(Savegame::getName).collect(Collectors.toList()));
+//        updateListView(loadedModpack);
+//        updateComboBox();
+//        savegameComboBox.getItems().addAll(app.getSavegameInspector().getSavegames().stream().map(Savegame::getName).collect(Collectors.toList()));
     }
 
     @Override
@@ -100,12 +99,12 @@ public class MainController extends Controller {
     }
 
     public void onSavegameSelect() {
-        Savegame savegame = app.getSavegameInspector().getSavegames().get(savegameComboBox.getSelectionModel().getSelectedIndex());
-        int loaded = loadedModpack == null ? 0 : loadedModpack.getMods().size() - 1; // -1 for package info
-        requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getMods().size()));
-        savegameListView.getSelectionModel().clearSelection();
-        savegameListView.getItems().clear();
-        savegameListView.getItems().addAll(savegame.getMods());
+//        Savegame savegame = app.getSavegameInspector().getSavegames().get(savegameComboBox.getSelectionModel().getSelectedIndex());
+//        int loaded = loadedModpack == null ? 0 : loadedModpack.getMods().size() - 1; // -1 for package info
+//        requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getMods().size()));
+//        savegameListView.getSelectionModel().clearSelection();
+//        savegameListView.getItems().clear();
+//        savegameListView.getItems().addAll(savegame.getMods());
     }
 
     @FXML

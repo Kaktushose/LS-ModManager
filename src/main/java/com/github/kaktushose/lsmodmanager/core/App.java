@@ -1,6 +1,7 @@
 package com.github.kaktushose.lsmodmanager.core;
 
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
+import com.github.kaktushose.lsmodmanager.services.SavegameService;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import javafx.application.Application;
@@ -13,15 +14,15 @@ public class App extends Application {
     private static final Logger log = LoggerFactory.getLogger(App.class);
     private final SettingsService settingsService;
     private final ModpackService modpackService;
+    private final SavegameService savegameService;
     private final SceneManager sceneManager;
-    private final SavegameInspector savegameInspector;
 
     public App() {
         settingsService = new SettingsService();
         settingsService.loadSettings();
         modpackService = new ModpackService(settingsService);
+        savegameService = new SavegameService(settingsService);
         sceneManager = new SceneManager(this);
-        savegameInspector = new SavegameInspector(settingsService);
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             log.error("An unexpected error has occurred! Details:", e);
@@ -42,7 +43,7 @@ public class App extends Application {
                     "Der LS-ModManager konnte keinen LS-Ordner finden. " +
                             "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
         }
-        savegameInspector.indexSavegames();
+        savegameService.indexSavegames();
         sceneManager.showMainWindow();
 
         log.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
@@ -56,8 +57,8 @@ public class App extends Application {
         return modpackService;
     }
 
-    public SavegameInspector getSavegameInspector() {
-        return savegameInspector;
+    public SavegameService getSavegameService() {
+        return savegameService;
     }
 
     public SettingsService getSettingsService() {
