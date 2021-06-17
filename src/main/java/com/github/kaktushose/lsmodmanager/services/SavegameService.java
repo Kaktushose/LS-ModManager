@@ -63,6 +63,10 @@ public class SavegameService {
         return Collections.emptyList();
     }
 
+    public List<Savegame> getAll() {
+        return Collections.unmodifiableList(savegames);
+    }
+
     private Savegame parse(File file) {
         Savegame savegame = new Savegame();
         Document document;

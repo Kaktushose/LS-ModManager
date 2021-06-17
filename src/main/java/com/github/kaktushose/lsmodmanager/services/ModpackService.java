@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class ModpackService {
 
@@ -73,11 +74,11 @@ public class ModpackService {
     }
 
     public Modpack getById(int id) {
-        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().orElseThrow().copy();
+        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().map(Modpack::copy).orElse(null);
     }
 
     public Modpack getByName(String name) {
-        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().orElseThrow().copy();
+        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().map(Modpack::copy).orElse(null);
     }
 
     public List<Modpack> getAll() {
