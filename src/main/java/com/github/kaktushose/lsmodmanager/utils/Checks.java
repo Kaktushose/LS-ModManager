@@ -1,4 +1,4 @@
-package com.github.kaktushose.lsmodmanager.util;
+package com.github.kaktushose.lsmodmanager.utils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,9 +32,9 @@ public class Checks {
         }
     }
 
-    public static void notPath(String path, String name) {
+    public static void notDirectory(String path, String name) {
         notNull(path, name);
-        if (isPath(path)) {
+        if (isDirectory(path)) {
             throw new IllegalArgumentException(name + " may not be path");
         }
     }
@@ -57,7 +57,7 @@ public class Checks {
         return Files.exists(Path.of(path));
     }
 
-    public static boolean isPath(String path) {
+    public static boolean isDirectory(String path) {
         return Files.isDirectory(Path.of(path));
     }
 }

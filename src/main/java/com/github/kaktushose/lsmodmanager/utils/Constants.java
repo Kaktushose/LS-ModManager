@@ -1,4 +1,4 @@
-package com.github.kaktushose.lsmodmanager.util;
+package com.github.kaktushose.lsmodmanager.utils;
 
 public class Constants {
 

@@ -1,4 +1,4 @@
-package com.github.kaktushose.lsmodmanager.util;
+package com.github.kaktushose.lsmodmanager.utils;
 
 import com.github.kaktushose.lsmodmanager.core.App;
 import com.github.kaktushose.lsmodmanager.ui.controller.Controller;
@@ -6,9 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SceneLoader {
 
+    private static final Logger log = LoggerFactory.getLogger(SceneLoader.class);
     private final App app;
     private Stage stage;
     private Controller controller;
@@ -17,19 +20,24 @@ public class SceneLoader {
         this.app = app;
     }
 
-    public void loadFXML(Class<?> controllerClass, String file, int width, int height) {
+    public void loadFXML(Class<?> controllerClass, String path, int width, int height) {
         Stage stage = new Stage();
         Controller controller;
         Parent root;
         try {
+            log.debug("Attempting to load fxml \"{}\"", path);
+
             controller = (Controller) controllerClass.getConstructor(App.class, Stage.class).newInstance(app, stage);
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + file));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + path));
             loader.setController(controller);
             root = loader.load();
             stage.setScene(new Scene(root, width, height));
             controller.afterInitialization();
-        } catch (Exception e) { // bad practice, but this shit can throw like thousand different exceptions
-            new CloseEvent(e, 2).perform();
+
+            log.debug("Successfully initialized controller \"{}\"", controller.getClass().getCanonicalName());
+        } catch (Exception e) {
+            log.error("Ls-ModManager has crashed! Stacktrace:", e);
+            System.exit(1);
             return;
         }
         this.stage = stage;
