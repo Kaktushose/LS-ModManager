@@ -35,7 +35,7 @@ public class Checks {
     public static void notDirectory(String path, String name) {
         notNull(path, name);
         if (isDirectory(path)) {
-            throw new IllegalArgumentException(name + " may not be path");
+            throw new IllegalArgumentException(name + " may not be a directory");
         }
     }
 
@@ -54,7 +54,7 @@ public class Checks {
     }
 
     public static boolean isFile(String path) {
-        return Files.exists(Path.of(path));
+        return Files.isRegularFile(Path.of(path));
     }
 
     public static boolean isDirectory(String path) {

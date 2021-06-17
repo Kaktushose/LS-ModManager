@@ -2,13 +2,24 @@ package com.github.kaktushose.lsmodmanager.services;
 
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
+import com.github.kaktushose.lsmodmanager.utils.Constants;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class ModpackService {
 
+    private static final Logger log = LoggerFactory.getLogger(ModpackService.class);
     private final SettingsService settingsService;
     private final List<Modpack> modpacks;
 
@@ -17,25 +28,56 @@ public class ModpackService {
         modpacks = settingsService.getModpacks();
     }
 
-    public Modpack create(String name) {
+    public Modpack create(String name, List<File> mods) {
         Checks.notBlank(name, "name");
+        log.debug("Creating new modpack...");
 
         int id = settingsService.getLastModpackId() + 1;
         Modpack modpack = new Modpack(id, createValidName(name));
+
+        Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
+        File packageInfo = new File(folder + "//package-info.txt");
+
+        try (FileWriter fileWriter = new FileWriter(packageInfo)) {
+            Files.createDirectory(folder);
+            log.debug("Created base folder.");
+
+            fileWriter.write("Automatically generated folder by the LS-ModManager.\n" +
+                    "Don't change, move or delete anything unless you really know what you're doing.\n" +
+                    "Visit https://github.com/Kaktushose/LS-ModManager for details.\n" +
+                    "id: " + id +
+                    "\noriginal name: " + name +
+                    "\ncreated at: " +
+                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
+            log.debug("Created package-info.");
+
+            for (File file : mods) {
+                log.debug("Copying file {}", file);
+                Files.copy(Path.of(file.getAbsolutePath()), Path.of(folder + file.getName()));
+            }
+            log.debug("Copied {} files", mods.size());
+
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("An error has occurred creating the modpack %s!", name), e);
+        }
+
+        modpack.setFolder(folder);
 
         modpacks.add(modpack);
 
         settingsService.setLastModpackId(id);
         settingsService.setModpacks(modpacks);
+
+        log.info("Created new modpack {}", modpack);
         return modpack.copy();
     }
 
-    public Optional<Modpack> getById(int id) {
-        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().map(Modpack::copy);
+    public Modpack getById(int id) {
+        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().orElseThrow().copy();
     }
 
-    public Optional<Modpack> getByName(String name) {
-        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().map(Modpack::copy);
+    public Modpack getByName(String name) {
+        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().orElseThrow().copy();
     }
 
     public List<Modpack> getAll() {
@@ -45,7 +87,7 @@ public class ModpackService {
     public void updateName(int id, String newName) {
         Checks.notBlank(newName, "name");
 
-        Modpack modpack = getById(id).orElseThrow();
+        Modpack modpack = getById(id);
         delete(id);
         modpack.setName(newName);
         modpacks.add(modpack);
@@ -56,7 +98,7 @@ public class ModpackService {
     public void updateName(String oldName, String newName) {
         Checks.notBlank(newName, "newName");
 
-        Modpack modpack = getByName(oldName).orElseThrow();
+        Modpack modpack = getByName(oldName);
         delete(modpack.getId());
         modpack.setName(newName);
         modpacks.add(modpack);
@@ -65,13 +107,23 @@ public class ModpackService {
     }
 
     public void delete(int id) {
-        modpacks.removeIf(modpack -> modpack.getId() == id);
-        settingsService.setModpacks(modpacks);
+        delete(getById(id));
     }
 
     public void delete(String name) {
-        modpacks.removeIf(modpack -> modpack.getName().equals(name));
+        delete(getByName(name));
+    }
+
+    public void delete(Modpack modpack) {
+        modpacks.removeIf(m -> m.getId() == modpack.getId());
         settingsService.setModpacks(modpacks);
+
+        try {
+            FileUtils.deleteDirectory(modpack.getFolder().toFile());
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
+        }
+        log.debug("Deleted modpack {}", modpack);
     }
 
     public boolean existsById(int id) {
