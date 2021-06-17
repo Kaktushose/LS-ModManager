@@ -36,7 +36,7 @@ public class SceneLoader {
 
             log.debug("Successfully initialized controller \"{}\"", controller.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Ls-ModManager has crashed! Stacktrace:", e);
+            log.error("LS-ModManager has crashed! Stacktrace:", e);
             System.exit(1);
             return;
         }

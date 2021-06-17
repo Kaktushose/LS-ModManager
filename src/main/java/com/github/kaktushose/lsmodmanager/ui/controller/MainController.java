@@ -4,8 +4,6 @@ import com.github.kaktushose.lsmodmanager.core.App;
 import com.github.kaktushose.lsmodmanager.core.SceneManager;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
-import com.github.kaktushose.lsmodmanager.util.CloseEvent;
-import com.github.kaktushose.lsmodmanager.util.Modpack;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -29,7 +27,7 @@ public class MainController extends Controller {
     public ListView<String> modpackListView, savegameListView;
     @FXML
     public Label modpackName, requiredMods;
-    private Modpack loadedModpack;
+    //private Modpack loadedModpack;
 
     public MainController(App app, Stage stage) {
         super(app, stage);
@@ -77,7 +75,8 @@ public class MainController extends Controller {
     @FXML
     public void onExit() {
         if (Dialogs.displayCloseOptions("Beenden?", "Möchtest du den LS-ModManager wirklich beenden?")) {
-            new CloseEvent("The user has closed the program", 0).perform();
+            log.info("Successfully stopped LS-ModManager.");
+            System.exit(0);
         }
     }
 
@@ -149,16 +148,16 @@ public class MainController extends Controller {
 //        modpackComboBox.getSelectionModel().select(name);
     }
 
-    private void updateListView(Modpack modpack) {
-        modpackListView.getItems().clear();
-        modpackListView.getSelectionModel().clearSelection();
-        if (modpack == null) return;
-        modpack.getMods().forEach(file -> {
-            if (file.getName().endsWith("zip")) {
-                modpackListView.getItems().add(file.getName());
-            }
-        });
-    }
+//    private void updateListView(Modpack modpack) {
+//        modpackListView.getItems().clear();
+//        modpackListView.getSelectionModel().clearSelection();
+//        if (modpack == null) return;
+//        modpack.getMods().forEach(file -> {
+//            if (file.getName().endsWith("zip")) {
+//                modpackListView.getItems().add(file.getName());
+//            }
+//        });
+//    }
 
     private void openURL(String url) {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {

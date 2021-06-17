@@ -102,7 +102,7 @@ public class Dialogs {
     public static void displayException(Throwable throwable) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setHeaderText("LS-ModManager has encountered an unexpected exception");
+        alert.setHeaderText("LS-ModManager has crashed! Details:");
         StringWriter sw = new StringWriter();
         throwable.printStackTrace(new PrintWriter(sw));
         alert.setContentText(throwable.getMessage());

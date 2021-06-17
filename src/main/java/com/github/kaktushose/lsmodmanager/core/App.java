@@ -23,12 +23,6 @@ public class App extends Application {
         modpackService = new ModpackService(settingsService);
         savegameService = new SavegameService(settingsService);
         sceneManager = new SceneManager(this);
-
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            log.error("An unexpected error has occurred! Details:", e);
-            Dialogs.displayException(e);
-        });
-
     }
 
     @Override
@@ -36,6 +30,8 @@ public class App extends Application {
         log.info("Starting app...");
 
         long startTime = System.currentTimeMillis();
+
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> sceneManager.onException(e)));
 
         settingsService.loadSettings();
         if (!settingsService.findFsPath()) {

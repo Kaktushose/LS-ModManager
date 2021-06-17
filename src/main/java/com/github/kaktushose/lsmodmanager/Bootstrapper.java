@@ -1,7 +1,7 @@
 package com.github.kaktushose.lsmodmanager;
 
 import com.github.kaktushose.lsmodmanager.core.App;
-import com.github.kaktushose.lsmodmanager.util.Constants;
+import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.application.Application;
 
 public class Bootstrapper {

@@ -2,8 +2,8 @@ package com.github.kaktushose.lsmodmanager.services;
 
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Settings;
-import com.github.kaktushose.lsmodmanager.util.Checks;
-import com.github.kaktushose.lsmodmanager.util.Constants;
+import com.github.kaktushose.lsmodmanager.utils.Checks;
+import com.github.kaktushose.lsmodmanager.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.kaktushose.lsmodmanager.util.Constants.SETTINGS_PATH;
+import static com.github.kaktushose.lsmodmanager.utils.Constants.SETTINGS_PATH;
 
 public class SettingsService {
 

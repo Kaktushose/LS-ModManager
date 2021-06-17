@@ -3,7 +3,6 @@ package com.github.kaktushose.lsmodmanager.ui.controller;
 import com.github.kaktushose.lsmodmanager.core.App;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
-import com.github.kaktushose.lsmodmanager.util.Modpack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -26,7 +25,6 @@ public class ModpackEditController extends Controller {
     @FXML
     public Button buttonAdd, buttonDelete, buttonSave;
     private boolean unsaved;
-    private Modpack modpack;
     private List<File> files;
 
     public ModpackEditController(App app, Stage stage) {
@@ -37,18 +35,18 @@ public class ModpackEditController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        textFieldName.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!oldValue.equals(newValue)) {
-                unsaved = true;
-                modpackComboBox.setDisable(true);
-            }
-            if (newValue.equals(modpack.getName())) {
-                unsaved = false;
-                modpackComboBox.setDisable(false);
-            }
-        });
-        setButtonDisable(true);
-        textFieldName.setDisable(true);
+//        textFieldName.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!oldValue.equals(newValue)) {
+//                unsaved = true;
+//                modpackComboBox.setDisable(true);
+//            }
+//            if (newValue.equals(modpack.getName())) {
+//                unsaved = false;
+//                modpackComboBox.setDisable(false);
+//            }
+//        });
+//        setButtonDisable(true);
+//        textFieldName.setDisable(true);
     }
 
     @Override
@@ -71,9 +69,9 @@ public class ModpackEditController extends Controller {
 
     @FXML
     public void onModAdd() {
-        files = (app.getSceneManager().showFileChooser(files));
-        unsaved = !modpack.getMods().containsAll(files);
-        modpackComboBox.setDisable(unsaved);
+//        files = (app.getSceneManager().showFileChooser(files));
+//        unsaved = !modpack.getMods().containsAll(files);
+//        modpackComboBox.setDisable(unsaved);
     }
 
 

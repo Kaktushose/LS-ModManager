@@ -1,7 +1,7 @@
 package com.github.kaktushose.lsmodmanager.services;
 
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
-import com.github.kaktushose.lsmodmanager.util.Checks;
+import com.github.kaktushose.lsmodmanager.utils.Checks;
 
 import java.util.Collections;
 import java.util.List;

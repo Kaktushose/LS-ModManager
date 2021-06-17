@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.kaktushose.ls.modmanager</groupId>
-    <artifactId>lsmm</artifactId>
+    <artifactId>LS-ModManager</artifactId>
     <version>1.0.0</version>
 
     <properties>

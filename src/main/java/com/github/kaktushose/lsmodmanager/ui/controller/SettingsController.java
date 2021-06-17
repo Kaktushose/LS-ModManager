@@ -3,7 +3,7 @@ package com.github.kaktushose.lsmodmanager.ui.controller;
 import com.github.kaktushose.lsmodmanager.core.App;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.Dialogs;
-import com.github.kaktushose.lsmodmanager.util.Constants;
+import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
