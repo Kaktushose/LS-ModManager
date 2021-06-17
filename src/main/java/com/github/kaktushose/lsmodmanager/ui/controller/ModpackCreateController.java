@@ -1,7 +1,9 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
+import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
+import com.github.kaktushose.lsmodmanager.utils.Checks;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -15,6 +17,7 @@ import java.util.ResourceBundle;
 
 public class ModpackCreateController extends Controller {
 
+    private final ModpackService modpackService;
     @FXML
     public TextField textFieldName;
     private boolean unsaved;
@@ -22,6 +25,7 @@ public class ModpackCreateController extends Controller {
 
     public ModpackCreateController(App app, Stage stage) {
         super(app, stage);
+        modpackService = app.getModpackService();
     }
 
     @Override
@@ -32,11 +36,6 @@ public class ModpackCreateController extends Controller {
             }
         });
         files = new ArrayList<>();
-    }
-
-    @Override
-    public void afterInitialization() {
-
     }
 
     @Override
@@ -57,38 +56,41 @@ public class ModpackCreateController extends Controller {
     // boolean indicates whether saving was successful or not
     @FXML
     public boolean onSave() {
-//        if (textFieldName.getText().isEmpty()) {
-//            Dialogs.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
-//            return false;
-//        }
-//        String name = textFieldName.getText();
-//
-//        if (app.getModpackManager().modpackExists(name)) {
-//            Dialogs.displayErrorMessage("Fehler", "Es existiert bereits ein Modpack mit dem Namen \"" + name + "\".\nBitte wähle einen anderen Namen aus.");
-//            return false;
-//        }
-//        app.getModpackManager().createModpack(name, files);
-//        Dialogs.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
-//        unsaved = false;
-//        onClose();
-//        app.getSceneManager().updateMainWindowData();
-//        return true;
-        return false;
+        String name = textFieldName.getText();
+
+        if (Checks.isBlank(name)) {
+            Alerts.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
+            return false;
+        }
+
+        modpackService.create(name, files);
+        Alerts.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
+        resetData();
+        return true;
     }
 
     @FXML
     public void onClose() {
         if (unsaved) {
-            switch (Alerts.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\nTrotzdem schließen?")) {
+            int result = Alerts.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\nTrotzdem schließen?");
+            switch (result) {
                 case 0:
-                    if (onSave()) {
-                        stage.close();
-                    }
-                    return;
+                    onSave();
+                    break;
                 case 1:
-                    stage.close();
+                    break;
+                default:
+                    return;
             }
-        } else stage.close();
+        }
+        stage.close();
         log.debug("modpack create window closed");
     }
+
+    private void resetData() {
+        textFieldName.setText("");
+        files = new ArrayList<>();
+        unsaved = false;
+    }
+
 }

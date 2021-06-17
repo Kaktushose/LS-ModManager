@@ -1,7 +1,7 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,7 +25,7 @@ public class ModpackEditController extends Controller {
     @FXML
     public Button buttonAdd, buttonDelete, buttonSave;
     private boolean unsaved;
-    private List<File> files;
+    private final List<File> files;
 
     public ModpackEditController(App app, Stage stage) {
         super(app, stage);

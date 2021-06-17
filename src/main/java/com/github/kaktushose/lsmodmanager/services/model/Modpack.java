@@ -1,6 +1,6 @@
 package com.github.kaktushose.lsmodmanager.services.model;
 
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,12 +8,20 @@ public class Modpack implements Comparable<Modpack> {
 
     private int id;
     private String name;
-    private transient Path folder;
+    private String folder;
     private transient List<String> mods;
 
     public Modpack(int id, String name) {
         this.id = id;
         this.name = name;
+        mods = new ArrayList<>();
+    }
+
+    public Modpack(int id, String name, String folder, List<String> mods) {
+        this.id = id;
+        this.name = name;
+        this.folder = folder;
+        this.mods = mods;
     }
 
     public int getId() {
@@ -32,11 +40,11 @@ public class Modpack implements Comparable<Modpack> {
         this.name = name;
     }
 
-    public Path getFolder() {
+    public String getFolder() {
         return folder;
     }
 
-    public void setFolder(Path folder) {
+    public void setFolder(String folder) {
         this.folder = folder;
     }
 
@@ -49,7 +57,7 @@ public class Modpack implements Comparable<Modpack> {
     }
 
     public Modpack copy() {
-        return new Modpack(id, name);
+        return new Modpack(id, name, folder, mods);
     }
 
     @Override

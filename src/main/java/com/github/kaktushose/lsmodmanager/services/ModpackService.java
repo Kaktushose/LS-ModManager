@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ModpackService {
 
@@ -29,6 +29,17 @@ public class ModpackService {
         modpacks = settingsService.getModpacks();
     }
 
+    public void indexModpacks() {
+        modpacks.forEach(modpack -> {
+            try {
+                List<String> mods = Files.list(Path.of(modpack.getFolder())).map(path -> path.getFileName().toString()).collect(Collectors.toList());
+                modpack.setMods(mods);
+            } catch (IOException e) {
+                throw new RuntimeException(String.format("An error has occurred while indexing the modpack %s!", modpack.getName()), e);
+            }
+        });
+    }
+
     public Modpack create(String name, List<File> mods) {
         Checks.notBlank(name, "name");
         log.debug("Creating new modpack...");
@@ -39,10 +50,11 @@ public class ModpackService {
         Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
         File packageInfo = new File(folder + "//package-info.txt");
 
-        try (FileWriter fileWriter = new FileWriter(packageInfo)) {
+        try {
             Files.createDirectory(folder);
             log.debug("Created base folder.");
 
+            FileWriter fileWriter = new FileWriter(packageInfo);
             fileWriter.write("Automatically generated folder by the LS-ModManager.\n" +
                     "Don't change, move or delete anything unless you really know what you're doing.\n" +
                     "Visit https://github.com/Kaktushose/LS-ModManager for details.\n" +
@@ -50,11 +62,12 @@ public class ModpackService {
                     "\noriginal name: " + name +
                     "\ncreated at: " +
                     new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
+            fileWriter.close();
             log.debug("Created package-info.");
 
             for (File file : mods) {
                 log.debug("Copying file {}", file);
-                Files.copy(Path.of(file.getAbsolutePath()), Path.of(folder + file.getName()));
+                Files.copy(Path.of(file.getAbsolutePath()), Path.of(String.format("%s\\%s", folder, file.getName())));
             }
             log.debug("Copied {} files", mods.size());
 
@@ -62,14 +75,15 @@ public class ModpackService {
             throw new RuntimeException(String.format("An error has occurred creating the modpack %s!", name), e);
         }
 
-        modpack.setFolder(folder);
+        modpack.setFolder(folder.toString());
+        modpack.setMods(mods.stream().map(File::getName).collect(Collectors.toList()));
 
         modpacks.add(modpack);
 
         settingsService.setLastModpackId(id);
         settingsService.setModpacks(modpacks);
 
-        log.info("Created new modpack {}", modpack);
+        log.info("Created new {}", modpack);
         return modpack.copy();
     }
 
@@ -120,7 +134,7 @@ public class ModpackService {
         settingsService.setModpacks(modpacks);
 
         try {
-            FileUtils.deleteDirectory(modpack.getFolder().toFile());
+            FileUtils.deleteDirectory(new File(modpack.getFolder()));
         } catch (IOException e) {
             throw new RuntimeException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
         }

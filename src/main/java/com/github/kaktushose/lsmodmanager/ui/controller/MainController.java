@@ -1,12 +1,12 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
+import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.services.SavegameService;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Savegame;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.SceneManager;
-import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -32,9 +32,13 @@ public class MainController extends Controller {
     private final SettingsService settingsService;
     private final SavegameService savegameService;
     @FXML
-    public ComboBox<String> modpackComboBox, savegameComboBox;
+    public ComboBox<String> modpackComboBox;
     @FXML
-    public ListView<String> modpackListView, savegameListView;
+    public ComboBox<String> savegameComboBox;
+    @FXML
+    public ListView<String> modpackListView;
+    @FXML
+    public ListView<String> savegameListView;
     @FXML
     public Label modpackName, requiredMods;
     private Modpack loadedModpack;
@@ -54,6 +58,7 @@ public class MainController extends Controller {
     @Override
     public void afterInitialization() {
         loadedModpack = modpackService.getById(settingsService.getLoadedModpackId());
+        savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
         updateData();
         stage.getScene().setOnKeyPressed(keyEvent -> {
             if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
@@ -71,7 +76,6 @@ public class MainController extends Controller {
     public void updateData() {
         updateListView(loadedModpack);
         updateComboBox();
-        savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
     }
 
     @Override
@@ -173,7 +177,7 @@ public class MainController extends Controller {
 
         modpack.getMods().forEach(name -> {
             if (!name.endsWith("zip")) {
-               return;
+                return;
             }
             modpackListView.getItems().add(name);
         });

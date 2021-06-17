@@ -40,6 +40,7 @@ public class App extends Application {
                             "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
         }
         savegameService.indexSavegames();
+        modpackService.indexModpacks();
         sceneManager.showMainWindow();
 
         log.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
