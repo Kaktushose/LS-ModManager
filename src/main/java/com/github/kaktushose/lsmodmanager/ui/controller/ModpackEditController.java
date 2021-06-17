@@ -1,8 +1,8 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
-import com.github.kaktushose.lsmodmanager.ui.Dialogs;
+import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -118,7 +118,7 @@ public class ModpackEditController extends Controller {
     @FXML
     public void onClose() {
         if (unsaved) {
-            switch (Dialogs.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\nTrotzdem schließen?")) {
+            switch (Alerts.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\nTrotzdem schließen?")) {
                 case 0:
                     if (onSave()) {
                         stage.close();

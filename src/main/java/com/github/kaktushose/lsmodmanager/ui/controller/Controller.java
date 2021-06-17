@@ -1,6 +1,6 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import org.slf4j.Logger;

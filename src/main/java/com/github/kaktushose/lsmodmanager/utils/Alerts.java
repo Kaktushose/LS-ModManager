@@ -1,4 +1,4 @@
-package com.github.kaktushose.lsmodmanager.ui;
+package com.github.kaktushose.lsmodmanager.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static javafx.scene.control.ButtonBar.ButtonData;
 
 @SuppressWarnings("unchecked")
-public class Dialogs {
+public class Alerts {
 
     public static boolean displayCloseOptions(String title, String message) {
         ButtonType close = new ButtonType("Schließen", ButtonData.OK_DONE);

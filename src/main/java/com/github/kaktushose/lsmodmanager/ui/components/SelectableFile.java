@@ -1,17 +1,17 @@
-package com.github.kaktushose.lsmodmanager.ui.model;
+package com.github.kaktushose.lsmodmanager.ui.components;
 
 import javafx.scene.control.Button;
 
 import java.io.File;
 
-public class FileModel {
+public class SelectableFile {
 
     private final String name;
     private final File file;
     private final Button button;
     private boolean delete;
 
-    public FileModel(File file) {
+    public SelectableFile(File file) {
         this.file = file;
         this.name = file.getName();
         this.button = new Button("behalten");
@@ -52,8 +52,8 @@ public class FileModel {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof FileModel)) return false;
-        FileModel model = (FileModel) obj;
+        if (!(obj instanceof SelectableFile)) return false;
+        SelectableFile model = (SelectableFile) obj;
         return model.getName().equals(name);
     }
 }

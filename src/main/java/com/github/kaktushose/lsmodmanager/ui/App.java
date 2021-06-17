@@ -1,9 +1,9 @@
-package com.github.kaktushose.lsmodmanager.core;
+package com.github.kaktushose.lsmodmanager.ui;
 
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.services.SavegameService;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
-import com.github.kaktushose.lsmodmanager.ui.Dialogs;
+import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class App extends Application {
 
         settingsService.loadSettings();
         if (!settingsService.findFsPath()) {
-            Dialogs.displayWarnMessage("Warnung!",
+            Alerts.displayWarnMessage("Warnung!",
                     "Der LS-ModManager konnte keinen LS-Ordner finden. " +
                             "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
         }

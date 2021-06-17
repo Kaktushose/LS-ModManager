@@ -1,8 +1,8 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
-import com.github.kaktushose.lsmodmanager.ui.Dialogs;
+import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -74,7 +74,7 @@ public class SettingsController extends Controller {
     @FXML
     public void onClose() {
         if (unsaved) {
-            int result = Dialogs.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\r\nEinstellungen trotzdem verlassen?");
+            int result = Alerts.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\r\nEinstellungen trotzdem verlassen?");
             switch (result) {
                 case 0:
                     onSave();

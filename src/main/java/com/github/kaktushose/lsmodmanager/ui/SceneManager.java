@@ -1,7 +1,7 @@
-package com.github.kaktushose.lsmodmanager.core;
+package com.github.kaktushose.lsmodmanager.ui;
 
-import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import com.github.kaktushose.lsmodmanager.ui.controller.*;
+import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.SceneLoader;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -61,7 +61,7 @@ public class SceneManager {
 
     public void onException(Throwable throwable) {
         log.error("LS-ModManager has crashed! Stacktrace:", throwable);
-        Dialogs.displayException(throwable);
+        Alerts.displayException(throwable);
         System.exit(1);
     }
 

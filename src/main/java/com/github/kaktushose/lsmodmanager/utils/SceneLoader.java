@@ -1,6 +1,6 @@
 package com.github.kaktushose.lsmodmanager.utils;
 
-import com.github.kaktushose.lsmodmanager.core.App;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.controller.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

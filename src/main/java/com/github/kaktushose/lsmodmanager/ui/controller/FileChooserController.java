@@ -1,7 +1,7 @@
 package com.github.kaktushose.lsmodmanager.ui.controller;
 
-import com.github.kaktushose.lsmodmanager.core.App;
-import com.github.kaktushose.lsmodmanager.ui.model.FileModel;
+import com.github.kaktushose.lsmodmanager.ui.App;
+import com.github.kaktushose.lsmodmanager.ui.components.SelectableFile;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,20 +18,20 @@ import java.util.*;
 
 public class FileChooserController extends Controller {
 
-    private final ObservableList<FileModel> fileModelObservableList;
+    private final ObservableList<SelectableFile> selectableFileObservableList;
     @FXML
-    public TableView<FileModel> tableView;
+    public TableView<SelectableFile> tableView;
     @FXML
-    public TableColumn<FileModel, String> nameColumn;
+    public TableColumn<SelectableFile, String> nameColumn;
     @FXML
-    public TableColumn<FileModel, Button> buttonColumn;
+    public TableColumn<SelectableFile, Button> buttonColumn;
     private Map<String, File> fileCache;
     private final Map<String, File> selectedFiles;
 
     public FileChooserController(App app, Stage stage) {
         super(app, stage);
         this.selectedFiles = new HashMap<>();
-        fileModelObservableList = FXCollections.observableArrayList();
+        selectableFileObservableList = FXCollections.observableArrayList();
     }
 
     @Override
@@ -92,17 +92,17 @@ public class FileChooserController extends Controller {
     private void save() {
         selectedFiles.clear();
         fileCache.values().forEach(file -> selectedFiles.putIfAbsent(file.getName(), file));
-        fileModelObservableList.forEach(fileModel -> {
-            if (fileModel.isDelete()) {
-                selectedFiles.remove(fileModel.getFile().getName());
+        selectableFileObservableList.forEach(selectableFile -> {
+            if (selectableFile.isDelete()) {
+                selectedFiles.remove(selectableFile.getFile().getName());
             }
         });
     }
 
     private void addItemToTableView(File file) {
         if (!file.getName().endsWith(".zip")) return;
-        fileModelObservableList.add(new FileModel(file));
-        tableView.setItems(fileModelObservableList);
+        selectableFileObservableList.add(new SelectableFile(file));
+        tableView.setItems(selectableFileObservableList);
     }
 
 }
