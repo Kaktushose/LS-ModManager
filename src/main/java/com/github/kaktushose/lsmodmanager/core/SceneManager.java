@@ -1,7 +1,8 @@
 package com.github.kaktushose.lsmodmanager.core;
 
+import com.github.kaktushose.lsmodmanager.ui.Dialogs;
 import com.github.kaktushose.lsmodmanager.ui.controller.*;
-import com.github.kaktushose.lsmodmanager.util.SceneLoader;
+import com.github.kaktushose.lsmodmanager.utils.SceneLoader;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -9,32 +10,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class SceneManager {
 
-    private final App app;
-    private final Logger logger;
+    private static final Logger log = LoggerFactory.getLogger(SceneManager.class);
     private final SceneLoader sceneLoader;
     private MainController mainController;
 
     public SceneManager(App app) {
-        this.app = app;
-        logger = LoggerFactory.getLogger(SceneManager.class);
         sceneLoader = new SceneLoader(app);
     }
 
     public void showMainWindow() {
-        logger.debug("Showing main window");
         sceneLoader.loadFXML(MainController.class, "mainwindow.fxml", 900, 600);
-        Stage stage = sceneLoader.getStage();
         mainController = (MainController) sceneLoader.getController();
-        stage.setTitle("LS-ModManager");
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("img/LogoT.png"));
-        stage.show();
+        applyStyle(sceneLoader.getStage(), "LS-ModManager").show();
     }
 
     public void updateMainWindowData() {
@@ -42,36 +33,18 @@ public class SceneManager {
     }
 
     public void showSettings() {
-        logger.debug("Showing settings window");
         sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 380);
-        Stage stage = sceneLoader.getStage();
-        stage.setTitle("Einstellungen");
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("img/LogoT.png"));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+        applyStyle(sceneLoader.getStage(), "Einstellungen").showAndWait();
     }
 
     public void showModpackCreate() {
-        logger.debug("Showing modpack create window");
         sceneLoader.loadFXML(ModpackCreateController.class, "modpackcreate.fxml", 640, 285);
-        Stage stage = sceneLoader.getStage();
-        stage.setTitle("Erstellen");
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("img/LogoT.png"));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+        applyStyle(sceneLoader.getStage(), "Erstellen").showAndWait();
     }
 
     public void showModpackEdit() {
-        logger.debug("Showing modpack edit window");
         sceneLoader.loadFXML(ModpackEditController.class, "modpackedit.fxml", 640, 446);
-        Stage stage = sceneLoader.getStage();
-        stage.setTitle("Bearbeiten");
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("img/LogoT.png"));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+        applyStyle(sceneLoader.getStage(), "Bearbeiten").showAndWait();
     }
 
     public List<File> showFileChooser() {
@@ -79,17 +52,24 @@ public class SceneManager {
     }
 
     public List<File> showFileChooser(Collection<File> selectedFiles) {
-        logger.debug("Showing file chooser window");
         sceneLoader.loadFXML(FileChooserController.class, "filechooser.fxml", 687, 750);
         FileChooserController controller = (FileChooserController) sceneLoader.getController();
         controller.setFiles(selectedFiles);
-        Stage stage = sceneLoader.getStage();
-        stage.setTitle("Dateien auswählen");
-        stage.setResizable(false);
-        stage.getIcons().add(new Image("img/LogoT.png"));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+        applyStyle(sceneLoader.getStage(), "Dateien auswählen").showAndWait();
         return controller.getSelectedFiles();
     }
 
+    public void onException(Throwable throwable) {
+        log.error("LS-ModManager has crashed! Stacktrace:", throwable);
+        Dialogs.displayException(throwable);
+        System.exit(1);
+    }
+
+    private Stage applyStyle(Stage stage, String title) {
+        stage.setTitle(title);
+        stage.setResizable(false);
+        stage.getIcons().add(new Image("img/LogoT.png"));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return stage;
+    }
 }
