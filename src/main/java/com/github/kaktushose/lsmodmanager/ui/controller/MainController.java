@@ -175,11 +175,11 @@ public class MainController extends Controller {
             return;
         }
 
-        modpack.getMods().forEach(name -> {
-            if (!name.endsWith("zip")) {
+        modpack.getMods().forEach(file -> {
+            if (!file.getName().endsWith("zip")) {
                 return;
             }
-            modpackListView.getItems().add(name);
+            modpackListView.getItems().add(file.getName());
         });
     }
 

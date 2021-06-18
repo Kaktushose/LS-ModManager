@@ -1,5 +1,6 @@
 package com.github.kaktushose.lsmodmanager.services.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +10,7 @@ public class Modpack implements Comparable<Modpack> {
     private int id;
     private String name;
     private String folder;
-    private transient List<String> mods;
+    private transient List<File> mods;
 
     public Modpack(int id, String name) {
         this.id = id;
@@ -17,7 +18,7 @@ public class Modpack implements Comparable<Modpack> {
         mods = new ArrayList<>();
     }
 
-    public Modpack(int id, String name, String folder, List<String> mods) {
+    public Modpack(int id, String name, String folder, List<File> mods) {
         this.id = id;
         this.name = name;
         this.folder = folder;
@@ -48,11 +49,11 @@ public class Modpack implements Comparable<Modpack> {
         this.folder = folder;
     }
 
-    public List<String> getMods() {
+    public List<File> getMods() {
         return mods;
     }
 
-    public void setMods(List<String> mods) {
+    public void setMods(List<File> mods) {
         this.mods = mods;
     }
 

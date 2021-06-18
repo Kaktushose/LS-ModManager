@@ -32,7 +32,7 @@ public class ModpackService {
     public void indexModpacks() {
         modpacks.forEach(modpack -> {
             try {
-                List<String> mods = Files.list(Path.of(modpack.getFolder())).map(path -> path.getFileName().toString()).collect(Collectors.toList());
+                List<File> mods = Files.list(Path.of(modpack.getFolder())).map(Path::toFile).collect(Collectors.toList());
                 modpack.setMods(mods);
             } catch (IOException e) {
                 throw new RuntimeException(String.format("An error has occurred while indexing the modpack %s!", modpack.getName()), e);
@@ -76,7 +76,7 @@ public class ModpackService {
         }
 
         modpack.setFolder(folder.toString());
-        modpack.setMods(mods.stream().map(File::getName).collect(Collectors.toList()));
+        modpack.setMods(mods);
 
         modpacks.add(modpack);
 
@@ -99,23 +99,15 @@ public class ModpackService {
         return Collections.unmodifiableList(modpacks);
     }
 
-    public void updateName(int id, String newName) {
-        Checks.notBlank(newName, "name");
+    public void updateModpack(int id, Modpack newValue) {
+        Checks.notBlank(newValue.getName(), "name");
+        Checks.notFile(newValue.getFolder(), "modpack path");
 
         Modpack modpack = getById(id);
         delete(id);
-        modpack.setName(newName);
-        modpacks.add(modpack);
-
-        settingsService.setModpacks(modpacks);
-    }
-
-    public void updateName(String oldName, String newName) {
-        Checks.notBlank(newName, "newName");
-
-        Modpack modpack = getByName(oldName);
-        delete(modpack.getId());
-        modpack.setName(newName);
+        modpack.setName(newValue.getName());
+        modpack.setMods(newValue.getMods());
+        modpack.setFolder(newValue.getFolder());
         modpacks.add(modpack);
 
         settingsService.setModpacks(modpacks);

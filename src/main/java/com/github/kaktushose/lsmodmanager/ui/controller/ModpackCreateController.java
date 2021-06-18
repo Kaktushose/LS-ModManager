@@ -83,6 +83,7 @@ public class ModpackCreateController extends Controller {
                     return;
             }
         }
+        app.getSceneManager().updateMainWindowData();
         stage.close();
         log.debug("modpack create window closed");
     }
