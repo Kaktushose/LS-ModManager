@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class SavegameService {
 
@@ -66,6 +67,10 @@ public class SavegameService {
         }
         List<String> modNames = savegame.getModNames();
         return modpack.getMods().stream().filter(mod -> modNames.contains(mod.getName())).count();
+    }
+
+    public Optional<Savegame> getByName(String name) {
+        return savegames.stream().filter(savegame -> savegame.getName().equals(name)).findFirst();
     }
 
     public List<Savegame> getAll() {

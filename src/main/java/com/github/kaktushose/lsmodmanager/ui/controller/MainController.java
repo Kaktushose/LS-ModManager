@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -114,7 +115,11 @@ public class MainController extends Controller {
 
     @FXML
     public void onSavegameSelect() {
-        Savegame savegame = savegameService.getAll().get(savegameComboBox.getSelectionModel().getSelectedIndex());
+        Optional<Savegame> optional = savegameService.getByName(savegameComboBox.getSelectionModel().getSelectedItem());
+        if (optional.isEmpty()) {
+            return;
+        }
+        Savegame savegame = optional.get();
         long loaded = loadedModpack == null ? 0 : savegameService.getMissingModsCount(savegame, loadedModpack);
         requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getModNames().size()));
         savegameListView.getSelectionModel().clearSelection();
