@@ -31,13 +31,13 @@
                 </TableView>
                 <HBox prefHeight="28.0" prefWidth="419.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#onAddFile" prefHeight="40.0" prefWidth="145.0"
-                                text="Mod hinzufügen">
+                        <Button mnemonicParsing="false" onAction="#onAddFile" prefHeight="40.0" prefWidth="150.0"
+                                text="Mods hinzufügen">
                             <HBox.margin>
                                 <Insets left="20.0"/>
                             </HBox.margin>
                         </Button>
-                        <Region prefHeight="40.0" prefWidth="443.0"/>
+                        <Region prefHeight="40.0" prefWidth="438.0"/>
                         <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="99.0"
                                 text="Schließen">
                             <padding>

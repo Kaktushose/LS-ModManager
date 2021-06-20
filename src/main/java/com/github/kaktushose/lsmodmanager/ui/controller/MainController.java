@@ -57,7 +57,7 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
-        loadedModpack = modpackService.getById(settingsService.getLoadedModpackId());
+        loadedModpack = modpackService.getLoadedModpack();
         savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
         updateData();
         stage.getScene().setOnKeyPressed(keyEvent -> {
@@ -74,8 +74,10 @@ public class MainController extends Controller {
     }
 
     public void updateData() {
+        loadedModpack = modpackService.getLoadedModpack();
         updateListView(loadedModpack);
         updateComboBox();
+        onSavegameSelect();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class MainController extends Controller {
 
     public void onSavegameSelect() {
         Savegame savegame = savegameService.getAll().get(savegameComboBox.getSelectionModel().getSelectedIndex());
-        int loaded = loadedModpack == null ? 0 : loadedModpack.getMods().size() - 1; // -1 for package info
+        long loaded = loadedModpack == null ? 0 : savegameService.getMissingModsCount(savegame, loadedModpack);
         requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getModNames().size()));
         savegameListView.getSelectionModel().clearSelection();
         savegameListView.getItems().clear();
@@ -123,19 +125,18 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackLoad() {
-//        if (loadedModpack != null) {
-//            modpackService.unloadModpack(loadedModpack);
-//            loadedModpack = null;
-//        }
-//        if (modpackComboBox.getValue().equals("Kein Modpack")) {
-//            modpackName.setText("Kein Modpack");
-//            return;
-//        }
-//        Modpack newValue = modpackService.getModpack(modpackComboBox.getValue());
-//        if (modpackService.loadModpack(newValue)) {
-//            loadedModpack = newValue;
-//            modpackName.setText(loadedModpack.getName());
-//        }
+        if (loadedModpack != null) {
+            modpackService.unload(loadedModpack.getId());
+            loadedModpack = null;
+        }
+        if (modpackComboBox.getValue().equals("Kein Modpack")) {
+            modpackName.setText("Kein Modpack");
+            return;
+        }
+        Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
+        modpackService.load(newValue.getId());
+        loadedModpack = newValue;
+        modpackName.setText(loadedModpack.getName());
     }
 
     @FXML
@@ -157,12 +158,7 @@ public class MainController extends Controller {
 
         modpackService.getAll().forEach(modpack -> modpackComboBox.getItems().add(modpack.getName()));
 
-        int id = settingsService.getLoadedModpackId();
-        if (id < 1) {
-            return;
-        }
-        loadedModpack = modpackService.getById(id);
-        String name = loadedModpack.getName();
+        String name = loadedModpack == null ? "Kein Modpack" : loadedModpack.getName();
         modpackName.setText(name);
         modpackComboBox.getSelectionModel().select(name);
     }

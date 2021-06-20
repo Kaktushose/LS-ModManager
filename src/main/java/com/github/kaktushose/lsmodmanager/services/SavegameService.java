@@ -1,5 +1,6 @@
 package com.github.kaktushose.lsmodmanager.services;
 
+import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Savegame;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import org.slf4j.Logger;
@@ -59,8 +60,12 @@ public class SavegameService {
         log.debug("Indexed a total of {} savegames!", savegames.size());
     }
 
-    public List<String> getMissingModNames() {
-        return Collections.emptyList();
+    public long getMissingModsCount(Savegame savegame, Modpack modpack) {
+        if (modpack == null) {
+            return 0;
+        }
+        List<String> modNames = savegame.getModNames();
+        return modpack.getMods().stream().filter(mod -> modNames.contains(mod.getName())).count();
     }
 
     public List<Savegame> getAll() {

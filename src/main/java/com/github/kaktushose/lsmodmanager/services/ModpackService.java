@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -152,7 +154,6 @@ public class ModpackService {
     public void delete(Modpack modpack) {
         modpacks.removeIf(m -> m.getId() == modpack.getId());
         settingsService.setModpacks(modpacks);
-
         try {
             PathUtils.deleteDirectory(Path.of(modpack.getFolder()));
         } catch (IOException e) {
@@ -192,6 +193,11 @@ public class ModpackService {
                 ));
 
         try {
+            if (!Files.isDirectory(targetDirectory)) {
+                Files.createDirectory(targetDirectory);
+                log.warn("The mod folder doesn't exist! Created a new one!");
+            }
+
             if (!PathUtils.isEmptyDirectory(targetDirectory)) {
                 PathUtils.copyDirectory(targetDirectory, backupDirectory);
                 log.warn("The mod folder wasn't empty! Created a backup at \"{}\"", backupDirectory);
@@ -215,9 +221,9 @@ public class ModpackService {
         Path targetDirectory = Path.of(modpack.getFolder());
 
         try {
-            PathUtils.copyDirectory(sourceDirectory, targetDirectory);
+            PathUtils.copyDirectory(sourceDirectory, targetDirectory, StandardCopyOption.REPLACE_EXISTING);
             log.debug("Copied modpack files");
-            PathUtils.cleanDirectory(targetDirectory);
+            PathUtils.cleanDirectory(sourceDirectory);
             log.debug("Cleared mod folder");
         } catch (IOException e) {
             throw new RuntimeException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
