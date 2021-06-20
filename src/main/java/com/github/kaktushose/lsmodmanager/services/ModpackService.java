@@ -3,7 +3,6 @@ package com.github.kaktushose.lsmodmanager.services;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,9 +109,8 @@ public class ModpackService {
         Checks.notFile(newValue.getFolder(), "modpack path");
 
         Modpack modpack = getById(id);
-        delete(id);
+        modpacks.removeIf(m -> m.getId() == modpack.getId());
         modpack.setName(newValue.getName());
-        modpack.setMods(newValue.getMods());
         modpack.setFolder(newValue.getFolder());
 
         log.debug("Updating files...");
@@ -131,6 +129,8 @@ public class ModpackService {
                 Files.delete(file.toPath());
                 modpack.getMods().remove(file);
             }
+
+            modpack.setMods(newValue.getMods());
         } catch (IOException e) {
             throw new RuntimeException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
         }
@@ -158,7 +158,7 @@ public class ModpackService {
         } catch (IOException e) {
             throw new RuntimeException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
         }
-        log.debug("Deleted modpack {}", modpack);
+        log.debug("Deleted {}", modpack);
     }
 
     public boolean existsById(int id) {
@@ -167,6 +167,10 @@ public class ModpackService {
 
     public boolean existsByName(String name) {
         return modpacks.stream().anyMatch(modpack -> modpack.getName().equals(name));
+    }
+
+    public boolean isLoadedModpack(int id) {
+        return settingsService.getLoadedModpackId() == id;
     }
 
     public void load(int id) {
