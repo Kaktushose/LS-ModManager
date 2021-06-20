@@ -4,6 +4,7 @@ import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public class ModpackService {
 
             for (File file : mods) {
                 log.debug("Copying file {}", file);
-                Files.copy(Path.of(file.getAbsolutePath()), Path.of(String.format("%s\\%s", folder, file.getName())));
+                Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
             }
             log.debug("Copied {} files", mods.size());
 
@@ -95,11 +96,16 @@ public class ModpackService {
         return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().map(Modpack::copy).orElse(null);
     }
 
+    public Modpack getLoadedModpack() {
+        return getById(settingsService.getLoadedModpackId());
+    }
+
     public List<Modpack> getAll() {
         return Collections.unmodifiableList(modpacks);
     }
 
     public void updateModpack(int id, Modpack newValue) {
+        log.debug("Updating modpack with id {}.", id);
         Checks.notBlank(newValue.getName(), "name");
         Checks.notFile(newValue.getFolder(), "modpack path");
 
@@ -108,9 +114,31 @@ public class ModpackService {
         modpack.setName(newValue.getName());
         modpack.setMods(newValue.getMods());
         modpack.setFolder(newValue.getFolder());
-        modpacks.add(modpack);
 
+        log.debug("Updating files...");
+        List<File> toAdd = newValue.getMods().stream().filter(file -> !modpack.getMods().contains(file)).collect(Collectors.toList());
+        List<File> toRemove = modpack.getMods().stream().filter(file -> !newValue.getMods().contains(file)).collect(Collectors.toList());
+        String folder = modpack.getFolder();
+        try {
+            for (File file : toAdd) {
+                log.debug("Copying file {}", file);
+                Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
+                modpack.getMods().add(file);
+            }
+
+            for (File file : toRemove) {
+                log.debug("Deleting file {}", file);
+                Files.delete(file.toPath());
+                modpack.getMods().remove(file);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
+        }
+        log.debug("All files updated.");
+
+        modpacks.add(modpack);
         settingsService.setModpacks(modpacks);
+        log.debug("Successfully updated {}", modpack);
     }
 
     public void delete(int id) {
@@ -126,7 +154,7 @@ public class ModpackService {
         settingsService.setModpacks(modpacks);
 
         try {
-            FileUtils.deleteDirectory(new File(modpack.getFolder()));
+            PathUtils.deleteDirectory(Path.of(modpack.getFolder()));
         } catch (IOException e) {
             throw new RuntimeException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
         }
@@ -141,12 +169,58 @@ public class ModpackService {
         return modpacks.stream().anyMatch(modpack -> modpack.getName().equals(name));
     }
 
-    public void load() {
+    public void load(int id) {
+        log.debug("Attempting to load modpack with id {}...", id);
 
+        int loadedId = settingsService.getLoadedModpackId();
+        if (loadedId > 0) {
+            log.debug("Unloading current modpack before proceeding...");
+            unload(loadedId);
+        }
+
+        Modpack modpack = getById(id);
+        Path sourceDirectory = Path.of(modpack.getFolder());
+        Path targetDirectory = Path.of(settingsService.getFsPath() + "\\mods");
+        Path backupDirectory = Path.of(
+                String.format("%s\\backup-%s",
+                        settingsService.getModpackPath(),
+                        new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date())
+                ));
+
+        try {
+            if (!PathUtils.isEmptyDirectory(targetDirectory)) {
+                PathUtils.copyDirectory(targetDirectory, backupDirectory);
+                log.warn("The mod folder wasn't empty! Created a backup at \"{}\"", backupDirectory);
+            }
+            PathUtils.deleteDirectory(targetDirectory);
+            log.debug("Deleted mod folder");
+            PathUtils.copyDirectory(sourceDirectory, targetDirectory);
+            log.debug("Copied modpack files");
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
+        }
+
+        settingsService.setLoadedModpackId(id);
+        log.info("Successfully loaded {}", modpack);
     }
 
-    public void unload() {
+    public void unload(int id) {
+        log.debug("Attempting to unload modpack with id {}...", id);
+        Modpack modpack = getById(id);
+        Path sourceDirectory = Path.of(settingsService.getFsPath() + "\\mods");
+        Path targetDirectory = Path.of(modpack.getFolder());
 
+        try {
+            PathUtils.copyDirectory(sourceDirectory, targetDirectory);
+            log.debug("Copied modpack files");
+            PathUtils.cleanDirectory(targetDirectory);
+            log.debug("Cleared mod folder");
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
+        }
+
+        settingsService.setLoadedModpackId(-1);
+        log.info("Successfully unloaded {}", modpack);
     }
 
     private String createValidName(String name) {
