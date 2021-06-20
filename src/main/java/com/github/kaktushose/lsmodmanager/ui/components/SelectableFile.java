@@ -27,10 +27,6 @@ public class SelectableFile {
         return name;
     }
 
-    public Button getButton() {
-        return button;
-    }
-
     public File getFile() {
         return file;
     }

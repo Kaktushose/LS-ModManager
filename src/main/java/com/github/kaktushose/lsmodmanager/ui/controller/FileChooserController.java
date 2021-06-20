@@ -104,5 +104,4 @@ public class FileChooserController extends Controller {
         selectableFileObservableList.add(new SelectableFile(file));
         tableView.setItems(selectableFileObservableList);
     }
-
 }

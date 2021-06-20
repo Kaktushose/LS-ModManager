@@ -11,13 +11,6 @@ public class Checks {
         }
     }
 
-    public static void notEmpty(CharSequence argument, String name) {
-        notNull(argument, name);
-        if (isEmpty(argument)) {
-            throw new IllegalArgumentException(name + " may not be empty");
-        }
-    }
-
     public static void notBlank(CharSequence argument, String name) {
         notNull(argument, name);
         if (isBlank(argument)) {
@@ -29,13 +22,6 @@ public class Checks {
         notNull(path, name);
         if (isFile(path)) {
             throw new IllegalArgumentException(name + " may not be a file");
-        }
-    }
-
-    public static void notDirectory(String path, String name) {
-        notNull(path, name);
-        if (isDirectory(path)) {
-            throw new IllegalArgumentException(name + " may not be a directory");
         }
     }
 
@@ -55,9 +41,5 @@ public class Checks {
 
     public static boolean isFile(String path) {
         return Files.isRegularFile(Path.of(path));
-    }
-
-    public static boolean isDirectory(String path) {
-        return Files.isDirectory(Path.of(path));
     }
 }

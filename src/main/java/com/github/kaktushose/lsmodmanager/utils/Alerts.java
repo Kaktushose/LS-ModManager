@@ -53,7 +53,7 @@ public class Alerts {
         applyStyle(alert);
         Optional<ButtonType> optional = alert.showAndWait();
 
-        if (optional.get().getButtonData().equals(ButtonData.YES)) {
+        if (optional.orElseThrow().getButtonData().equals(ButtonData.YES)) {
             return 0;
         } else if (optional.get().getButtonData().equals(ButtonData.OK_DONE)) {
             return 1;
@@ -68,7 +68,7 @@ public class Alerts {
         alert.setHeaderText(null);
         alert.setContentText(message);
         applyStyle(alert);
-        Optional optional = alert.showAndWait();
+        Optional<ButtonType> optional = alert.showAndWait();
         return optional.orElse(ButtonType.CANCEL) == ButtonType.OK;
     }
 

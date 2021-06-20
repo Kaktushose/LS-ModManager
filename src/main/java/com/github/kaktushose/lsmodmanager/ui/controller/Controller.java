@@ -27,9 +27,4 @@ public abstract class Controller implements Initializable {
     public void onCloseRequest() {
         stage.close();
     }
-
-    public void forceClose() {
-        stage.close();
-    }
-
 }

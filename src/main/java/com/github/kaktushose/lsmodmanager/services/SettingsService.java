@@ -1,5 +1,6 @@
 package com.github.kaktushose.lsmodmanager.services;
 
+import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Settings;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
@@ -51,7 +52,7 @@ public class SettingsService {
         try (FileWriter fileWriter = new FileWriter(SETTINGS_PATH)) {
             gson.toJson(settings, fileWriter);
         } catch (IOException e) {
-            throw new RuntimeException("There was an error saving the settings file!", e);
+            throw new FileOperationException("There was an error saving the settings file!", e);
         }
     }
 

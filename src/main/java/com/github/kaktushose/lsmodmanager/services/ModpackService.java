@@ -1,5 +1,6 @@
 package com.github.kaktushose.lsmodmanager.services;
 
+import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -37,12 +37,12 @@ public class ModpackService {
                 List<File> mods = Files.list(Path.of(modpack.getFolder())).map(Path::toFile).collect(Collectors.toList());
                 modpack.setMods(mods);
             } catch (IOException e) {
-                throw new RuntimeException(String.format("An error has occurred while indexing the modpack %s!", modpack.getName()), e);
+                throw new FileOperationException(String.format("An error has occurred while indexing the modpack %s!", modpack.getName()), e);
             }
         });
     }
 
-    public Modpack create(String name, List<File> mods) {
+    public void create(String name, List<File> mods) {
         Checks.notBlank(name, "name");
         log.debug("Creating new modpack...");
 
@@ -74,7 +74,7 @@ public class ModpackService {
             log.debug("Copied {} files", mods.size());
 
         } catch (IOException e) {
-            throw new RuntimeException(String.format("An error has occurred creating the modpack %s!", name), e);
+            throw new FileOperationException(String.format("An error has occurred creating the modpack %s!", name), e);
         }
 
         modpack.setFolder(folder.toString());
@@ -86,7 +86,6 @@ public class ModpackService {
         settingsService.setModpacks(modpacks);
 
         log.info("Created new {}", modpack);
-        return modpack.copy();
     }
 
     public Modpack getById(int id) {
@@ -134,7 +133,7 @@ public class ModpackService {
 
             modpack.setMods(newValue.getMods());
         } catch (IOException e) {
-            throw new RuntimeException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
         }
         log.debug("All files updated.");
 
@@ -143,27 +142,15 @@ public class ModpackService {
         log.debug("Successfully updated {}", modpack);
     }
 
-    public void delete(int id) {
-        delete(getById(id));
-    }
-
-    public void delete(String name) {
-        delete(getByName(name));
-    }
-
     public void delete(Modpack modpack) {
         modpacks.removeIf(m -> m.getId() == modpack.getId());
         settingsService.setModpacks(modpacks);
         try {
             PathUtils.deleteDirectory(Path.of(modpack.getFolder()));
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
         }
         log.debug("Deleted {}", modpack);
-    }
-
-    public boolean existsById(int id) {
-        return modpacks.stream().anyMatch(modpack -> modpack.getId() == id);
     }
 
     public boolean existsByName(String name) {
@@ -207,7 +194,7 @@ public class ModpackService {
             PathUtils.copyDirectory(sourceDirectory, targetDirectory);
             log.debug("Copied modpack files");
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
         }
 
         settingsService.setLoadedModpackId(id);
@@ -226,7 +213,7 @@ public class ModpackService {
             PathUtils.cleanDirectory(sourceDirectory);
             log.debug("Cleared mod folder");
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("Unable to unload the modpack %s!", modpack.getName()), e);
         }
 
         settingsService.setLoadedModpackId(-1);

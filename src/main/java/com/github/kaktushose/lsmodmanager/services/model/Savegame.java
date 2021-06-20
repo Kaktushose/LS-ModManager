@@ -32,5 +32,4 @@ public class Savegame {
     public void setModNames(List<String> modNames) {
         this.modNames = modNames;
     }
-
 }

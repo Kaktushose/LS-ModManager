@@ -5,7 +5,6 @@ import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -21,8 +20,6 @@ public class SettingsController extends Controller {
     public TextField textFieldFsPath;
     @FXML
     public TextField textFieldModpackPath;
-    @FXML
-    public CheckBox toggleCopy;
     private boolean unsaved;
 
     public SettingsController(App app, Stage stage) {

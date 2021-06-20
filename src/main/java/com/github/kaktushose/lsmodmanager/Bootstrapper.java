@@ -10,5 +10,4 @@ public class Bootstrapper {
         System.setProperty("lsmm.log", Constants.LOGGING_PATH);
         Application.launch(App.class);
     }
-
 }

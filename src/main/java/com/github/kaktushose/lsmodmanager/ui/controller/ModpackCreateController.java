@@ -93,5 +93,4 @@ public class ModpackCreateController extends Controller {
         files = new ArrayList<>();
         unsaved = false;
     }
-
 }

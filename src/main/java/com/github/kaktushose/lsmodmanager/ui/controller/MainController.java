@@ -29,7 +29,6 @@ public class MainController extends Controller {
 
     private final SceneManager sceneManager;
     private final ModpackService modpackService;
-    private final SettingsService settingsService;
     private final SavegameService savegameService;
     @FXML
     public ComboBox<String> modpackComboBox;
@@ -47,7 +46,6 @@ public class MainController extends Controller {
         super(app, stage);
         sceneManager = app.getSceneManager();
         modpackService = app.getModpackService();
-        settingsService = app.getSettingsService();
         savegameService = app.getSavegameService();
     }
 
@@ -114,6 +112,7 @@ public class MainController extends Controller {
         updateListView(selected);
     }
 
+    @FXML
     public void onSavegameSelect() {
         Savegame savegame = savegameService.getAll().get(savegameComboBox.getSelectionModel().getSelectedIndex());
         long loaded = loadedModpack == null ? 0 : savegameService.getMissingModsCount(savegame, loadedModpack);
