@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static com.github.kaktushose.lsmodmanager.utils.Constants.SETTINGS_PATH;
 
@@ -134,11 +135,16 @@ public class SettingsService {
         Checks.notNull(language, "language");
         log.debug("Value \"language\" updated. Old value \"{}\" new value \"{}\"", settings.getLanguage(), language);
         settings.setLanguage(language);
+        Locale.setDefault(language);
         saveSettings();
     }
 
     public List<Locale> getAvailableLanguages() {
         return settings.getAvailableLanguages();
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return ResourceBundle.getBundle("bundles.Bundle", getLanguage());
     }
 
 }

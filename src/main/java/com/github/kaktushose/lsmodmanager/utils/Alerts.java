@@ -11,16 +11,18 @@ import javafx.stage.Stage;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static javafx.scene.control.ButtonBar.ButtonData;
 
-@SuppressWarnings("unchecked")
 public class Alerts {
 
     public static boolean displayCloseOptions(String title, String message) {
-        ButtonType close = new ButtonType("Schließen", ButtonData.OK_DONE);
-        ButtonType cancel = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.Bundle", Locale.getDefault());
+        ButtonType close = new ButtonType(bundle.getString("alerts.button.exit"), ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType(bundle.getString("alerts.button.cancel"), ButtonData.CANCEL_CLOSE);
 
         Alert alert = new Alert
                 (Alert.AlertType.CONFIRMATION,
@@ -35,9 +37,10 @@ public class Alerts {
     }
 
     public static int displaySaveOptions(String title, String message) {
-        ButtonType save = new ButtonType("Speichern", ButtonData.YES);
-        ButtonType notSave = new ButtonType("Nicht Speichern", ButtonData.OK_DONE);
-        ButtonType cancel = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.Bundle", Locale.getDefault());
+        ButtonType save = new ButtonType(bundle.getString("alerts.button.save"), ButtonData.YES);
+        ButtonType notSave = new ButtonType(bundle.getString("alerts.button.notsave"), ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType(bundle.getString("alerts.button.cancel"), ButtonData.CANCEL_CLOSE);
 
         Alert alert = new Alert
                 (Alert.AlertType.CONFIRMATION,
@@ -100,9 +103,10 @@ public class Alerts {
     }
 
     public static void displayException(Throwable throwable) {
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.Bundle", Locale.getDefault());
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("LS-ModManager has crashed! Details:");
+        alert.setTitle(bundle.getString("alerts.crash.title"));
+        alert.setHeaderText(bundle.getString("alerts.crash.text"));
         StringWriter sw = new StringWriter();
         throwable.printStackTrace(new PrintWriter(sw));
         alert.setContentText(throwable.getMessage());

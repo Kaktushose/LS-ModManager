@@ -10,7 +10,7 @@
     <children>
         <VBox prefHeight="464.0" prefWidth="665.0" spacing="10.0">
             <children>
-                <Label text="Einstellungen">
+                <Label text="%settings.label.title">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -21,9 +21,9 @@
                 <Separator prefHeight="0.0" prefWidth="640.0"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="LS-Ordner"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.game"/>
                         <TextField fx:id="textFieldFsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
-                        <Button mnemonicParsing="false" onAction="#onFsPath" text="auswählen">
+                        <Button mnemonicParsing="false" onAction="#onFsPath" text="%settings.button.select">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
@@ -39,9 +39,9 @@
                 <Separator prefWidth="200.0"/>
                 <HBox prefHeight="100.0" prefWidth="640.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="Modpack-Ordner"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.modpacks"/>
                         <TextField fx:id="textFieldModpackPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
-                        <Button mnemonicParsing="false" onAction="#onModpackPath" text="auswählen">
+                        <Button mnemonicParsing="false" onAction="#onModpackPath" text="%settings.button.select">
                             <padding>
                                 <Insets right="20.0"/>
                             </padding>
@@ -60,7 +60,7 @@
                 <Separator prefHeight="4.0" prefWidth="640.0"/>
                 <HBox prefHeight="42.0" prefWidth="601.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="Sprache"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.language"/>
                         <ComboBox fx:id="languageComboBox" onAction="#onLanguageSelect" prefHeight="42.0"
                                   prefWidth="168.0">
                             <HBox.margin>
@@ -78,9 +78,9 @@
                     <children>
                         <Region prefHeight="40.0" prefWidth="415.0"/>
                         <Button mnemonicParsing="false" onAction="#onSave" prefHeight="40.0" prefWidth="85.0"
-                                text="Speichern"/>
+                                text="%settings.button.save"/>
                         <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="85.0"
-                                text="Schließen">
+                                text="%settings.button.exit">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>

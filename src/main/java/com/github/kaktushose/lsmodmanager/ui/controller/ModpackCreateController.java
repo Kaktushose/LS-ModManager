@@ -22,6 +22,7 @@ public class ModpackCreateController extends Controller {
     public TextField textFieldName;
     private boolean unsaved;
     private List<File> files;
+    private ResourceBundle bundle;
 
     public ModpackCreateController(App app, Stage stage) {
         super(app, stage);
@@ -36,6 +37,7 @@ public class ModpackCreateController extends Controller {
             }
         });
         files = new ArrayList<>();
+        bundle = resources;
     }
 
     @Override
@@ -59,12 +61,12 @@ public class ModpackCreateController extends Controller {
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
-            Alerts.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
+            Alerts.displayErrorMessage(bundle.getString("create.error.title"), bundle.getString("create.error.message"));
             return false;
         }
 
         modpackService.create(name, files);
-        Alerts.displayInfoMessage("Erfolg", "Das Modpack wurde erfolgreich erstellt!");
+        Alerts.displayInfoMessage(bundle.getString("create.success.title"), bundle.getString("create.success.message"));
         resetData();
         return true;
     }
@@ -72,7 +74,7 @@ public class ModpackCreateController extends Controller {
     @FXML
     public void onClose() {
         if (unsaved) {
-            int result = Alerts.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\nTrotzdem schließen?");
+            int result = Alerts.displaySaveOptions(bundle.getString("create.save.title"), bundle.getString("create.save.message"));
             switch (result) {
                 case 0:
                     onSave();

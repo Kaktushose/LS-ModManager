@@ -2,7 +2,6 @@ package com.github.kaktushose.lsmodmanager.ui.controller;
 
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.services.SavegameService;
-import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Savegame;
 import com.github.kaktushose.lsmodmanager.ui.App;
@@ -42,6 +41,8 @@ public class MainController extends Controller {
     @FXML
     public Label modpackName, requiredMods;
     private Modpack loadedModpack;
+    private ResourceBundle bundle;
+    private String noModpack;
 
     public MainController(App app, Stage stage) {
         super(app, stage);
@@ -52,12 +53,14 @@ public class MainController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        bundle = resources;
     }
 
     @Override
     public void afterInitialization() {
         loadedModpack = modpackService.getLoadedModpack();
         savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
+        noModpack = bundle.getString("main.modpack.none");
         updateData();
         stage.getScene().setOnKeyPressed(keyEvent -> {
             if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
@@ -89,9 +92,13 @@ public class MainController extends Controller {
         sceneManager.showSettings();
     }
 
+    public void forceClose() {
+        stage.close();
+    }
+
     @FXML
     public void onExit() {
-        if (Alerts.displayCloseOptions("Beenden?", "Möchtest du den LS-ModManager wirklich beenden?")) {
+        if (Alerts.displayCloseOptions(bundle.getString("main.exit.title"), bundle.getString("main.exit.message"))) {
             log.info("Successfully stopped LS-ModManager.");
             System.exit(0);
         }
@@ -121,7 +128,7 @@ public class MainController extends Controller {
         }
         Savegame savegame = optional.get();
         long loaded = loadedModpack == null ? 0 : savegameService.getMissingModsCount(savegame, loadedModpack);
-        requiredMods.setText(String.format("%d von %d benötigten Mods sind geladen", loaded, savegame.getModNames().size()));
+        requiredMods.setText(String.format(bundle.getString("main.required.format"), loaded, savegame.getModNames().size()));
         savegameListView.getSelectionModel().clearSelection();
         savegameListView.getItems().clear();
         savegameListView.getItems().addAll(savegame.getModNames());
@@ -133,8 +140,8 @@ public class MainController extends Controller {
             modpackService.unload(loadedModpack.getId());
             loadedModpack = null;
         }
-        if (modpackComboBox.getValue().equals("Kein Modpack")) {
-            modpackName.setText("Kein Modpack");
+        if (modpackComboBox.getValue().equals(noModpack)) {
+            modpackName.setText(noModpack);
             return;
         }
         Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
@@ -145,24 +152,24 @@ public class MainController extends Controller {
 
     @FXML
     public void onAbout() {
-        openURL("https://github.com/Kaktushose/LS-ModManager/");
+        openURL(bundle.getString("main.url.about"));
     }
 
     @FXML
     public void onHelp() {
-        openURL("https://github.com/Kaktushose/LS-ModManager/wiki");
+        openURL(bundle.getString("main.url.help"));
     }
 
     private void updateComboBox() {
         modpackComboBox.getItems().clear();
         modpackComboBox.getSelectionModel().clearSelection();
 
-        modpackComboBox.getItems().add("Kein Modpack");
-        modpackComboBox.getSelectionModel().select("Kein Modpack");
+        modpackComboBox.getItems().add(noModpack);
+        modpackComboBox.getSelectionModel().select(noModpack);
 
         modpackService.getAll().forEach(modpack -> modpackComboBox.getItems().add(modpack.getName()));
 
-        String name = loadedModpack == null ? "Kein Modpack" : loadedModpack.getName();
+        String name = loadedModpack == null ? noModpack : loadedModpack.getName();
         modpackName.setText(name);
         modpackComboBox.getSelectionModel().select(name);
     }

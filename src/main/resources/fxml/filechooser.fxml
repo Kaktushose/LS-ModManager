@@ -8,7 +8,7 @@
             prefWidth="687.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
             xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label text="Mods auswählen" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <Label text="%chooser.label.title" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
             <font>
                 <Font size="18.0"/>
             </font>
@@ -21,9 +21,9 @@
                         <Label text=""/>
                     </placeholder>
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="499.0" resizable="false" text="Mod"/>
+                        <TableColumn fx:id="nameColumn" prefWidth="499.0" resizable="false" text="%chooser.column.mod"/>
                         <TableColumn fx:id="buttonColumn" minWidth="0.0" prefWidth="126.0" resizable="false"
-                                     text="Aktion"/>
+                                     text="%chooser.column.action"/>
                     </columns>
                     <VBox.margin>
                         <Insets left="20.0" right="20.0"/>
@@ -32,14 +32,14 @@
                 <HBox prefHeight="28.0" prefWidth="419.0">
                     <children>
                         <Button mnemonicParsing="false" onAction="#onAddFile" prefHeight="40.0" prefWidth="150.0"
-                                text="Mods hinzufügen">
+                                text="%chooser.button.add">
                             <HBox.margin>
                                 <Insets left="20.0"/>
                             </HBox.margin>
                         </Button>
                         <Region prefHeight="40.0" prefWidth="438.0"/>
                         <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="99.0"
-                                text="Schließen">
+                                text="%chooser.button.close">
                             <padding>
                                 <Insets right="20.0"/>
                             </padding>

@@ -35,6 +35,7 @@ public class ModpackEditController extends Controller {
     private boolean unsaved;
     private Modpack modpack;
     private List<File> files;
+    private ResourceBundle bundle;
 
     public ModpackEditController(App app, Stage stage) {
         super(app, stage);
@@ -57,6 +58,7 @@ public class ModpackEditController extends Controller {
         });
         setButtonDisable(true);
         textFieldName.setDisable(true);
+        bundle = resources;
     }
 
     @Override
@@ -87,11 +89,11 @@ public class ModpackEditController extends Controller {
     @FXML
     public void onDelete() {
         if (modpack.getId() == settingsService.getLoadedModpackId()) {
-            if (!Alerts.displayConfirmDialog("Löschen?", "Das Modpack \"" + modpack.getName() + "\" ist aktuell geladen. Möchtest du es trotzdem löschen?")) {
+            if (!Alerts.displayConfirmDialog(bundle.getString("edit.delete.title"), String.format(bundle.getString("edit.delete.loaded"), modpack.getName()))) {
                 return;
             }
             modpackService.unload(modpack.getId());
-        } else if (!Alerts.displayConfirmDialog("Löschen?", "Möchtest du das Modpack \"" + modpack.getName() + "\" wirklich löschen?")) {
+        } else if (!Alerts.displayConfirmDialog(bundle.getString("edit.delete.title"), String.format(bundle.getString("edit.delete.normal"), modpack.getName()))) {
             return;
         }
         modpackService.delete(modpack);
@@ -112,7 +114,7 @@ public class ModpackEditController extends Controller {
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
-            Alerts.displayErrorMessage("Fehler", "Name des Modpacks darf nicht leer sein!");
+            Alerts.displayErrorMessage(bundle.getString("edit.error.title"), bundle.getString("edit.error.message"));
             return false;
         }
 
@@ -133,7 +135,7 @@ public class ModpackEditController extends Controller {
     @FXML
     public void onClose() {
         if (unsaved) {
-            int result = Alerts.displaySaveOptions("Speichern?", "Das Modpack wurde noch nicht erstellt.\nTrotzdem schließen?");
+            int result = Alerts.displaySaveOptions(bundle.getString("edit.save.title"), bundle.getString("edit.save.message"));
             switch (result) {
                 case 0:
                     onSave();

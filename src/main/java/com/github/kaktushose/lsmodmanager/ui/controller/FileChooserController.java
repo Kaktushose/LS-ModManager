@@ -19,6 +19,7 @@ import java.util.*;
 public class FileChooserController extends Controller {
 
     private final ObservableList<SelectableFile> selectableFileObservableList;
+    private final Map<String, File> selectedFiles;
     @FXML
     public TableView<SelectableFile> tableView;
     @FXML
@@ -26,7 +27,7 @@ public class FileChooserController extends Controller {
     @FXML
     public TableColumn<SelectableFile, Button> buttonColumn;
     private Map<String, File> fileCache;
-    private final Map<String, File> selectedFiles;
+    private ResourceBundle bundle;
 
     public FileChooserController(App app, Stage stage) {
         super(app, stage);
@@ -40,11 +41,7 @@ public class FileChooserController extends Controller {
         buttonColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
         buttonColumn.setEditable(true);
         fileCache = new HashMap<>();
-    }
-
-    @Override
-    public void afterInitialization() {
-
+        bundle = resources;
     }
 
     @Override
@@ -61,7 +58,7 @@ public class FileChooserController extends Controller {
     @FXML
     public void onAddFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Mods auswählen");
+        fileChooser.setTitle(bundle.getString("chooser.filechooser.title"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mods", "*.zip"));
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);

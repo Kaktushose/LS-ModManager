@@ -8,7 +8,7 @@
             prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
             xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label text="Modpack bearbeiten" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <Label text="%edit.label.title" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
             <font>
                 <Font size="18.0"/>
             </font>
@@ -25,13 +25,13 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                     <children>
-                        <Label prefHeight="32.0" prefWidth="58.0" text="Modpack"/>
+                        <Label prefHeight="32.0" prefWidth="58.0" text="%edit.label.modpack"/>
                         <Separator prefHeight="0.0" prefWidth="120.0"/>
-                        <Label prefHeight="34.0" prefWidth="120.0" text="Name"/>
+                        <Label prefHeight="34.0" prefWidth="120.0" text="%edit.label.name"/>
                         <Separator prefHeight="0.0" prefWidth="170.0"/>
-                        <Label prefHeight="29.0" prefWidth="168.0" text="Mods"/>
+                        <Label prefHeight="29.0" prefWidth="168.0" text="%edit.label.mods"/>
                         <Separator prefHeight="17.0" prefWidth="170.0"/>
-                        <Label text="Modpack löschen"/>
+                        <Label text="%edit.label.delete"/>
                         <Separator prefHeight="39.0" prefWidth="171.0"/>
                     </children>
                 </VBox>
@@ -44,7 +44,7 @@
                                     <children>
                                         <ComboBox fx:id="modpackComboBox" maxHeight="-Infinity" maxWidth="-Infinity"
                                                   minHeight="-Infinity" minWidth="-Infinity" onAction="#onModpackSelect"
-                                                  prefHeight="42.0" prefWidth="170.0" promptText="Modpack auswählen"/>
+                                                  prefHeight="42.0" prefWidth="170.0" promptText="%edit.combobox.modpack"/>
                                         <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                                                    minWidth="-Infinity" prefHeight="35.0" prefWidth="426.0"/>
                                     </children>
@@ -80,7 +80,7 @@
                                         <HBox prefHeight="86.0" prefWidth="425.0" spacing="10.0">
                                             <children>
                                                 <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#onModAdd"
-                                                        prefHeight="40.0" prefWidth="70.0" text="ändern">
+                                                        prefHeight="40.0" prefWidth="70.0" text="%edit.button.change">
                                                     <padding>
                                                         <Insets bottom="10.0"/>
                                                     </padding>
@@ -112,7 +112,7 @@
                                     <children>
                                         <Region prefHeight="14.0" prefWidth="430.0"/>
                                         <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#onDelete"
-                                                text="löschen"/>
+                                                text="%edit.button.delete"/>
                                         <Separator maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
                                                    prefHeight="0.0" prefWidth="426.0"/>
                                         <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0"
@@ -120,7 +120,7 @@
                                             <children>
                                                 <Region prefHeight="26.0" prefWidth="207.0"/>
                                                 <Button fx:id="buttonSave" mnemonicParsing="false" onAction="#onSave"
-                                                        prefHeight="0.0" prefWidth="85.0" text="Speichern">
+                                                        prefHeight="0.0" prefWidth="85.0" text="%edit.button.save">
                                                     <padding>
                                                         <Insets bottom="10.0"/>
                                                     </padding>
@@ -128,7 +128,7 @@
                                                         <Insets bottom="10.0"/>
                                                     </HBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onClose" text="Schließen">
+                                                <Button mnemonicParsing="false" onAction="#onClose" text="%edit.button.exit">
                                                     <HBox.margin>
                                                         <Insets left="10.0" right="10.0"/>
                                                     </HBox.margin>

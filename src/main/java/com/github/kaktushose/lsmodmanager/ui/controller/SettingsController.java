@@ -4,7 +4,6 @@ import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
-import com.sun.javafx.collections.MappingChange;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -22,14 +21,17 @@ public class SettingsController extends Controller {
 
     private final SettingsService settingsService;
     private final Map<String, Locale> locales;
-    private Locale locale;
     @FXML
     public TextField textFieldFsPath;
     @FXML
     public TextField textFieldModpackPath;
     @FXML
     public ComboBox<String> languageComboBox;
+    private Locale locale;
     private boolean unsaved;
+    private boolean languageChanged;
+    private boolean reload;
+    private ResourceBundle bundle;
 
     public SettingsController(App app, Stage stage) {
         super(app, stage);
@@ -40,6 +42,8 @@ public class SettingsController extends Controller {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         unsaved = false;
+        languageChanged = false;
+        bundle = resources;
         textFieldFsPath.setText(settingsService.getFsPath());
         textFieldModpackPath.setText(settingsService.getModpackPath());
         settingsService.getAvailableLanguages().forEach(locale -> {
@@ -60,7 +64,7 @@ public class SettingsController extends Controller {
     public void onFsPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File(Constants.MY_GAMES));
-        directoryChooser.setTitle("Pfad auswählen");
+        directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
         System.out.println(Constants.MY_GAMES);
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
@@ -71,7 +75,7 @@ public class SettingsController extends Controller {
     @FXML
     public void onModpackPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Pfad auswählen");
+        directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
         textFieldModpackPath.setText(path.getAbsolutePath());
@@ -82,6 +86,7 @@ public class SettingsController extends Controller {
     public void onLanguageSelect() {
         locale = locales.get(languageComboBox.getSelectionModel().getSelectedItem());
         unsaved = !locale.equals(settingsService.getLanguage());
+        languageChanged = true;
     }
 
     @FXML
@@ -90,12 +95,13 @@ public class SettingsController extends Controller {
         settingsService.setModpackPath(textFieldModpackPath.getText());
         settingsService.setLanguage(locale);
         unsaved = false;
+        reload = languageChanged;
     }
 
     @FXML
     public void onClose() {
         if (unsaved) {
-            int result = Alerts.displaySaveOptions("Speichern?", "Einige Änderungen wurden noch nicht gespeichert.\r\nEinstellungen trotzdem verlassen?");
+            int result = Alerts.displaySaveOptions(bundle.getString("settings.save.title"), bundle.getString("settings.save.message"));
             switch (result) {
                 case 0:
                     onSave();
@@ -108,5 +114,8 @@ public class SettingsController extends Controller {
         }
         stage.close();
         log.debug("settings window closed");
+        if (reload) {
+            app.getSceneManager().reloadMainWindow();
+        }
     }
 }

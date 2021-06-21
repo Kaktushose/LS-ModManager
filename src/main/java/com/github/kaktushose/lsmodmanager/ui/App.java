@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class App extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(App.class);
@@ -38,10 +41,10 @@ public class App extends Application {
         modpackService.indexModpacks();
         sceneManager.showMainWindow();
 
+        Locale.setDefault(settingsService.getLanguage());
+        ResourceBundle bundle = settingsService.getResourceBundle();
         if (!settingsService.findFsPath()) {
-            Alerts.displayWarnMessage("Warnung!",
-                    "Der LS-ModManager konnte keinen LS-Ordner finden. " +
-                            "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
+            Alerts.displayWarnMessage(bundle.getString("alerts.folder.title"), bundle.getString("alerts.folder.text"));
         }
 
         log.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));

@@ -17,22 +17,19 @@ public class SceneLoader {
 
     private static final Logger log = LoggerFactory.getLogger(SceneLoader.class);
     private final App app;
-    private final SettingsService settingsService;
     private Stage stage;
     private Controller controller;
 
     public SceneLoader(App app) {
         this.app = app;
-        this.settingsService = app.getSettingsService();
     }
 
-    public void loadFXML(Class<?> controllerClass, String path, int width, int height) {
+    public void loadFXML(Class<?> controllerClass, String path, int width, int height, ResourceBundle bundle) {
         Stage stage = new Stage();
         Controller controller;
         Parent root;
         try {
             log.debug("Attempting to load fxml \"{}\"", path);
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.Bundle", settingsService.getLanguage());
             controller = (Controller) controllerClass.getConstructor(App.class, Stage.class).newInstance(app, stage);
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + path), bundle);
             loader.setController(controller);
