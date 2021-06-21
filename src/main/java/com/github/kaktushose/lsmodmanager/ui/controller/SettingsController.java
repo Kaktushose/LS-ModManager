@@ -4,6 +4,7 @@ import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
+import com.sun.javafx.collections.MappingChange;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -12,11 +13,16 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class SettingsController extends Controller {
 
     private final SettingsService settingsService;
+    private final Map<String, Locale> locales;
+    private Locale locale;
     @FXML
     public TextField textFieldFsPath;
     @FXML
@@ -28,6 +34,7 @@ public class SettingsController extends Controller {
     public SettingsController(App app, Stage stage) {
         super(app, stage);
         this.settingsService = app.getSettingsService();
+        locales = new HashMap<>();
     }
 
     @Override
@@ -35,8 +42,13 @@ public class SettingsController extends Controller {
         unsaved = false;
         textFieldFsPath.setText(settingsService.getFsPath());
         textFieldModpackPath.setText(settingsService.getModpackPath());
-        languageComboBox.getItems().add("Deutsch");
-        languageComboBox.getSelectionModel().select(0);
+        settingsService.getAvailableLanguages().forEach(locale -> {
+            String name = locale.getDisplayName(locale);
+            locales.put(name, locale);
+            languageComboBox.getItems().add(name);
+        });
+        locale = settingsService.getLanguage();
+        languageComboBox.getSelectionModel().select(locale.getDisplayName(locale));
     }
 
     @Override
@@ -68,13 +80,15 @@ public class SettingsController extends Controller {
 
     @FXML
     public void onLanguageSelect() {
-
+        locale = locales.get(languageComboBox.getSelectionModel().getSelectedItem());
+        unsaved = !locale.equals(settingsService.getLanguage());
     }
 
     @FXML
     public void onSave() {
         settingsService.setFsPath(textFieldFsPath.getText());
         settingsService.setModpackPath(textFieldModpackPath.getText());
+        settingsService.setLanguage(locale);
         unsaved = false;
     }
 

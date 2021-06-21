@@ -136,4 +136,9 @@ public class SettingsService {
         settings.setLanguage(language);
         saveSettings();
     }
+
+    public List<Locale> getAvailableLanguages() {
+        return settings.getAvailableLanguages();
+    }
+
 }

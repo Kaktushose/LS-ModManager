@@ -6,6 +6,7 @@ import java.util.Locale;
 
 public class Settings {
 
+    private final List<Locale> availableLanguages;
     private String fsPath;
     private int loadedModpack;
     private String modpackPath;
@@ -20,6 +21,10 @@ public class Settings {
         lastModpackId = -1;
         modpacks = new ArrayList<>();
         language = Locale.ENGLISH;
+        availableLanguages = new ArrayList<>() {{
+            add(Locale.ENGLISH);
+            add(Locale.GERMAN);
+        }};
     }
 
     public String getFsPath() {
@@ -68,5 +73,9 @@ public class Settings {
 
     public void setLanguage(Locale language) {
         this.language = language;
+    }
+
+    public List<Locale> getAvailableLanguages() {
+        return availableLanguages;
     }
 }
