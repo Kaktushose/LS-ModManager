@@ -27,7 +27,9 @@ public class SceneManager {
     public void showMainWindow() {
         sceneLoader.loadFXML(MainController.class, "mainwindow.fxml", 900, 600);
         mainController = (MainController) sceneLoader.getController();
-        applyStyle(sceneLoader.getStage(), "LS-ModManager").show();
+        Stage stage = applyStyle(sceneLoader.getStage(), "LS-ModManager");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
     }
 
     public void updateMainWindowData() {

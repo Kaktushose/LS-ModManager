@@ -34,14 +34,15 @@ public class App extends Application {
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> sceneManager.onException(e)));
 
         settingsService.loadSettings();
+        savegameService.indexSavegames();
+        modpackService.indexModpacks();
+        sceneManager.showMainWindow();
+
         if (!settingsService.findFsPath()) {
             Alerts.displayWarnMessage("Warnung!",
                     "Der LS-ModManager konnte keinen LS-Ordner finden. " +
                             "Bitte gehe in die Einstellungen und wähle den LS-Ordner manuell aus.");
         }
-        savegameService.indexSavegames();
-        modpackService.indexModpacks();
-        sceneManager.showMainWindow();
 
         log.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
     }

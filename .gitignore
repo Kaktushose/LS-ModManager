@@ -1,5 +1,8 @@
 .idea/
-target/
-lsmm.iml
+out
+target
+*.iml
 *.exe
+*.msi
+*.jar
 dependency-reduced-pom.xml
