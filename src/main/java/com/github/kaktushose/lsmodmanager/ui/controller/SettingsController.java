@@ -5,6 +5,7 @@ import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -20,6 +21,8 @@ public class SettingsController extends Controller {
     public TextField textFieldFsPath;
     @FXML
     public TextField textFieldModpackPath;
+    @FXML
+    public ComboBox<String> languageComboBox;
     private boolean unsaved;
 
     public SettingsController(App app, Stage stage) {
@@ -32,6 +35,8 @@ public class SettingsController extends Controller {
         unsaved = false;
         textFieldFsPath.setText(settingsService.getFsPath());
         textFieldModpackPath.setText(settingsService.getModpackPath());
+        languageComboBox.getItems().add("Deutsch");
+        languageComboBox.getSelectionModel().select(0);
     }
 
     @Override
@@ -59,6 +64,11 @@ public class SettingsController extends Controller {
         if (path == null) return;
         textFieldModpackPath.setText(path.getAbsolutePath());
         unsaved = !settingsService.getModpackPath().equals(path.getAbsolutePath());
+    }
+
+    @FXML
+    public void onLanguageSelect() {
+
     }
 
     @FXML

@@ -37,7 +37,7 @@ public class SceneManager {
     }
 
     public void showSettings() {
-        sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 640, 380);
+        sceneLoader.loadFXML(SettingsController.class, "settings.fxml", 644, 472);
         applyStyle(sceneLoader.getStage(), "Einstellungen").showAndWait();
     }
 
