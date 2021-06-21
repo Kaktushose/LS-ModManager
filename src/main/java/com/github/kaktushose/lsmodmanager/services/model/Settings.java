@@ -2,6 +2,7 @@ package com.github.kaktushose.lsmodmanager.services.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Settings {
 
@@ -10,6 +11,7 @@ public class Settings {
     private String modpackPath;
     private int lastModpackId;
     private List<Modpack> modpacks;
+    private Locale language;
 
     public Settings() {
         fsPath = "";
@@ -17,6 +19,7 @@ public class Settings {
         modpackPath = fsPath;
         lastModpackId = -1;
         modpacks = new ArrayList<>();
+        language = Locale.ENGLISH;
     }
 
     public String getFsPath() {
@@ -57,5 +60,13 @@ public class Settings {
 
     public void setModpacks(List<Modpack> modpacks) {
         this.modpacks = modpacks;
+    }
+
+    public Locale getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Locale language) {
+        this.language = language;
     }
 }

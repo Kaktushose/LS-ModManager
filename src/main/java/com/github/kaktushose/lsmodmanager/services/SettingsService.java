@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static com.github.kaktushose.lsmodmanager.utils.Constants.SETTINGS_PATH;
 
@@ -122,6 +123,17 @@ public class SettingsService {
         Collections.sort(modpacks);
         log.debug("Value \"modpacks\" updated. Old size \"{}\" new size \"{}\"", settings.getModpacks().size(), modpacks.size());
         settings.setModpacks(modpacks);
+        saveSettings();
+    }
+
+    public Locale getLanguage() {
+        return settings.getLanguage();
+    }
+
+    public void setLanguage(Locale language) {
+        Checks.notNull(language, "language");
+        log.debug("Value \"language\" updated. Old value \"{}\" new value \"{}\"", settings.getLanguage(), language);
+        settings.setLanguage(language);
         saveSettings();
     }
 }

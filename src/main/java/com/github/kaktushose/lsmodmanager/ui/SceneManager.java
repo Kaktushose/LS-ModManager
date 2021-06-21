@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class SceneManager {
@@ -49,10 +48,6 @@ public class SceneManager {
     public void showModpackEdit() {
         sceneLoader.loadFXML(ModpackEditController.class, "modpackedit.fxml", 640, 446);
         applyStyle(sceneLoader.getStage(), "Bearbeiten").showAndWait();
-    }
-
-    public List<File> showFileChooser() {
-        return showFileChooser(Collections.emptyList());
     }
 
     public List<File> showFileChooser(Collection<File> selectedFiles) {

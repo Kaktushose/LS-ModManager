@@ -1,5 +1,6 @@
 package com.github.kaktushose.lsmodmanager.utils;
 
+import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.controller.Controller;
 import javafx.fxml.FXMLLoader;
@@ -9,15 +10,20 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class SceneLoader {
 
     private static final Logger log = LoggerFactory.getLogger(SceneLoader.class);
     private final App app;
+    private final SettingsService settingsService;
     private Stage stage;
     private Controller controller;
 
     public SceneLoader(App app) {
         this.app = app;
+        this.settingsService = app.getSettingsService();
     }
 
     public void loadFXML(Class<?> controllerClass, String path, int width, int height) {
@@ -26,9 +32,9 @@ public class SceneLoader {
         Parent root;
         try {
             log.debug("Attempting to load fxml \"{}\"", path);
-
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.Bundle", settingsService.getLanguage());
             controller = (Controller) controllerClass.getConstructor(App.class, Stage.class).newInstance(app, stage);
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + path));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + path), bundle);
             loader.setController(controller);
             root = loader.load();
             stage.setScene(new Scene(root, width, height));
