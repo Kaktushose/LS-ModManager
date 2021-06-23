@@ -51,7 +51,6 @@ public class Checks {
     }
 
     public static boolean isModsFolder(String path) {
-        System.out.println(path);
         return path.matches("[A-Z]:\\\\.+?(?<=\\\\FarmingSimulator[0-9]{4})\\\\mods");
     }
 }

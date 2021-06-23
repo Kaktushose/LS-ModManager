@@ -36,8 +36,8 @@ public class SceneManager {
         stage.show();
     }
 
-    public void updateMainWindowData() {
-        mainController.updateData();
+    public void updateModpackData() {
+        mainController.updateModpackData();
     }
 
     public void reloadMainWindow() {

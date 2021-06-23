@@ -97,7 +97,7 @@ public class ModpackEditController extends Controller {
             return;
         }
         modpackService.delete(modpack);
-        app.getSceneManager().updateMainWindowData();
+        app.getSceneManager().updateModpackData();
         resetUI();
         unsaved = false;
     }
@@ -127,7 +127,7 @@ public class ModpackEditController extends Controller {
         }
 
         resetUI();
-        app.getSceneManager().updateMainWindowData();
+        app.getSceneManager().updateModpackData();
         unsaved = false;
         return true;
     }
@@ -146,7 +146,7 @@ public class ModpackEditController extends Controller {
                     return;
             }
         }
-        app.getSceneManager().updateMainWindowData();
+        app.getSceneManager().updateModpackData();
         stage.close();
         log.debug("modpack edit window closed");
     }

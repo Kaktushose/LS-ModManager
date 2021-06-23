@@ -67,7 +67,7 @@
                                   prefWidth="211.0" promptText="%main.combobox.savegame"/>
                         <HBox prefHeight="10.0" prefWidth="300.0">
                             <children>
-                                <Label fx:id="requiredMods" text="%main.label.required.default"/>
+                                <Label fx:id="requiredMods" text="%main.label.required"/>
                             </children>
                         </HBox>
                         <ListView fx:id="savegameListView" prefHeight="507.0" prefWidth="430.0"/>

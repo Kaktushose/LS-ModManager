@@ -31,6 +31,7 @@ public class SavegameService {
 
     public void indexSavegames() {
         log.debug("Indexing savegames...");
+        savegames.clear();
 
         if (Checks.isBlank(settingsService.getFsPath())) {
             log.warn("Invalid Farming Simulator folder. Savegame indexing aborted!");

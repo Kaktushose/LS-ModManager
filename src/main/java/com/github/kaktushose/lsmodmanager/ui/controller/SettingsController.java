@@ -32,6 +32,7 @@ public class SettingsController extends Controller {
     private boolean unsaved;
     private boolean languageChanged;
     private boolean reload;
+    private boolean fsPathChanged;
     private ResourceBundle bundle;
 
     public SettingsController(App app, Stage stage) {
@@ -44,6 +45,7 @@ public class SettingsController extends Controller {
     public void initialize(URL location, ResourceBundle resources) {
         unsaved = false;
         languageChanged = false;
+        fsPathChanged = false;
         bundle = resources;
         textFieldFsPath.setText(settingsService.getFsPath());
         textFieldModpackPath.setText(settingsService.getModpackPath());
@@ -70,6 +72,7 @@ public class SettingsController extends Controller {
         if (path == null) return;
         textFieldFsPath.setText(path.getAbsolutePath());
         unsaved = !settingsService.getFsPath().equals(path.getAbsolutePath());
+        fsPathChanged = true;
     }
 
     @FXML
@@ -103,7 +106,7 @@ public class SettingsController extends Controller {
         settingsService.setModpackPath(textFieldModpackPath.getText());
         settingsService.setLanguage(locale);
         unsaved = false;
-        reload = languageChanged;
+        reload = true;
     }
 
     @FXML
@@ -123,7 +126,13 @@ public class SettingsController extends Controller {
         stage.close();
         log.debug("settings window closed");
         if (reload) {
-            app.getSceneManager().reloadMainWindow();
+            if (fsPathChanged) {
+                app.getSavegameService().indexSavegames();
+                app.getSceneManager().reloadMainWindow();
+            }
+            if (languageChanged) {
+                app.getSceneManager().reloadMainWindow();
+            }
         }
     }
 }

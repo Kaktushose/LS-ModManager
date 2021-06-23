@@ -58,10 +58,9 @@ public class MainController extends Controller {
 
     @Override
     public void afterInitialization() {
-        loadedModpack = modpackService.getLoadedModpack();
-        savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
         noModpack = bundle.getString("main.modpack.none");
-        updateData();
+        savegameComboBox.getItems().addAll(savegameService.getAll().stream().map(Savegame::getName).collect(Collectors.toList()));
+        updateModpackData();
         stage.getScene().setOnKeyPressed(keyEvent -> {
             if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(keyEvent)) {
                 sceneManager.showModpackCreate();
@@ -75,10 +74,10 @@ public class MainController extends Controller {
         });
     }
 
-    public void updateData() {
+    public void updateModpackData() {
         loadedModpack = modpackService.getLoadedModpack();
-        updateListView(loadedModpack);
-        updateComboBox();
+        updateModpackListView(loadedModpack);
+        updateModpackComboBox();
         onSavegameSelect();
     }
 
@@ -117,7 +116,7 @@ public class MainController extends Controller {
     @FXML
     public void onModpackSelect() {
         Modpack selected = modpackService.getByName(modpackComboBox.getValue());
-        updateListView(selected);
+        updateModpackListView(selected);
     }
 
     @FXML
@@ -160,7 +159,7 @@ public class MainController extends Controller {
         openURL(bundle.getString("main.url.help"));
     }
 
-    private void updateComboBox() {
+    private void updateModpackComboBox() {
         modpackComboBox.getItems().clear();
         modpackComboBox.getSelectionModel().clearSelection();
 
@@ -174,7 +173,7 @@ public class MainController extends Controller {
         modpackComboBox.getSelectionModel().select(name);
     }
 
-    private void updateListView(Modpack modpack) {
+    private void updateModpackListView(Modpack modpack) {
         modpackListView.getItems().clear();
         modpackListView.getSelectionModel().clearSelection();
 
