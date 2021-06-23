@@ -106,11 +106,15 @@ public class ModpackService {
     }
 
     public void moveModpackFolder(Path targetDirectory) {
-        if (targetDirectory.toString().equals(settingsService.getModpackPath())) {
+        String modpackPath = settingsService.getModpackPath();
+        if (targetDirectory.toString().equals(modpackPath)) {
+            return;
+        }
+        if (Checks.isBlank(modpackPath)) {
             return;
         }
         log.debug("Attempting to relocate modpack folder...");
-        Path sourceDirectory = Path.of(settingsService.getModpackPath());
+        Path sourceDirectory = Path.of(modpackPath);
         Checks.emptyDirectory(targetDirectory.toString(), "modpacksPath");
         Checks.notSubDirectory(sourceDirectory.toString(), targetDirectory.toString(), "modpacksPath");
 
@@ -231,6 +235,11 @@ public class ModpackService {
         Path targetDirectory = Path.of(modpack.getFolder());
 
         try {
+            if (!PathUtils.isDirectory(sourceDirectory)) {
+                log.debug("Skipped modpack unloading. Mods folder doesn't exists. Nothing to unload");
+                return;
+            }
+
             PathUtils.copyDirectory(sourceDirectory, targetDirectory, StandardCopyOption.REPLACE_EXISTING);
             log.debug("Copied modpack files");
             PathUtils.cleanDirectory(sourceDirectory);

@@ -7,6 +7,7 @@ import com.github.kaktushose.lsmodmanager.services.model.Savegame;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.SceneManager;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
+import com.github.kaktushose.lsmodmanager.utils.Checks;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -105,11 +106,17 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackCreate() {
+        if (!isReady()) {
+            return;
+        }
         sceneManager.showModpackCreate();
     }
 
     @FXML
     public void onModpackEdit() {
+        if (!isReady()) {
+            return;
+        }
         sceneManager.showModpackEdit();
     }
 
@@ -157,6 +164,14 @@ public class MainController extends Controller {
     @FXML
     public void onHelp() {
         openURL(bundle.getString("main.url.help"));
+    }
+
+    private boolean isReady() {
+        if (Checks.isBlank(app.getSettingsService().getModpackPath())) {
+            Alerts.displayInfoMessage(bundle.getString("alerts.select.title"), bundle.getString("alerts.select.text"));
+            return false;
+        }
+        return true;
     }
 
     private void updateModpackComboBox() {

@@ -35,13 +35,14 @@ public class SettingsService {
         this.app = app;
     }
 
-    public void loadSettings() {
+    // returns true when new settings file was created, which equals to first start of app
+    public boolean loadSettings() {
         try {
             if (!Files.exists(Path.of(SETTINGS_PATH))) {
                 settings = new Settings();
                 saveSettings();
                 log.warn("No settings file found! Created a new one!");
-                return;
+                return true;
             }
 
             JsonReader jsonReader = new JsonReader(new FileReader(SETTINGS_PATH));
@@ -51,6 +52,7 @@ public class SettingsService {
             e.printStackTrace();
             log.error("There was an error loading the settings file!", e);
         }
+        return false;
     }
 
     private void saveSettings() {

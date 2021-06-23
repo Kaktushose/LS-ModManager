@@ -80,7 +80,9 @@ public class SettingsController extends Controller {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String oldPath = settingsService.getModpackPath();
         String toOpen = oldPath.contains("\\") ? oldPath.substring(0, oldPath.lastIndexOf("\\")) : oldPath;
-        directoryChooser.setInitialDirectory(new File(toOpen));
+        if (!Checks.isBlank(toOpen)) {
+            directoryChooser.setInitialDirectory(new File(toOpen));
+        }
         directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
 
         File path = directoryChooser.showDialog(stage);

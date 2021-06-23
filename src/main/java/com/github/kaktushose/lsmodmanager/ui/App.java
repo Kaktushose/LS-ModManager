@@ -19,10 +19,11 @@ public class App extends Application {
     private final ModpackService modpackService;
     private final SavegameService savegameService;
     private final SceneManager sceneManager;
+    private final boolean firstStart;
 
     public App() {
         settingsService = new SettingsService(this);
-        settingsService.loadSettings();
+        firstStart = settingsService.loadSettings();
         modpackService = new ModpackService(settingsService);
         savegameService = new SavegameService(settingsService);
         sceneManager = new SceneManager(this);
@@ -31,20 +32,22 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         log.info("Starting app...");
-
         long startTime = System.currentTimeMillis();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> sceneManager.onException(e)));
 
-        settingsService.loadSettings();
+        ResourceBundle bundle = settingsService.getResourceBundle();
+        Locale.setDefault(settingsService.getLanguage());
         savegameService.indexSavegames();
         modpackService.indexModpacks();
         sceneManager.showMainWindow();
 
-        Locale.setDefault(settingsService.getLanguage());
-        ResourceBundle bundle = settingsService.getResourceBundle();
         if (!settingsService.findFsPath()) {
             Alerts.displayWarnMessage(bundle.getString("alerts.folder.title"), bundle.getString("alerts.folder.text"));
+        }
+
+        if (firstStart) {
+            Alerts.displayInfoMessage(bundle.getString("alerts.welcome.title"), bundle.getString("alerts.welcome.text"));
         }
 
         log.info(String.format("Successfully started app! Took %d ms", System.currentTimeMillis() - startTime));
