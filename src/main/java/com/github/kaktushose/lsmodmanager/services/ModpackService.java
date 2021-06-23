@@ -4,6 +4,7 @@ import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,28 @@ public class ModpackService {
 
     public List<Modpack> getAll() {
         return Collections.unmodifiableList(modpacks);
+    }
+
+    public void moveModpackFolder(Path targetDirectory) {
+        if (targetDirectory.toString().equals(settingsService.getModpackPath())) {
+            return;
+        }
+        log.debug("Attempting to relocate modpack folder...");
+        Path sourceDirectory = Path.of(settingsService.getModpackPath());
+        Checks.emptyDirectory(targetDirectory.toString(), "modpacksPath");
+        Checks.notSubDirectory(sourceDirectory.toString(), targetDirectory.toString(), "modpacksPath");
+
+        try {
+            FileUtils.copyDirectory(sourceDirectory.toFile(), targetDirectory.toFile());
+            log.debug("Moved modpack folder");
+            FileUtils.cleanDirectory(sourceDirectory.toFile());
+        } catch (IOException e) {
+            throw new FileOperationException("An error has occurred moving the modpack folder", e);
+        }
+        modpacks.forEach(modpack -> modpack.setFolder(targetDirectory + Constants.MOD_FOLDER_PATH + modpack.getId()));
+        settingsService.setModpacks(modpacks);
+        log.debug("Updated modpack folder paths");
+        log.info("Successfully relocated the modpack folder");
     }
 
     public void updateModpack(int id, Modpack newValue) {

@@ -3,6 +3,7 @@ package com.github.kaktushose.lsmodmanager.services;
 import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Settings;
+import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import com.google.gson.Gson;
@@ -25,11 +26,13 @@ import static com.github.kaktushose.lsmodmanager.utils.Constants.SETTINGS_PATH;
 public class SettingsService {
 
     private static final Logger log = LoggerFactory.getLogger(SettingsService.class);
+    private final App app;
     private final Gson gson;
     private Settings settings;
 
-    public SettingsService() {
+    public SettingsService(App app) {
         gson = new Gson();
+        this.app = app;
     }
 
     public void loadSettings() {
@@ -92,6 +95,7 @@ public class SettingsService {
         Checks.notFile(modpacksPath, "modpacksPath");
         Checks.notModsFolder(modpacksPath, "modpacksPath");
         log.debug("Value \"modpackPath\" updated. Old value \"{}\" new value \"{}\"", settings.getModpackPath(), modpacksPath);
+        app.getModpackService().moveModpackFolder(Path.of(modpacksPath));
         settings.setModpackPath(modpacksPath);
         saveSettings();
     }

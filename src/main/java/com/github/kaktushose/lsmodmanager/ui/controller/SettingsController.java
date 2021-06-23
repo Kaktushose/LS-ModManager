@@ -78,6 +78,9 @@ public class SettingsController extends Controller {
     @FXML
     public void onModpackPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
+        String oldPath = settingsService.getModpackPath();
+        String toOpen = oldPath.contains("\\") ? oldPath.substring(0, oldPath.lastIndexOf("\\")) : oldPath;
+        directoryChooser.setInitialDirectory(new File(toOpen));
         directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
 
         File path = directoryChooser.showDialog(stage);
@@ -85,10 +88,17 @@ public class SettingsController extends Controller {
             return;
         }
         if (Checks.isModsFolder(path.toString())) {
-            Alerts.displayErrorMessage(bundle.getString("settings.error.title"), bundle.getString("settings.error.message"));
+            Alerts.displayErrorMessage(bundle.getString("settings.error.title"), bundle.getString("settings.error.mods"));
             return;
         }
-
+        if (!Checks.isEmptyDirectory(path.toString())) {
+            Alerts.displayErrorMessage(bundle.getString("settings.error.title"), bundle.getString("settings.error.empty"));
+            return;
+        }
+        if (Checks.isSubDirectory(oldPath, path.toString())) {
+            Alerts.displayErrorMessage(bundle.getString("settings.error.title"), bundle.getString("settings.error.sub"));
+            return;
+        }
         textFieldModpackPath.setText(path.getAbsolutePath());
         unsaved = !settingsService.getModpackPath().equals(path.getAbsolutePath());
     }
