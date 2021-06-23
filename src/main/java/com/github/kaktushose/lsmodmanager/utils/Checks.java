@@ -25,6 +25,13 @@ public class Checks {
         }
     }
 
+    public static void notModsFolder(String path, String name) {
+        notNull(path, name);
+        if (isModsFolder(path)) {
+            throw new IllegalArgumentException(name + " may not be the mods folder");
+        }
+    }
+
     public static boolean isEmpty(CharSequence seq) {
         return seq == null || seq.length() == 0;
     }
@@ -41,5 +48,10 @@ public class Checks {
 
     public static boolean isFile(String path) {
         return Files.isRegularFile(Path.of(path));
+    }
+
+    public static boolean isModsFolder(String path) {
+        System.out.println(path);
+        return path.matches("[A-Z]:\\\\.+?(?<=\\\\FarmingSimulator[0-9]{4})\\\\mods");
     }
 }

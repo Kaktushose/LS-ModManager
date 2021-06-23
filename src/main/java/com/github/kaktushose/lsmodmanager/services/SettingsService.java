@@ -90,6 +90,7 @@ public class SettingsService {
 
     public void setModpackPath(String modpacksPath) {
         Checks.notFile(modpacksPath, "modpacksPath");
+        Checks.notModsFolder(modpacksPath, "modpacksPath");
         log.debug("Value \"modpackPath\" updated. Old value \"{}\" new value \"{}\"", settings.getModpackPath(), modpacksPath);
         settings.setModpackPath(modpacksPath);
         saveSettings();

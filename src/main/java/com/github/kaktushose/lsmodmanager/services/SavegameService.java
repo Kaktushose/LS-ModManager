@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SavegameService {
 
@@ -93,6 +90,10 @@ public class SavegameService {
         List<String> modNames = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             String name = nodeList.item(i).getAttributes().getNamedItem("modName").getNodeValue();
+            // skip dlcs
+            if (name.contains("pdlc")) {
+                continue;
+            }
             modNames.add(String.format("%s.zip", name));
         }
         Collections.sort(modNames);
@@ -101,7 +102,8 @@ public class SavegameService {
         // get name
         Element element = (Element) document.getElementsByTagName("settings").item(0);
         String name = element.getElementsByTagName("savegameName").item(0).getTextContent();
-        savegame.setName(name);
+        String map = element.getElementsByTagName("mapTitle").item(0).getTextContent();
+        savegame.setName(String.format("%s (%s)", name, map));
 
         return savegame;
     }

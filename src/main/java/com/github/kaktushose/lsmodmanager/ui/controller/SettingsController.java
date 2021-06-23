@@ -3,6 +3,7 @@ package com.github.kaktushose.lsmodmanager.ui.controller;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
+import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -65,7 +66,6 @@ public class SettingsController extends Controller {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File(Constants.MY_GAMES));
         directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
-        System.out.println(Constants.MY_GAMES);
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
         textFieldFsPath.setText(path.getAbsolutePath());
@@ -76,8 +76,16 @@ public class SettingsController extends Controller {
     public void onModpackPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
+
         File path = directoryChooser.showDialog(stage);
-        if (path == null) return;
+        if (path == null) {
+            return;
+        }
+        if (Checks.isModsFolder(path.toString())) {
+            Alerts.displayErrorMessage(bundle.getString("settings.error.title"), bundle.getString("settings.error.message"));
+            return;
+        }
+
         textFieldModpackPath.setText(path.getAbsolutePath());
         unsaved = !settingsService.getModpackPath().equals(path.getAbsolutePath());
     }

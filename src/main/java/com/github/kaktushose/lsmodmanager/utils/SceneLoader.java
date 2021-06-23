@@ -1,6 +1,5 @@
 package com.github.kaktushose.lsmodmanager.utils;
 
-import com.github.kaktushose.lsmodmanager.services.SettingsService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.controller.Controller;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +9,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class SceneLoader {
