@@ -66,7 +66,6 @@ public class ModpackCreateController extends Controller {
         }
 
         modpackService.create(name, files);
-        Alerts.displayInfoMessage(bundle.getString("create.success.title"), bundle.getString("create.success.message"));
         resetData();
         return true;
     }

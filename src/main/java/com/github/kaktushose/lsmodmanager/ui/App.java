@@ -24,7 +24,7 @@ public class App extends Application {
     public App() {
         settingsService = new SettingsService(this);
         firstStart = settingsService.loadSettings();
-        modpackService = new ModpackService(settingsService);
+        modpackService = new ModpackService(this);
         savegameService = new SavegameService(settingsService);
         sceneManager = new SceneManager(this);
     }

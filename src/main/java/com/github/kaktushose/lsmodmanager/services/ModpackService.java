@@ -2,8 +2,12 @@ package com.github.kaktushose.lsmodmanager.services;
 
 import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
+import com.github.kaktushose.lsmodmanager.ui.App;
+import com.github.kaktushose.lsmodmanager.ui.components.FileMovementStatusUpdater;
+import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
+import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
@@ -14,21 +18,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ModpackService {
 
     private static final Logger log = LoggerFactory.getLogger(ModpackService.class);
     private final SettingsService settingsService;
+    private final App app;
     private final List<Modpack> modpacks;
 
-    public ModpackService(SettingsService settingsService) {
-        this.settingsService = settingsService;
+    public ModpackService(App app) {
+        this.settingsService = app.getSettingsService();
+        this.app = app;
         modpacks = settingsService.getModpacks();
     }
 
@@ -49,44 +55,47 @@ public class ModpackService {
 
         int id = settingsService.getLastModpackId() + 1;
         Modpack modpack = new Modpack(id, createValidName(name));
-
         Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
         File packageInfo = new File(folder + "//package-info.txt");
+        FileMovementStatusUpdater updater = new FileMovementStatusUpdater(app.getSceneManager().getProgressIndicatorController());
 
-        try {
-            Files.createDirectory(folder);
-            log.debug("Created base folder.");
+        new Thread(() -> {
+            long size = mods.stream().mapToLong(File::length).sum();
+            updater.monitor(folder, size);
+            try {
+                Files.createDirectory(folder);
+                log.debug("Created base folder.");
 
-            FileWriter fileWriter = new FileWriter(packageInfo);
-            fileWriter.write("Automatically generated folder by the LS-ModManager.\n" +
-                    "Don't change, move or delete anything unless you really know what you're doing.\n" +
-                    "Visit https://github.com/Kaktushose/LS-ModManager for details.\n" +
-                    "id: " + id +
-                    "\noriginal name: " + name +
-                    "\ncreated at: " +
-                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
-            fileWriter.close();
-            log.debug("Created package-info.");
+                FileWriter fileWriter = new FileWriter(packageInfo);
+                fileWriter.write("Automatically generated folder by the LS-ModManager.\n" +
+                        "Don't change, move or delete anything unless you really know what you're doing.\n" +
+                        "Visit https://github.com/Kaktushose/LS-ModManager for details.\n" +
+                        "id: " + id +
+                        "\noriginal name: " + name +
+                        "\ncreated at: " +
+                        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
+                fileWriter.close();
+                log.debug("Created package-info.");
 
-            for (File file : mods) {
-                log.debug("Copying file {}", file);
-                Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
+                for (File file : mods) {
+                    log.debug("Copying file {}", file);
+                    Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
+                }
+                log.debug("Copied {} files", mods.size());
+            } catch (IOException e) {
+                throw new FileOperationException(String.format("An error has occurred creating the modpack %s!", name), e);
             }
-            log.debug("Copied {} files", mods.size());
+            modpack.setFolder(folder.toString());
+            modpack.setMods(mods);
+            modpacks.add(modpack);
+            settingsService.setLastModpackId(id);
+            settingsService.setModpacks(modpacks);
+            log.info("Created new {}", modpack);
 
-        } catch (IOException e) {
-            throw new FileOperationException(String.format("An error has occurred creating the modpack %s!", name), e);
-        }
-
-        modpack.setFolder(folder.toString());
-        modpack.setMods(mods);
-
-        modpacks.add(modpack);
-
-        settingsService.setLastModpackId(id);
-        settingsService.setModpacks(modpacks);
-
-        log.info("Created new {}", modpack);
+            ResourceBundle bundle = settingsService.getResourceBundle();
+            Platform.runLater(() -> Alerts.displayInfoMessage(bundle.getString("create.success.title"), bundle.getString("create.success.message")));
+            updater.stop();
+        }, "ModpackCreate Thread").start();
     }
 
     public Modpack getById(int id) {
@@ -206,48 +215,48 @@ public class ModpackService {
                         new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date())
                 ));
 
-        try {
-            if (!Files.isDirectory(targetDirectory)) {
-                Files.createDirectory(targetDirectory);
-                log.warn("The mod folder doesn't exist! Created a new one!");
-            }
+        FileMovementStatusUpdater updater = new FileMovementStatusUpdater(app.getSceneManager().getProgressIndicatorController());
+        updater.monitor(targetDirectory, FileUtils.sizeOfDirectory(sourceDirectory.toFile()));
 
-            if (!PathUtils.isEmptyDirectory(targetDirectory)) {
-                PathUtils.copyDirectory(targetDirectory, backupDirectory);
-                log.warn("The mod folder wasn't empty! Created a backup at \"{}\"", backupDirectory);
-            }
-            PathUtils.deleteDirectory(targetDirectory);
-            log.debug("Deleted mod folder");
-            PathUtils.copyDirectory(sourceDirectory, targetDirectory);
-            log.debug("Copied modpack files");
-        } catch (IOException e) {
-            throw new FileOperationException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
-        }
+        new Thread(() -> {
+            try {
+                if (!Files.isDirectory(targetDirectory)) {
+                    Files.createDirectory(targetDirectory);
+                    log.warn("The mod folder doesn't exist! Created a new one!");
+                }
 
-        settingsService.setLoadedModpackId(id);
-        log.info("Successfully loaded {}", modpack);
+                if (!PathUtils.isEmptyDirectory(targetDirectory)) {
+                    PathUtils.copyDirectory(targetDirectory, backupDirectory);
+                    log.warn("The mod folder wasn't empty! Created a backup at \"{}\"", backupDirectory);
+                }
+
+                PathUtils.deleteDirectory(targetDirectory);
+                log.debug("Deleted mod folder");
+                PathUtils.copyDirectory(sourceDirectory, targetDirectory);
+                log.debug("Copied modpack files");
+            } catch (IOException e) {
+                throw new FileOperationException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
+            }
+            settingsService.setLoadedModpackId(id);
+            log.info("Successfully loaded {}", modpack);
+            updater.stop();
+        }, "ModpackLoad Thread").start();
     }
 
     public void unload(int id) {
         log.debug("Attempting to unload modpack with id {}...", id);
         Modpack modpack = getById(id);
         Path sourceDirectory = Path.of(settingsService.getFsPath() + "\\mods");
-        Path targetDirectory = Path.of(modpack.getFolder());
-
         try {
             if (!PathUtils.isDirectory(sourceDirectory)) {
                 log.debug("Skipped modpack unloading. Mods folder doesn't exists. Nothing to unload");
                 return;
             }
-
-            PathUtils.copyDirectory(sourceDirectory, targetDirectory, StandardCopyOption.REPLACE_EXISTING);
-            log.debug("Copied modpack files");
-            PathUtils.cleanDirectory(sourceDirectory);
-            log.debug("Cleared mod folder");
+            PathUtils.deleteDirectory(sourceDirectory);
+            Files.createDirectory(sourceDirectory);
         } catch (IOException e) {
             throw new FileOperationException(String.format("Unable to unload the modpack %s!", modpack.getName()), e);
         }
-
         settingsService.setLoadedModpackId(-1);
         log.info("Successfully unloaded {}", modpack);
     }

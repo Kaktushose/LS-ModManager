@@ -72,6 +72,13 @@ public class SceneManager {
         return controller.getSelectedFiles();
     }
 
+    public ProgressIndicatorController getProgressIndicatorController() {
+        ResourceBundle bundle = settingsService.getResourceBundle();
+        sceneLoader.loadFXML(ProgressIndicatorController.class, "progressindicator.fxml", 400, 150, bundle);
+        applyStyle(sceneLoader.getStage(), bundle.getString("progress.window.title"));
+        return (ProgressIndicatorController) sceneLoader.getController();
+    }
+
     public void onException(Throwable throwable) {
         log.error("LS-ModManager has crashed! Stacktrace:", throwable);
         Alerts.displayException(throwable);
