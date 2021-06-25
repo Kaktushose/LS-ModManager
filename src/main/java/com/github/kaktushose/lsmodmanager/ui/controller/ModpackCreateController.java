@@ -65,7 +65,7 @@ public class ModpackCreateController extends Controller {
             return false;
         }
 
-        modpackService.create(name, files);
+        modpackService.create(name, files).onSuccess(modpack -> System.out.println("done " + modpack.getName()));
         resetData();
         return true;
     }

@@ -104,12 +104,6 @@ public class ModpackEditController extends Controller {
 
     @FXML
     public boolean onSave() {
-        boolean unloaded = false;
-        if (modpackService.isLoadedModpack(modpack.getId())) {
-            modpackService.unload(modpack.getId());
-            unloaded = true;
-        }
-
         Modpack updatedModpack = modpack.copy();
         String name = textFieldName.getText();
 
@@ -121,10 +115,6 @@ public class ModpackEditController extends Controller {
         updatedModpack.setName(textFieldName.getText());
         updatedModpack.setMods(files);
         modpackService.updateModpack(modpack.getId(), updatedModpack);
-
-        if (unloaded) {
-            modpackService.load(modpack.getId());
-        }
 
         resetUI();
         app.getSceneManager().updateModpackData();

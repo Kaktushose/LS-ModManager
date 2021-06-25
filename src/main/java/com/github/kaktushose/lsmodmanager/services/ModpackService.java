@@ -4,9 +4,7 @@ import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.components.FileMovementStatusUpdater;
-import com.github.kaktushose.lsmodmanager.utils.Alerts;
-import com.github.kaktushose.lsmodmanager.utils.Checks;
-import com.github.kaktushose.lsmodmanager.utils.Constants;
+import com.github.kaktushose.lsmodmanager.utils.*;
 import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
@@ -49,10 +47,12 @@ public class ModpackService {
         });
     }
 
-    public void create(String name, List<File> mods) {
-        Checks.notBlank(name, "name");
+    public FileAction<Modpack> create(String name, List<File> mods) {
         log.debug("Creating new modpack...");
 
+        Checks.notBlank(name, "name");
+
+        FileActionImpl<Modpack> fileAction = new FileActionImpl<>();
         int id = settingsService.getLastModpackId() + 1;
         Modpack modpack = new Modpack(id, createValidName(name));
         Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
@@ -95,23 +95,9 @@ public class ModpackService {
             ResourceBundle bundle = settingsService.getResourceBundle();
             Platform.runLater(() -> Alerts.displayInfoMessage(bundle.getString("create.success.title"), bundle.getString("create.success.message")));
             updater.stop();
+            fileAction.getSuccessConsumer().accept(modpack);
         }, "ModpackCreate Thread").start();
-    }
-
-    public Modpack getById(int id) {
-        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().map(Modpack::copy).orElse(null);
-    }
-
-    public Modpack getByName(String name) {
-        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().map(Modpack::copy).orElse(null);
-    }
-
-    public Modpack getLoadedModpack() {
-        return getById(settingsService.getLoadedModpackId());
-    }
-
-    public List<Modpack> getAll() {
-        return Collections.unmodifiableList(modpacks);
+        return fileAction;
     }
 
     public void moveModpackFolder(Path targetDirectory) {
@@ -178,23 +164,22 @@ public class ModpackService {
         log.debug("Successfully updated {}", modpack);
     }
 
-    public void delete(Modpack modpack) {
-        modpacks.removeIf(m -> m.getId() == modpack.getId());
-        settingsService.setModpacks(modpacks);
+    public void unload(int id) {
+        log.debug("Attempting to unload modpack with id {}...", id);
+        Modpack modpack = getById(id);
+        Path sourceDirectory = Path.of(settingsService.getFsPath() + "\\mods");
         try {
-            PathUtils.deleteDirectory(Path.of(modpack.getFolder()));
+            if (!PathUtils.isDirectory(sourceDirectory)) {
+                log.debug("Skipped modpack unloading. Mods folder doesn't exists. Nothing to unload");
+                return;
+            }
+            PathUtils.deleteDirectory(sourceDirectory);
+            Files.createDirectory(sourceDirectory);
         } catch (IOException e) {
-            throw new FileOperationException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("Unable to unload the modpack %s!", modpack.getName()), e);
         }
-        log.debug("Deleted {}", modpack);
-    }
-
-    public boolean existsByName(String name) {
-        return modpacks.stream().anyMatch(modpack -> modpack.getName().equals(name));
-    }
-
-    public boolean isLoadedModpack(int id) {
-        return settingsService.getLoadedModpackId() == id;
+        settingsService.setLoadedModpackId(-1);
+        log.info("Successfully unloaded {}", modpack);
     }
 
     public void load(int id) {
@@ -243,22 +228,39 @@ public class ModpackService {
         }, "ModpackLoad Thread").start();
     }
 
-    public void unload(int id) {
-        log.debug("Attempting to unload modpack with id {}...", id);
-        Modpack modpack = getById(id);
-        Path sourceDirectory = Path.of(settingsService.getFsPath() + "\\mods");
+    public Modpack getById(int id) {
+        return modpacks.stream().filter(modpack -> modpack.getId() == id).findFirst().map(Modpack::copy).orElse(null);
+    }
+
+    public Modpack getByName(String name) {
+        return modpacks.stream().filter(modpack -> modpack.getName().equals(name)).findFirst().map(Modpack::copy).orElse(null);
+    }
+
+    public Modpack getLoadedModpack() {
+        return getById(settingsService.getLoadedModpackId());
+    }
+
+    public List<Modpack> getAll() {
+        return Collections.unmodifiableList(modpacks);
+    }
+
+    public void delete(Modpack modpack) {
+        modpacks.removeIf(m -> m.getId() == modpack.getId());
+        settingsService.setModpacks(modpacks);
         try {
-            if (!PathUtils.isDirectory(sourceDirectory)) {
-                log.debug("Skipped modpack unloading. Mods folder doesn't exists. Nothing to unload");
-                return;
-            }
-            PathUtils.deleteDirectory(sourceDirectory);
-            Files.createDirectory(sourceDirectory);
+            PathUtils.deleteDirectory(Path.of(modpack.getFolder()));
         } catch (IOException e) {
-            throw new FileOperationException(String.format("Unable to unload the modpack %s!", modpack.getName()), e);
+            throw new FileOperationException(String.format("Unable to delete the modpack %s!", modpack.getName()), e);
         }
-        settingsService.setLoadedModpackId(-1);
-        log.info("Successfully unloaded {}", modpack);
+        log.debug("Deleted {}", modpack);
+    }
+
+    public boolean existsByName(String name) {
+        return modpacks.stream().anyMatch(modpack -> modpack.getName().equals(name));
+    }
+
+    public boolean isLoadedModpack(int id) {
+        return settingsService.getLoadedModpackId() == id;
     }
 
     private String createValidName(String name) {
