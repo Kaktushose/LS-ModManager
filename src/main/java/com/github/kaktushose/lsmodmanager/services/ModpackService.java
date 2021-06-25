@@ -29,11 +29,13 @@ public class ModpackService {
     private final SettingsService settingsService;
     private final App app;
     private final List<Modpack> modpacks;
+    private final WorkerThreadFactory threadFactory;
 
     public ModpackService(App app) {
         this.settingsService = app.getSettingsService();
         this.app = app;
         modpacks = settingsService.getModpacks();
+        threadFactory = new WorkerThreadFactory("ModpackThread");
     }
 
     public void indexModpacks() {
@@ -53,20 +55,23 @@ public class ModpackService {
         Checks.notBlank(name, "name");
 
         FileActionImpl<Modpack> fileAction = new FileActionImpl<>();
-        int id = settingsService.getLastModpackId() + 1;
-        Modpack modpack = new Modpack(id, createValidName(name));
-        Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
-        File packageInfo = new File(folder + "//package-info.txt");
         FileMovementStatusUpdater updater = new FileMovementStatusUpdater(app.getSceneManager().getProgressIndicatorController());
 
-        new Thread(() -> {
+        int id = settingsService.getLastModpackId() + 1;
+        Modpack modpack = new Modpack(id, createValidName(name));
+
+        threadFactory.newThread(() -> {
+            Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
+            ResourceBundle bundle = settingsService.getResourceBundle();
+
             long size = mods.stream().mapToLong(File::length).sum();
             updater.monitor(folder, size);
+
             try {
                 Files.createDirectory(folder);
-                log.debug("Created base folder.");
+                log.debug("Created base folder");
 
-                FileWriter fileWriter = new FileWriter(packageInfo);
+                FileWriter fileWriter = new FileWriter(folder + "//package-info.txt");
                 fileWriter.write("Automatically generated folder by the LS-ModManager.\n" +
                         "Don't change, move or delete anything unless you really know what you're doing.\n" +
                         "Visit https://github.com/Kaktushose/LS-ModManager for details.\n" +
@@ -75,7 +80,7 @@ public class ModpackService {
                         "\ncreated at: " +
                         new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
                 fileWriter.close();
-                log.debug("Created package-info.");
+                log.debug("Created package-info");
 
                 for (File file : mods) {
                     log.debug("Copying file {}", file);
@@ -85,18 +90,23 @@ public class ModpackService {
             } catch (IOException e) {
                 throw new FileOperationException(String.format("An error has occurred creating the modpack %s!", name), e);
             }
+
             modpack.setFolder(folder.toString());
             modpack.setMods(mods);
             modpacks.add(modpack);
             settingsService.setLastModpackId(id);
             settingsService.setModpacks(modpacks);
+
             log.info("Created new {}", modpack);
 
-            ResourceBundle bundle = settingsService.getResourceBundle();
-            Platform.runLater(() -> Alerts.displayInfoMessage(bundle.getString("create.success.title"), bundle.getString("create.success.message")));
+            Platform.runLater(() -> Alerts.displayInfoMessage(bundle.getString("create.success.title"),
+                    bundle.getString("create.success.message"))
+            );
             updater.stop();
+
             fileAction.getSuccessConsumer().accept(modpack);
-        }, "ModpackCreate Thread").start();
+        }).start();
+
         return fileAction;
     }
 
