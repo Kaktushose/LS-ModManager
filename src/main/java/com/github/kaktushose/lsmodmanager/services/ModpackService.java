@@ -4,7 +4,9 @@ import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.components.FileMovementStatusUpdater;
+import com.github.kaktushose.lsmodmanager.ui.controller.ProgressIndicatorController;
 import com.github.kaktushose.lsmodmanager.utils.*;
+import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
@@ -145,6 +147,9 @@ public class ModpackService {
         modpacks.removeIf(m -> m.getId() == modpack.getId());
         modpack.setName(newValue.getName());
 
+        ProgressIndicatorController controller = app.getSceneManager().getProgressIndicatorController();
+        controller.show();
+
         threadFactory.newThread(() -> {
             log.debug("Updating files...");
 
@@ -152,16 +157,33 @@ public class ModpackService {
             List<File> toRemove = modpack.getMods().stream().filter(file -> !newValue.getMods().contains(file)).collect(Collectors.toList());
             String folder = modpack.getFolder();
 
+            boolean isLoaded = settingsService.getLoadedModpackId() == modpack.getId();
+            int total = toAdd.size() + toRemove.size();
+            int counter = 0;
             try {
                 for (File file : toAdd) {
                     log.debug("Copying file {}", file);
                     Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
+                    if (isLoaded) {
+                        Files.copy(file.toPath(), Path.of(String.format("%s\\mods\\%s", settingsService.getFsPath(), file.getName())));
+                    }
+
+                    int current = ++counter;
+                    Platform.runLater(() -> controller.update(100.0 * current / total));
+
                     modpack.getMods().add(file);
                 }
 
                 for (File file : toRemove) {
                     log.debug("Deleting file {}", file);
                     Files.delete(file.toPath());
+                    if (isLoaded) {
+                        Files.delete(Path.of(String.format("%s\\mods\\%s", settingsService.getFsPath(), file.getName())));
+                    }
+
+                    int current = ++counter;
+                    Platform.runLater(() -> controller.update(100.0 * current / total));
+
                     modpack.getMods().remove(file);
                 }
 
@@ -173,8 +195,11 @@ public class ModpackService {
 
             modpacks.add(modpack);
             settingsService.setModpacks(modpacks);
-            log.info("Successfully updated {}", modpack);
+
+            Platform.runLater(controller::close);
             fileAction.getSuccessConsumer().run();
+
+            log.info("Successfully updated {}", modpack);
         }).start();
 
         return fileAction;
