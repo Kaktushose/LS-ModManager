@@ -25,10 +25,6 @@ public class VersionService {
         return !latestVersion.equals(settingsService.getVersion());
     }
 
-    public String getLatestVersion() {
-        return latestVersion;
-    }
-
     public void retrieveLatestVersion() {
         try {
             URL url = new URL("https://api.github.com/repos/Kaktushose/jda-commands/releases/latest");

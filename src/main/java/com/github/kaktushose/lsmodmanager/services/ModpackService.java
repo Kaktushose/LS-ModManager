@@ -298,10 +298,6 @@ public class ModpackService {
         return modpacks.stream().anyMatch(modpack -> modpack.getName().equals(name));
     }
 
-    public boolean isLoadedModpack(int id) {
-        return settingsService.getLoadedModpackId() == id;
-    }
-
     private String createValidName(String name) {
         if (name == null) {
             name = "null";

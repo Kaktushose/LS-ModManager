@@ -13,5 +13,4 @@ public class FileActionImpl implements FileAction {
         this.success = success;
         return this;
     }
-
 }

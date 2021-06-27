@@ -16,5 +16,4 @@ public class Constants {
         add(Locale.ENGLISH);
         add(Locale.GERMAN);
     }};
-
 }

@@ -18,10 +18,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -41,7 +37,9 @@ public class MainController extends Controller {
     @FXML
     public ListView<String> savegameListView;
     @FXML
-    public Label modpackName, requiredMods;
+    public Label modpackName;
+    @FXML
+    public Label requiredMods;
     private Modpack loadedModpack;
     private ResourceBundle bundle;
     private String noModpack;
@@ -107,7 +105,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackCreate() {
-        if (!isReady()) {
+        if (isNotReady()) {
             return;
         }
         sceneManager.showModpackCreate();
@@ -115,7 +113,7 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackEdit() {
-        if (!isReady()) {
+        if (isNotReady()) {
             return;
         }
         sceneManager.showModpackEdit();
@@ -174,12 +172,12 @@ public class MainController extends Controller {
         app.openURL(bundle.getString("main.url.help"));
     }
 
-    private boolean isReady() {
+    private boolean isNotReady() {
         if (Checks.isBlank(app.getSettingsService().getModpackPath())) {
             Alerts.displayInfoMessage(bundle.getString("alerts.select.title"), bundle.getString("alerts.select.text"));
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void updateModpackComboBox() {

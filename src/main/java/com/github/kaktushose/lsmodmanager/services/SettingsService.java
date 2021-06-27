@@ -3,7 +3,6 @@ package com.github.kaktushose.lsmodmanager.services;
 import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.services.model.Settings;
-import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
 import com.google.gson.Gson;
@@ -163,5 +162,4 @@ public class SettingsService {
     public ResourceBundle getResourceBundle() {
         return ResourceBundle.getBundle("bundles.Bundle", getLanguage());
     }
-
 }

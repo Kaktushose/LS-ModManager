@@ -5,5 +5,4 @@ public class ThreadExecutionException extends RuntimeException {
     public ThreadExecutionException(String error, Throwable t) {
         super(error, t);
     }
-
 }

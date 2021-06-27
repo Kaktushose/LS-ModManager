@@ -112,5 +112,4 @@ public class App extends Application {
             log.warn("Failed to open link. Desktop is not supported");
         }
     }
-
 }
