@@ -142,11 +142,7 @@ public class ModpackService {
         Checks.notFile(newValue.getFolder(), "modpack path");
 
         FileActionImpl fileAction = new FileActionImpl();
-
         Modpack modpack = getById(id);
-        modpacks.removeIf(m -> m.getId() == modpack.getId());
-        modpack.setName(newValue.getName());
-
         ProgressIndicatorController controller = app.getSceneManager().getProgressIndicatorController();
         controller.show();
 
@@ -170,8 +166,6 @@ public class ModpackService {
 
                     int current = ++counter;
                     Platform.runLater(() -> controller.update(100.0 * current / total));
-
-                    modpack.getMods().add(file);
                 }
 
                 for (File file : toRemove) {
@@ -183,16 +177,15 @@ public class ModpackService {
 
                     int current = ++counter;
                     Platform.runLater(() -> controller.update(100.0 * current / total));
-
-                    modpack.getMods().remove(file);
                 }
-
-                modpack.setMods(newValue.getMods());
             } catch (IOException e) {
                 throw new FileOperationException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
             }
             log.debug("All files updated.");
 
+            modpack.setName(newValue.getName());
+            modpack.setMods(newValue.getMods());
+            modpacks.removeIf(m -> m.getId() == modpack.getId());
             modpacks.add(modpack);
             settingsService.setModpacks(modpacks);
 

@@ -58,12 +58,12 @@ public class ModpackCreateController extends Controller {
 
     // boolean indicates whether saving was successful or not
     @FXML
-    public void onSave() {
+    public boolean onSave() {
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
             Alerts.displayErrorMessage(bundle.getString("create.error.title"), bundle.getString("create.error.message"));
-            return;
+            return false;
         }
 
         modpackService.create(name, files).onSuccess(() -> Platform.runLater(() -> {
@@ -72,15 +72,18 @@ public class ModpackCreateController extends Controller {
             );
             resetData();
         }));
+        return true;
     }
 
     @FXML
     public void onClose() {
+        boolean exit = true;
+
         if (unsaved) {
             int result = Alerts.displaySaveOptions(bundle.getString("create.save.title"), bundle.getString("create.save.message"));
             switch (result) {
                 case 0:
-                    onSave();
+                    exit = onSave();
                     break;
                 case 1:
                     break;
@@ -88,6 +91,11 @@ public class ModpackCreateController extends Controller {
                     return;
             }
         }
+
+        if (!exit) {
+            return;
+        }
+
         app.getSceneManager().updateModpackData();
         stage.close();
         log.debug("modpack create window closed");

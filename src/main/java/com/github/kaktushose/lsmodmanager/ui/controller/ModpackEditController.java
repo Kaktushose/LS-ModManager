@@ -73,7 +73,7 @@ public class ModpackEditController extends Controller {
             return;
         }
         modpack = modpackService.getByName(modpackComboBox.getValue());
-        files.clear();
+        files = new ArrayList<>();
         files.addAll(modpack.getMods());
         textFieldName.setText(modpack.getName());
         textFieldName.setDisable(false);
@@ -82,7 +82,7 @@ public class ModpackEditController extends Controller {
 
     @FXML
     public void onModAdd() {
-        files = (app.getSceneManager().showFileChooser(files));
+        files = app.getSceneManager().showFileChooser(files);
         unsaved = !modpack.getMods().containsAll(files);
         modpackComboBox.setDisable(unsaved);
     }
@@ -104,40 +104,45 @@ public class ModpackEditController extends Controller {
     }
 
     @FXML
-    public void onSave() {
+    public boolean onSave() {
         Modpack updatedModpack = modpack.copy();
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
             Alerts.displayErrorMessage(bundle.getString("edit.error.title"), bundle.getString("edit.error.message"));
-            return;
+            return false;
         }
 
         updatedModpack.setName(textFieldName.getText());
         updatedModpack.setMods(files);
-        modpackService.updateModpack(modpack.getId(), updatedModpack).onSuccess(() -> {
-            Platform.runLater(() -> {
-                resetUI();
-                app.getSceneManager().updateModpackData();
-            });
+        modpackService.updateModpack(modpack.getId(), updatedModpack).onSuccess(() -> Platform.runLater(() -> {
+            resetUI();
+            app.getSceneManager().updateModpackData();
             unsaved = false;
-        });
+        }));
+        return true;
     }
 
     @FXML
     public void onClose() {
+        boolean exit = true;
+
         if (unsaved) {
             int result = Alerts.displaySaveOptions(bundle.getString("edit.save.title"), bundle.getString("edit.save.message"));
             switch (result) {
                 case 0:
-                    onSave();
-                    break;
+                    exit = onSave();
                 case 1:
                     break;
                 default:
                     return;
             }
         }
+
+        if (!exit) {
+            return;
+        }
+
         app.getSceneManager().updateModpackData();
         stage.close();
         log.debug("modpack edit window closed");
