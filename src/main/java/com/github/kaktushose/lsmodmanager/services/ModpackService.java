@@ -5,7 +5,6 @@ import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.components.FileMovementStatusUpdater;
 import com.github.kaktushose.lsmodmanager.utils.*;
-import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ModpackService {
@@ -49,12 +47,12 @@ public class ModpackService {
         });
     }
 
-    public FileAction<Modpack> create(String name, List<File> mods) {
+    public FileAction create(String name, List<File> mods) {
         log.debug("Creating new modpack...");
 
         Checks.notBlank(name, "name");
 
-        FileActionImpl<Modpack> fileAction = new FileActionImpl<>();
+        FileActionImpl fileAction = new FileActionImpl();
         FileMovementStatusUpdater updater = new FileMovementStatusUpdater(app.getSceneManager().getProgressIndicatorController());
 
         int id = settingsService.getLastModpackId() + 1;
@@ -62,7 +60,6 @@ public class ModpackService {
 
         threadFactory.newThread(() -> {
             Path folder = Path.of(settingsService.getModpackPath() + Constants.MOD_FOLDER_PATH + id);
-            ResourceBundle bundle = settingsService.getResourceBundle();
 
             long size = mods.stream().mapToLong(File::length).sum();
             updater.monitor(folder, size);
@@ -98,13 +95,8 @@ public class ModpackService {
             settingsService.setModpacks(modpacks);
 
             log.info("Created new {}", modpack);
-
-            Platform.runLater(() -> Alerts.displayInfoMessage(bundle.getString("create.success.title"),
-                    bundle.getString("create.success.message"))
-            );
             updater.stop();
-
-            fileAction.getSuccessConsumer().accept(modpack);
+            fileAction.getSuccessConsumer().run();
         }).start();
 
         return fileAction;
@@ -112,13 +104,16 @@ public class ModpackService {
 
     public void moveModpackFolder(Path targetDirectory) {
         String modpackPath = settingsService.getModpackPath();
+
         if (targetDirectory.toString().equals(modpackPath)) {
             return;
         }
         if (Checks.isBlank(modpackPath)) {
             return;
         }
+
         log.debug("Attempting to relocate modpack folder...");
+
         Path sourceDirectory = Path.of(modpackPath);
         Checks.emptyDirectory(targetDirectory.toString(), "modpacksPath");
         Checks.notSubDirectory(sourceDirectory.toString(), targetDirectory.toString(), "modpacksPath");
@@ -130,48 +125,59 @@ public class ModpackService {
         } catch (IOException e) {
             throw new FileOperationException("An error has occurred moving the modpack folder", e);
         }
+
         modpacks.forEach(modpack -> modpack.setFolder(targetDirectory + Constants.MOD_FOLDER_PATH + modpack.getId()));
         settingsService.setModpacks(modpacks);
+
         log.debug("Updated modpack folder paths");
         log.info("Successfully relocated the modpack folder");
     }
 
-    public void updateModpack(int id, Modpack newValue) {
+    public FileAction updateModpack(int id, Modpack newValue) {
         log.debug("Updating modpack with id {}.", id);
+
         Checks.notBlank(newValue.getName(), "name");
         Checks.notFile(newValue.getFolder(), "modpack path");
+
+        FileActionImpl fileAction = new FileActionImpl();
 
         Modpack modpack = getById(id);
         modpacks.removeIf(m -> m.getId() == modpack.getId());
         modpack.setName(newValue.getName());
-        modpack.setFolder(newValue.getFolder());
 
-        log.debug("Updating files...");
-        List<File> toAdd = newValue.getMods().stream().filter(file -> !modpack.getMods().contains(file)).collect(Collectors.toList());
-        List<File> toRemove = modpack.getMods().stream().filter(file -> !newValue.getMods().contains(file)).collect(Collectors.toList());
-        String folder = modpack.getFolder();
-        try {
-            for (File file : toAdd) {
-                log.debug("Copying file {}", file);
-                Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
-                modpack.getMods().add(file);
+        threadFactory.newThread(() -> {
+            log.debug("Updating files...");
+
+            List<File> toAdd = newValue.getMods().stream().filter(file -> !modpack.getMods().contains(file)).collect(Collectors.toList());
+            List<File> toRemove = modpack.getMods().stream().filter(file -> !newValue.getMods().contains(file)).collect(Collectors.toList());
+            String folder = modpack.getFolder();
+
+            try {
+                for (File file : toAdd) {
+                    log.debug("Copying file {}", file);
+                    Files.copy(file.toPath(), Path.of(String.format("%s\\%s", folder, file.getName())));
+                    modpack.getMods().add(file);
+                }
+
+                for (File file : toRemove) {
+                    log.debug("Deleting file {}", file);
+                    Files.delete(file.toPath());
+                    modpack.getMods().remove(file);
+                }
+
+                modpack.setMods(newValue.getMods());
+            } catch (IOException e) {
+                throw new FileOperationException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
             }
+            log.debug("All files updated.");
 
-            for (File file : toRemove) {
-                log.debug("Deleting file {}", file);
-                Files.delete(file.toPath());
-                modpack.getMods().remove(file);
-            }
+            modpacks.add(modpack);
+            settingsService.setModpacks(modpacks);
+            log.info("Successfully updated {}", modpack);
+            fileAction.getSuccessConsumer().run();
+        }).start();
 
-            modpack.setMods(newValue.getMods());
-        } catch (IOException e) {
-            throw new FileOperationException(String.format("An error has occurred updating the modpack %s!", modpack.getName()), e);
-        }
-        log.debug("All files updated.");
-
-        modpacks.add(modpack);
-        settingsService.setModpacks(modpacks);
-        log.debug("Successfully updated {}", modpack);
+        return fileAction;
     }
 
     public void unload(int id) {
@@ -192,7 +198,7 @@ public class ModpackService {
         log.info("Successfully unloaded {}", modpack);
     }
 
-    public void load(int id) {
+    public FileAction load(int id) {
         log.debug("Attempting to load modpack with id {}...", id);
 
         int loadedId = settingsService.getLoadedModpackId();
@@ -201,6 +207,7 @@ public class ModpackService {
             unload(loadedId);
         }
 
+        FileActionImpl fileAction = new FileActionImpl();
         Modpack modpack = getById(id);
         Path sourceDirectory = Path.of(modpack.getFolder());
         Path targetDirectory = Path.of(settingsService.getFsPath() + "\\mods");
@@ -213,7 +220,7 @@ public class ModpackService {
         FileMovementStatusUpdater updater = new FileMovementStatusUpdater(app.getSceneManager().getProgressIndicatorController());
         updater.monitor(targetDirectory, FileUtils.sizeOfDirectory(sourceDirectory.toFile()));
 
-        new Thread(() -> {
+        threadFactory.newThread(() -> {
             try {
                 if (!Files.isDirectory(targetDirectory)) {
                     Files.createDirectory(targetDirectory);
@@ -232,10 +239,14 @@ public class ModpackService {
             } catch (IOException e) {
                 throw new FileOperationException(String.format("Unable to load the modpack %s!", modpack.getName()), e);
             }
+
             settingsService.setLoadedModpackId(id);
             log.info("Successfully loaded {}", modpack);
             updater.stop();
-        }, "ModpackLoad Thread").start();
+            fileAction.getSuccessConsumer().run();
+        }).start();
+
+        return fileAction;
     }
 
     public Modpack getById(int id) {

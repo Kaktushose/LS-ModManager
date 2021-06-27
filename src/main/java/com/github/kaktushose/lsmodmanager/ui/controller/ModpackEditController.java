@@ -6,6 +6,7 @@ import com.github.kaktushose.lsmodmanager.services.model.Modpack;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -103,23 +104,24 @@ public class ModpackEditController extends Controller {
     }
 
     @FXML
-    public boolean onSave() {
+    public void onSave() {
         Modpack updatedModpack = modpack.copy();
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
             Alerts.displayErrorMessage(bundle.getString("edit.error.title"), bundle.getString("edit.error.message"));
-            return false;
+            return;
         }
 
         updatedModpack.setName(textFieldName.getText());
         updatedModpack.setMods(files);
-        modpackService.updateModpack(modpack.getId(), updatedModpack);
-
-        resetUI();
-        app.getSceneManager().updateModpackData();
-        unsaved = false;
-        return true;
+        modpackService.updateModpack(modpack.getId(), updatedModpack).onSuccess(() -> {
+            Platform.runLater(() -> {
+                resetUI();
+                app.getSceneManager().updateModpackData();
+            });
+            unsaved = false;
+        });
     }
 
     @FXML

@@ -8,6 +8,7 @@ import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.ui.SceneManager;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -151,9 +152,10 @@ public class MainController extends Controller {
             return;
         }
         Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
-        modpackService.load(newValue.getId());
-        loadedModpack = newValue;
-        modpackName.setText(loadedModpack.getName());
+        modpackService.load(newValue.getId()).onSuccess(() -> {
+            loadedModpack = newValue;
+            Platform.runLater(() -> modpackName.setText(loadedModpack.getName()));
+        });
     }
 
     @FXML

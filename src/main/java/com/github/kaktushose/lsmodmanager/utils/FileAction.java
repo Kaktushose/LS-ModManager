@@ -2,10 +2,9 @@ package com.github.kaktushose.lsmodmanager.utils;
 
 import java.util.function.Consumer;
 
-public interface FileAction<T> {
+public interface FileAction {
 
-    FileAction<T> onSuccess(Consumer<T> success);
+    FileAction onSuccess(Runnable success);
 
-    FileAction<T> onError(Runnable error);
 
 }

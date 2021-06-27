@@ -4,6 +4,7 @@ import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -57,17 +58,20 @@ public class ModpackCreateController extends Controller {
 
     // boolean indicates whether saving was successful or not
     @FXML
-    public boolean onSave() {
+    public void onSave() {
         String name = textFieldName.getText();
 
         if (Checks.isBlank(name)) {
             Alerts.displayErrorMessage(bundle.getString("create.error.title"), bundle.getString("create.error.message"));
-            return false;
+            return;
         }
 
-        modpackService.create(name, files).onSuccess(modpack -> System.out.println("done " + modpack.getName()));
-        resetData();
-        return true;
+        modpackService.create(name, files).onSuccess(() -> Platform.runLater(() -> {
+            Alerts.displayInfoMessage(bundle.getString("create.success.title"),
+                    bundle.getString("create.success.message")
+            );
+            resetData();
+        }));
     }
 
     @FXML

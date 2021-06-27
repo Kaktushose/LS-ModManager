@@ -1,29 +1,17 @@
 package com.github.kaktushose.lsmodmanager.utils;
 
-import java.util.function.Consumer;
+public class FileActionImpl implements FileAction {
 
-public class FileActionImpl<T> implements FileAction<T> {
+    private Runnable success;
 
-    private Consumer<T> success;
-    private Runnable error;
-
-    public Consumer<T> getSuccessConsumer() {
+    public Runnable getSuccessConsumer() {
         return success;
     }
 
-    public Runnable getErrorConsumer() {
-        return error;
-    }
-
     @Override
-    public FileAction<T> onSuccess(Consumer<T> success) {
+    public FileAction onSuccess(Runnable success) {
         this.success = success;
         return this;
     }
 
-    @Override
-    public FileAction<T> onError(Runnable error) {
-        this.error = error;
-        return this;
-    }
 }
