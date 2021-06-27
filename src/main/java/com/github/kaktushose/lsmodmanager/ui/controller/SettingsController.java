@@ -123,7 +123,7 @@ public class SettingsController extends Controller {
             }
             ProgressIndicatorController controller = app.getSceneManager().getProgressIndicatorController();
             controller.showEndless();
-            new Thread(() -> {
+            app.getThreadFactory().newThread(() -> {
                 app.getModpackService().moveModpackFolder(Path.of(textFieldModpackPath.getText()));
                 settingsService.setModpackPath(textFieldModpackPath.getText());
                 Platform.runLater(controller::close);

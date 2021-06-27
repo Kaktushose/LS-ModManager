@@ -1,18 +1,21 @@
 package com.github.kaktushose.lsmodmanager.services.model;
 
+import com.github.kaktushose.lsmodmanager.utils.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Settings {
 
-    private final List<Locale> availableLanguages;
     private String fsPath;
     private int loadedModpack;
     private String modpackPath;
     private int lastModpackId;
     private List<Modpack> modpacks;
     private Locale language;
+    private List<Locale> availableLanguages;
+    private String version;
 
     public Settings() {
         fsPath = "";
@@ -21,10 +24,8 @@ public class Settings {
         lastModpackId = -1;
         modpacks = new ArrayList<>();
         language = Locale.ENGLISH;
-        availableLanguages = new ArrayList<>() {{
-            add(Locale.ENGLISH);
-            add(Locale.GERMAN);
-        }};
+        availableLanguages = Constants.AVAILABLE_LANGUAGES;
+        version = Constants.VERSION;
     }
 
     public String getFsPath() {
@@ -77,5 +78,17 @@ public class Settings {
 
     public List<Locale> getAvailableLanguages() {
         return availableLanguages;
+    }
+
+    public void setAvailableLanguages(List<Locale> availableLanguages) {
+        this.availableLanguages = availableLanguages;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

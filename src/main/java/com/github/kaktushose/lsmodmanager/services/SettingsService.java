@@ -50,6 +50,7 @@ public class SettingsService {
             e.printStackTrace();
             log.error("There was an error loading the settings file!", e);
         }
+        writeConstants();
         return false;
     }
 
@@ -59,6 +60,12 @@ public class SettingsService {
         } catch (IOException e) {
             throw new FileOperationException("There was an error saving the settings file!", e);
         }
+    }
+
+    private void writeConstants() {
+        settings.setAvailableLanguages(Constants.AVAILABLE_LANGUAGES);
+        settings.setVersion(Constants.VERSION);
+        saveSettings();
     }
 
     public boolean findFsPath() {
@@ -131,6 +138,11 @@ public class SettingsService {
         saveSettings();
     }
 
+    public String getVersion() {
+        saveSettings(); // save settings to make sure that new value is written to file
+        return settings.getVersion();
+    }
+
     public Locale getLanguage() {
         return settings.getLanguage();
     }
@@ -144,6 +156,7 @@ public class SettingsService {
     }
 
     public List<Locale> getAvailableLanguages() {
+        saveSettings(); // save settings to make sure that new value is written to file
         return settings.getAvailableLanguages();
     }
 

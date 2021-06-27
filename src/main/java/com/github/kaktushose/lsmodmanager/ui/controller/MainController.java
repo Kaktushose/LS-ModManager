@@ -166,12 +166,12 @@ public class MainController extends Controller {
 
     @FXML
     public void onAbout() {
-        openURL(bundle.getString("main.url.about"));
+        app.openURL(bundle.getString("main.url.about"));
     }
 
     @FXML
     public void onHelp() {
-        openURL(bundle.getString("main.url.help"));
+        app.openURL(bundle.getString("main.url.help"));
     }
 
     private boolean isReady() {
@@ -210,17 +210,5 @@ public class MainController extends Controller {
             }
             modpackListView.getItems().add(file.getName());
         });
-    }
-
-    private void openURL(String url) {
-        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            try {
-                Desktop.getDesktop().browse(new URI(url));
-            } catch (IOException | URISyntaxException e) {
-                log.error("Failed to open the url: " + url, e);
-            }
-        } else {
-            log.warn("Failed to open link. Desktop is not supported");
-        }
     }
 }
