@@ -83,7 +83,7 @@ public class ModpackEditController extends Controller {
     @FXML
     public void onModAdd() {
         files = app.getSceneManager().showFileChooser(files);
-        unsaved = !modpack.getMods().containsAll(files);
+        unsaved = unsaved || !modpack.getMods().containsAll(files);
         modpackComboBox.setDisable(unsaved);
     }
 
@@ -115,6 +115,11 @@ public class ModpackEditController extends Controller {
 
         updatedModpack.setName(textFieldName.getText());
         updatedModpack.setMods(files);
+
+        if (!app.getDiskSpaceChecker().checkEditing(modpack, updatedModpack)) {
+            return false;
+        }
+
         modpackService.updateModpack(modpack.getId(), updatedModpack).onSuccess(() -> Platform.runLater(() -> {
             resetUI();
             app.getSceneManager().updateModpackData();

@@ -3,6 +3,7 @@ package com.github.kaktushose.lsmodmanager.ui;
 import com.github.kaktushose.lsmodmanager.services.ModpackService;
 import com.github.kaktushose.lsmodmanager.services.SavegameService;
 import com.github.kaktushose.lsmodmanager.services.SettingsService;
+import com.github.kaktushose.lsmodmanager.ui.components.DiskSpaceChecker;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,14 +20,16 @@ public class App extends Application {
     private final ModpackService modpackService;
     private final SavegameService savegameService;
     private final SceneManager sceneManager;
+    private final DiskSpaceChecker diskSpaceChecker;
     private final boolean firstStart;
 
     public App() {
-        settingsService = new SettingsService(this);
+        settingsService = new SettingsService();
         firstStart = settingsService.loadSettings();
         modpackService = new ModpackService(this);
         savegameService = new SavegameService(settingsService);
         sceneManager = new SceneManager(this);
+        diskSpaceChecker = new DiskSpaceChecker(settingsService);
     }
 
     @Override
@@ -67,5 +70,9 @@ public class App extends Application {
 
     public SettingsService getSettingsService() {
         return settingsService;
+    }
+
+    public DiskSpaceChecker getDiskSpaceChecker() {
+        return diskSpaceChecker;
     }
 }

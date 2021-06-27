@@ -5,6 +5,7 @@ import com.github.kaktushose.lsmodmanager.ui.App;
 import com.github.kaktushose.lsmodmanager.utils.Alerts;
 import com.github.kaktushose.lsmodmanager.utils.Checks;
 import com.github.kaktushose.lsmodmanager.utils.Constants;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -29,10 +31,10 @@ public class SettingsController extends Controller {
     @FXML
     public ComboBox<String> languageComboBox;
     private Locale locale;
-    private boolean unsaved;
     private boolean languageChanged;
-    private boolean reload;
+    private boolean saved;
     private boolean fsPathChanged;
+    private boolean modpacksPathChanged;
     private ResourceBundle bundle;
 
     public SettingsController(App app, Stage stage) {
@@ -43,7 +45,6 @@ public class SettingsController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        unsaved = false;
         languageChanged = false;
         fsPathChanged = false;
         bundle = resources;
@@ -71,8 +72,7 @@ public class SettingsController extends Controller {
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
         textFieldFsPath.setText(path.getAbsolutePath());
-        unsaved = !settingsService.getFsPath().equals(path.getAbsolutePath());
-        fsPathChanged = true;
+        fsPathChanged = !settingsService.getFsPath().equals(path.getAbsolutePath());
     }
 
     @FXML
@@ -102,32 +102,40 @@ public class SettingsController extends Controller {
             return;
         }
         textFieldModpackPath.setText(path.getAbsolutePath());
-        unsaved = !settingsService.getModpackPath().equals(path.getAbsolutePath());
+        modpacksPathChanged = !settingsService.getModpackPath().equals(path.getAbsolutePath());
     }
 
     @FXML
     public void onLanguageSelect() {
         locale = locales.get(languageComboBox.getSelectionModel().getSelectedItem());
-        unsaved = !locale.equals(settingsService.getLanguage());
-        languageChanged = true;
+        languageChanged = !locale.equals(settingsService.getLanguage());
     }
 
     @FXML
-    public void onSave() {
+    public boolean onSave() {
+        if (modpacksPathChanged) {
+            if (!app.getDiskSpaceChecker().checkMoving(settingsService.getModpackPath(), textFieldFsPath.getText())) {
+                return false;
+            }
+            app.getModpackService().moveModpackFolder(Path.of(textFieldModpackPath.getText()));
+        }
+
         settingsService.setFsPath(textFieldFsPath.getText());
         settingsService.setModpackPath(textFieldModpackPath.getText());
         settingsService.setLanguage(locale);
-        unsaved = false;
-        reload = true;
+        saved = true;
+        return true;
     }
 
     @FXML
     public void onClose() {
-        if (unsaved) {
+        boolean exit = true;
+
+        if (fsPathChanged || modpacksPathChanged || languageChanged) {
             int result = Alerts.displaySaveOptions(bundle.getString("settings.save.title"), bundle.getString("settings.save.message"));
             switch (result) {
                 case 0:
-                    onSave();
+                    exit = onSave();
                     break;
                 case 1:
                     break;
@@ -135,9 +143,14 @@ public class SettingsController extends Controller {
                     return;
             }
         }
+        if (!exit) {
+            return;
+        }
+
         stage.close();
         log.debug("settings window closed");
-        if (reload) {
+
+        if (saved) {
             if (fsPathChanged) {
                 app.getSavegameService().indexSavegames();
                 app.getSceneManager().reloadMainWindow();

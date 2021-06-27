@@ -26,13 +26,11 @@ import static com.github.kaktushose.lsmodmanager.utils.Constants.SETTINGS_PATH;
 public class SettingsService {
 
     private static final Logger log = LoggerFactory.getLogger(SettingsService.class);
-    private final App app;
     private final Gson gson;
     private Settings settings;
 
-    public SettingsService(App app) {
+    public SettingsService() {
         gson = new Gson();
-        this.app = app;
     }
 
     // returns true when new settings file was created, which equals to first start of app
@@ -97,7 +95,6 @@ public class SettingsService {
         Checks.notFile(modpacksPath, "modpacksPath");
         Checks.notModsFolder(modpacksPath, "modpacksPath");
         log.debug("Value \"modpackPath\" updated. Old value \"{}\" new value \"{}\"", settings.getModpackPath(), modpacksPath);
-        app.getModpackService().moveModpackFolder(Path.of(modpacksPath));
         settings.setModpackPath(modpacksPath);
         saveSettings();
     }

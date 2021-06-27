@@ -52,7 +52,7 @@ public class ModpackCreateController extends Controller {
         // sorting both lists before comparing
         Collections.sort(newFiles);
         Collections.sort(files);
-        unsaved = !newFiles.equals(files);
+        unsaved = unsaved || !newFiles.equals(files);
         files = newFiles;
     }
 
@@ -63,6 +63,10 @@ public class ModpackCreateController extends Controller {
 
         if (Checks.isBlank(name)) {
             Alerts.displayErrorMessage(bundle.getString("create.error.title"), bundle.getString("create.error.message"));
+            return false;
+        }
+
+        if (!app.getDiskSpaceChecker().checkCreation(files)) {
             return false;
         }
 

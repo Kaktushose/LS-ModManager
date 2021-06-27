@@ -143,15 +143,21 @@ public class MainController extends Controller {
 
     @FXML
     public void onModpackLoad() {
+        Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
+
+        if (!app.getDiskSpaceChecker().checkLoading(newValue)) {
+            return;
+        }
         if (loadedModpack != null) {
             modpackService.unload(loadedModpack.getId());
             loadedModpack = null;
+
         }
         if (modpackComboBox.getValue().equals(noModpack)) {
             modpackName.setText(noModpack);
             return;
         }
-        Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
+
         modpackService.load(newValue.getId()).onSuccess(() -> {
             loadedModpack = newValue;
             Platform.runLater(() -> modpackName.setText(loadedModpack.getName()));
