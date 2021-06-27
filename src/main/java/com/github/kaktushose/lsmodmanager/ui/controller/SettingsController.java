@@ -32,9 +32,10 @@ public class SettingsController extends Controller {
     public ComboBox<String> languageComboBox;
     private Locale locale;
     private boolean languageChanged;
-    private boolean saved;
     private boolean fsPathChanged;
     private boolean modpacksPathChanged;
+    private boolean unsaved;
+    private boolean canReload;
     private ResourceBundle bundle;
 
     public SettingsController(App app, Stage stage) {
@@ -73,6 +74,7 @@ public class SettingsController extends Controller {
         if (path == null) return;
         textFieldFsPath.setText(path.getAbsolutePath());
         fsPathChanged = !settingsService.getFsPath().equals(path.getAbsolutePath());
+        unsaved = unsaved || fsPathChanged;
     }
 
     @FXML
@@ -103,12 +105,14 @@ public class SettingsController extends Controller {
         }
         textFieldModpackPath.setText(path.getAbsolutePath());
         modpacksPathChanged = !settingsService.getModpackPath().equals(path.getAbsolutePath());
+        unsaved = unsaved || modpacksPathChanged;
     }
 
     @FXML
     public void onLanguageSelect() {
         locale = locales.get(languageComboBox.getSelectionModel().getSelectedItem());
         languageChanged = !locale.equals(settingsService.getLanguage());
+        unsaved = unsaved || languageChanged;
     }
 
     @FXML
@@ -117,13 +121,19 @@ public class SettingsController extends Controller {
             if (!app.getDiskSpaceChecker().checkMoving(settingsService.getModpackPath(), textFieldFsPath.getText())) {
                 return false;
             }
-            app.getModpackService().moveModpackFolder(Path.of(textFieldModpackPath.getText()));
+            ProgressIndicatorController controller = app.getSceneManager().getProgressIndicatorController();
+            controller.showEndless();
+            new Thread(() -> {
+                app.getModpackService().moveModpackFolder(Path.of(textFieldModpackPath.getText()));
+                settingsService.setModpackPath(textFieldModpackPath.getText());
+                Platform.runLater(controller::close);
+            }).start();
         }
 
         settingsService.setFsPath(textFieldFsPath.getText());
-        settingsService.setModpackPath(textFieldModpackPath.getText());
         settingsService.setLanguage(locale);
-        saved = true;
+        canReload = true;
+        unsaved = false;
         return true;
     }
 
@@ -131,7 +141,7 @@ public class SettingsController extends Controller {
     public void onClose() {
         boolean exit = true;
 
-        if (fsPathChanged || modpacksPathChanged || languageChanged) {
+        if (unsaved) {
             int result = Alerts.displaySaveOptions(bundle.getString("settings.save.title"), bundle.getString("settings.save.message"));
             switch (result) {
                 case 0:
@@ -150,7 +160,7 @@ public class SettingsController extends Controller {
         stage.close();
         log.debug("settings window closed");
 
-        if (saved) {
+        if (canReload) {
             if (fsPathChanged) {
                 app.getSavegameService().indexSavegames();
                 app.getSceneManager().reloadMainWindow();
