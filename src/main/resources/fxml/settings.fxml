@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0"
+            prefWidth="644.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
+            xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox prefHeight="464.0" prefWidth="665.0" spacing="10.0">
+            <children>
+                <Label text="%settings.label.title">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="-10.0" left="10.0" top="10.0"/>
+                    </VBox.margin>
+                </Label>
+                <Separator prefHeight="0.0" prefWidth="640.0"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                    <children>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.game"/>
+                        <TextField fx:id="textFieldFsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
+                        <Button mnemonicParsing="false" onAction="#onFsPath" text="%settings.button.select">
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets left="20.0"/>
+                    </padding>
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </HBox>
+                <Separator prefWidth="200.0"/>
+                <HBox prefHeight="100.0" prefWidth="640.0" spacing="20.0">
+                    <children>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.modpacks"/>
+                        <TextField fx:id="textFieldModpackPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
+                        <Button mnemonicParsing="false" onAction="#onModpackPath" text="%settings.button.select">
+                            <padding>
+                                <Insets right="20.0"/>
+                            </padding>
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0"/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets left="20.0"/>
+                    </padding>
+                </HBox>
+                <Separator prefHeight="4.0" prefWidth="640.0"/>
+                <HBox prefHeight="42.0" prefWidth="601.0" spacing="20.0">
+                    <children>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.language"/>
+                        <ComboBox fx:id="languageComboBox" onAction="#onLanguageSelect" prefHeight="42.0"
+                                  prefWidth="168.0">
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </ComboBox>
+                        <Region prefHeight="42.0" prefWidth="280.0"/>
+                    </children>
+                    <padding>
+                        <Insets left="20.0" right="20.0"/>
+                    </padding>
+                </HBox>
+                <Separator prefHeight="8.0" prefWidth="665.0"/>
+                <HBox prefHeight="51.0" prefWidth="645.0" spacing="20.0">
+                    <children>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button mnemonicParsing="false" onAction="#onSave" text="%settings.button.save"/>
+                        <Button mnemonicParsing="false" onAction="#onClose" text="%settings.button.exit">
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" right="20.0" top="20.0"/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets top="-10.0"/>
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

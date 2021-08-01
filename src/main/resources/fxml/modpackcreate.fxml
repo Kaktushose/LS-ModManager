@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="285.0"
+            prefWidth="640.0" style="-fx-background-color: #EAEAeA;" stylesheets="@material-fx-v0_3.css"
+            xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label text="%create.label.title" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <Separator layoutY="22.0" prefHeight="35.0" prefWidth="624.0"/>
+        <HBox layoutX="86.0" layoutY="165.0" prefHeight="292.0" prefWidth="642.0" AnchorPane.bottomAnchor="42.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+            <children>
+                <VBox prefHeight="331.0" prefWidth="192.0" spacing="10.0">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                    <children>
+                        <Label prefHeight="36.0" prefWidth="125.0" text="%create.label.name"/>
+                        <Separator prefHeight="0.0" prefWidth="170.0"/>
+                        <Label prefHeight="40.0" prefWidth="168.0" text="%create.label.mods"/>
+                        <Separator prefHeight="0.0" prefWidth="170.0"/>
+                    </children>
+                </VBox>
+                <VBox prefHeight="274.0" prefWidth="432.0" spacing="10.0">
+                    <children>
+                        <HBox prefHeight="19.0" prefWidth="432.0" spacing="10.0">
+                            <children>
+                                <TextField fx:id="textFieldName" prefHeight="36.0" prefWidth="302.0"/>
+                            </children>
+                        </HBox>
+                        <Separator prefHeight="35.0" prefWidth="435.0"/>
+                        <HBox prefHeight="28.0" prefWidth="424.0" spacing="10.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onModSelect" text="%create.button.select"/>
+                            </children>
+                        </HBox>
+                        <Separator prefWidth="200.0"/>
+                        <HBox prefHeight="40.0" prefWidth="513.0" spacing="10.0">
+                            <children>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button mnemonicParsing="false" onAction="#onSave" text="%create.button.save"/>
+                                <Button mnemonicParsing="false" onAction="#onClose" text="%create.button.exit">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="-10.0"/>
+                            </padding>
+                        </HBox>
+                    </children>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
