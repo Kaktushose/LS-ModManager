@@ -29,6 +29,9 @@ public class DiskSpaceChecker {
     }
 
     public boolean checkMoving(String oldDirectory, String newDirectory) {
+        if (oldDirectory.isEmpty()) {
+            return true;
+        }
         long size = FileUtils.sizeOfDirectory(new File(oldDirectory));
         return check(size, newDirectory);
     }

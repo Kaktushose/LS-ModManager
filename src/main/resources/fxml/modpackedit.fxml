@@ -44,7 +44,8 @@
                                     <children>
                                         <ComboBox fx:id="modpackComboBox" maxHeight="-Infinity" maxWidth="-Infinity"
                                                   minHeight="-Infinity" minWidth="-Infinity" onAction="#onModpackSelect"
-                                                  prefHeight="42.0" prefWidth="170.0" promptText="%edit.combobox.modpack"/>
+                                                  prefHeight="42.0" prefWidth="170.0"
+                                                  promptText="%edit.combobox.modpack"/>
                                         <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                                                    minWidth="-Infinity" prefHeight="35.0" prefWidth="426.0"/>
                                     </children>
@@ -118,9 +119,9 @@
                                         <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0"
                                               prefWidth="430.0" spacing="10.0">
                                             <children>
-                                                <Region prefHeight="26.0" prefWidth="207.0"/>
+                                                <Region HBox.hgrow="ALWAYS"/>
                                                 <Button fx:id="buttonSave" mnemonicParsing="false" onAction="#onSave"
-                                                        prefHeight="0.0" prefWidth="85.0" text="%edit.button.save">
+                                                        text="%edit.button.save">
                                                     <padding>
                                                         <Insets bottom="10.0"/>
                                                     </padding>
@@ -128,7 +129,8 @@
                                                         <Insets bottom="10.0"/>
                                                     </HBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onClose" text="%edit.button.exit">
+                                                <Button mnemonicParsing="false" onAction="#onClose"
+                                                        text="%edit.button.exit">
                                                     <HBox.margin>
                                                         <Insets left="10.0" right="10.0"/>
                                                     </HBox.margin>

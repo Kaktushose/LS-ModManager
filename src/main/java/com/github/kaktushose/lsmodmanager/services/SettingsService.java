@@ -72,7 +72,7 @@ public class SettingsService {
             return true;
         }
 
-        for (int i = 19; i != 11; i -= 2) {
+        for (int i = 22; i != 11; i--) {
             String path = Constants.MY_GAMES + "\\FarmingSimulator20" + i;
             if (Files.isDirectory(Path.of(path))) {
                 setFsPath(path);

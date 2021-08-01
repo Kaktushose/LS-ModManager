@@ -27,7 +27,7 @@ public class VersionService {
 
     public void retrieveLatestVersion() {
         try {
-            URL url = new URL("https://api.github.com/repos/Kaktushose/jda-commands/releases/latest");
+            URL url = new URL("https://api.github.com/repos/Kaktushose/LS-ModManager/releases/latest");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder response = new StringBuilder();

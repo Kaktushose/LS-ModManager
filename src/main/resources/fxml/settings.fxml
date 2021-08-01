@@ -76,11 +76,9 @@
                 <Separator prefHeight="8.0" prefWidth="665.0"/>
                 <HBox prefHeight="51.0" prefWidth="645.0" spacing="20.0">
                     <children>
-                        <Region prefHeight="40.0" prefWidth="415.0"/>
-                        <Button mnemonicParsing="false" onAction="#onSave" prefHeight="40.0" prefWidth="85.0"
-                                text="%settings.button.save"/>
-                        <Button mnemonicParsing="false" onAction="#onClose" prefHeight="40.0" prefWidth="85.0"
-                                text="%settings.button.exit">
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button mnemonicParsing="false" onAction="#onSave" text="%settings.button.save"/>
+                        <Button mnemonicParsing="false" onAction="#onClose" text="%settings.button.exit">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
