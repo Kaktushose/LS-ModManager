@@ -14,7 +14,8 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="%main.menu.menu.name">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#onSettings" text="%main.menu.menu.settings"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onSettings"
+                                          text="%main.menu.menu.settings"/>
                                 <MenuItem mnemonicParsing="false" onAction="#onExit" text="%main.menu.menu.exit"/>
                             </items>
                         </Menu>
@@ -22,7 +23,8 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#onModpackCreate"
                                           text="%main.menu.modpack.create"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onModpackEdit" text="%main.menu.modpack.edit"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onModpackEdit"
+                                          text="%main.menu.modpack.edit"/>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="%main.menu.help.name">
