@@ -151,6 +151,7 @@ public class MainController extends Controller {
 
         if (modpackComboBox.getValue().equals(noModpack)) {
             modpackName.setText(noModpack);
+            onSavegameSelect();
             return;
         }
 
@@ -160,7 +161,10 @@ public class MainController extends Controller {
 
         modpackService.load(newValue.getId()).onSuccess(() -> {
             loadedModpack = newValue;
-            Platform.runLater(() -> modpackName.setText(loadedModpack.getName()));
+            Platform.runLater(() -> {
+                modpackName.setText(loadedModpack.getName());
+                onSavegameSelect();
+            });
         });
     }
 

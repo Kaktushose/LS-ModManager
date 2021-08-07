@@ -51,7 +51,7 @@ public class SavegameService {
                     return;
                 }
 
-                Savegame savegame = parse(savegameFile);
+                Savegame savegame = parse(savegameFile, file.getFileName().toString());
                 log.debug("Savegame \"{}\" indexed. {} required mods found!", savegame.getName(), savegame.getModNames().size());
                 savegames.add(savegame);
             });
@@ -78,7 +78,7 @@ public class SavegameService {
         return Collections.unmodifiableList(savegames);
     }
 
-    private Savegame parse(File file) {
+    private Savegame parse(File file, String savegameName) {
         Savegame savegame = new Savegame();
         Document document;
         try {
@@ -103,11 +103,10 @@ public class SavegameService {
         Collections.sort(modNames);
         savegame.setModNames(modNames);
 
-        // get name
+        // get map name
         Element element = (Element) document.getElementsByTagName("settings").item(0);
-        String name = element.getElementsByTagName("savegameName").item(0).getTextContent();
         String map = element.getElementsByTagName("mapTitle").item(0).getTextContent();
-        savegame.setName(String.format("%s (%s)", name, map));
+        savegame.setName(String.format("%s (%s)", savegameName, map));
 
         return savegame;
     }
