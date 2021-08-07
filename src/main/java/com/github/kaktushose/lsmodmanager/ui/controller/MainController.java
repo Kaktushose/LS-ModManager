@@ -143,16 +143,18 @@ public class MainController extends Controller {
     public void onModpackLoad() {
         Modpack newValue = modpackService.getByName(modpackComboBox.getValue());
 
-        if (!app.getDiskSpaceChecker().checkLoading(newValue)) {
-            return;
-        }
         if (loadedModpack != null) {
             modpackService.unload(loadedModpack.getId());
             loadedModpack = null;
 
         }
+
         if (modpackComboBox.getValue().equals(noModpack)) {
             modpackName.setText(noModpack);
+            return;
+        }
+
+        if (!app.getDiskSpaceChecker().checkLoading(newValue)) {
             return;
         }
 

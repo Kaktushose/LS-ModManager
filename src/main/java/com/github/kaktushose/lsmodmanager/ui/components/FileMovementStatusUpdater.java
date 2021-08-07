@@ -4,7 +4,6 @@ import com.github.kaktushose.lsmodmanager.exceptions.FileOperationException;
 import com.github.kaktushose.lsmodmanager.ui.controller.ProgressIndicatorController;
 import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.file.PathUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -19,9 +18,6 @@ public class FileMovementStatusUpdater {
     }
 
     public void monitor(Path directory, long desiredSize) {
-        if (!PathUtils.isDirectory(directory)) {
-            return;
-        }
         new Thread(() -> {
             synchronized (this) {
                 File file = directory.toFile();

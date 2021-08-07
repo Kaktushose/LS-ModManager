@@ -53,7 +53,8 @@ public class DiskSpaceChecker {
     private boolean check(long size, String path) {
         File target = new File(path);
         boolean enoughSpace = (target.getUsableSpace() + size) < target.getTotalSpace();
-
+        System.out.println(target.getUsableSpace() + size);
+        System.out.println(target.getTotalSpace());
         if (!enoughSpace) {
             String available = FileUtils.byteCountToDisplaySize(target.getUsableSpace());
             String required = FileUtils.byteCountToDisplaySize(size);
