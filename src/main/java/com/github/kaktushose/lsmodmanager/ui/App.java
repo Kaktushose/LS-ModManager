@@ -52,13 +52,14 @@ public class App extends Application {
 
         ResourceBundle bundle = settingsService.getResourceBundle();
         Locale.setDefault(settingsService.getLanguage());
+
+        if (!settingsService.findFsPath()) {
+            Platform.runLater(() -> Alerts.displayWarnMessage(bundle.getString("alerts.folder.title"), bundle.getString("alerts.folder.text")));
+        }
+
         savegameService.indexSavegames();
         modpackService.indexModpacks();
         sceneManager.showMainWindow();
-
-        if (!settingsService.findFsPath()) {
-            Alerts.displayWarnMessage(bundle.getString("alerts.folder.title"), bundle.getString("alerts.folder.text"));
-        }
 
         if (firstStart) {
             Alerts.displayInfoMessage(bundle.getString("alerts.welcome.title"), bundle.getString("alerts.welcome.text"));

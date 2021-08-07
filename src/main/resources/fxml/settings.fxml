@@ -21,12 +21,19 @@
                 <Separator prefHeight="0.0" prefWidth="640.0"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.game"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.game">
+                            <tooltip>
+                                <Tooltip text="%tooltips.label.game"/>
+                            </tooltip>
+                        </Label>
                         <TextField fx:id="textFieldFsPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
                         <Button mnemonicParsing="false" onAction="#onFsPath" text="%settings.button.select">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
+                            <tooltip>
+                                <Tooltip text="%tooltips.label.game"/>
+                            </tooltip>
                         </Button>
                     </children>
                     <padding>
@@ -39,7 +46,11 @@
                 <Separator prefWidth="200.0"/>
                 <HBox prefHeight="100.0" prefWidth="640.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.modpacks"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.modpacks">
+                            <tooltip>
+                                <Tooltip text="%tooltips.label.modpacks"/>
+                            </tooltip>
+                        </Label>
                         <TextField fx:id="textFieldModpackPath" editable="false" prefHeight="36.0" prefWidth="346.0"/>
                         <Button mnemonicParsing="false" onAction="#onModpackPath" text="%settings.button.select">
                             <padding>
@@ -48,6 +59,9 @@
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
+                            <tooltip>
+                                <Tooltip text="%tooltips.label.modpacks"/>
+                            </tooltip>
                         </Button>
                     </children>
                     <VBox.margin>
@@ -60,7 +74,11 @@
                 <Separator prefHeight="4.0" prefWidth="640.0"/>
                 <HBox prefHeight="42.0" prefWidth="601.0" spacing="20.0">
                     <children>
-                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.language"/>
+                        <Label prefHeight="40.0" prefWidth="126.0" text="%settings.label.language">
+                            <tooltip>
+                                <Tooltip text="%tooltips.label.language"/>
+                            </tooltip>
+                        </Label>
                         <ComboBox fx:id="languageComboBox" onAction="#onLanguageSelect" prefHeight="42.0"
                                   prefWidth="168.0">
                             <HBox.margin>

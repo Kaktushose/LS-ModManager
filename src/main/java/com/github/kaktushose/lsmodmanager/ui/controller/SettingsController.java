@@ -68,7 +68,11 @@ public class SettingsController extends Controller {
     @FXML
     public void onFsPath() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File(Constants.MY_GAMES));
+        String toOpen = settingsService.getFsPath();
+        if (Checks.isBlank(toOpen)) {
+            toOpen = Constants.MY_GAMES;
+        }
+        directoryChooser.setInitialDirectory(new File(toOpen));
         directoryChooser.setTitle(bundle.getString("settings.filechooser.title"));
         File path = directoryChooser.showDialog(stage);
         if (path == null) return;
