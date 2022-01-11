@@ -16,6 +16,8 @@ This program is a simple modpack manager for the game series "Farming Simulator"
 * Modify or delete modpacks at any time
 * Inspect savegames to find required mods 
 
+![image](https://user-images.githubusercontent.com/42280757/128599139-77906dac-4a43-489d-b843-246d19798c35.png)
+
 ## Installation
 
 You can find the latest version [here](https://github.com/Kaktushose/LS-ModManager/releases/latest). 
