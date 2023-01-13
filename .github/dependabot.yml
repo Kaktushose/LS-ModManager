@@ -4,4 +4,6 @@ updates:
     directory: "/"
     target-branch: "dev"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    ignore:
+      update-types: ["version-update:semver-patch", "version-update:semver-minor"]
